@@ -4,6 +4,7 @@ import { Tour } from '@/types/tour'
 import { TourImageGallery } from '../components/TourImageGallery'
 import { TourReviews } from '../components/TourReviews'
 import { TourMeetingPoint } from '../components/TourMeetingPoint'
+import { TourDetailMap } from '../components/TourDetailMap'
 
 // Mock data - replace with API call
 const mockTour: Tour = {
@@ -194,7 +195,7 @@ const mockTour: Tour = {
 export const TourDetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const [tour] = useState<Tour>(mockTour)
-  const [activeTab, setActiveTab] = useState<'overview' | 'itinerary' | 'included' | 'meeting' | 'reviews'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'itinerary' | 'included' | 'meeting' | 'reviews' | 'map'>('overview')
 
   // Suppress unused variable warning
   console.log('Tour ID:', id)
@@ -260,18 +261,22 @@ export const TourDetailPage = () => {
           {/* Tabs */}
           <div className="border-b border-gray-200 dark:border-gray-700">
             <nav className="flex gap-4 md:gap-8 overflow-x-auto">
-              {(['overview', 'itinerary', 'included', 'meeting', 'reviews'] as const).map((tab) => (
+              {(['overview', 'itinerary', 'included', 'meeting', 'reviews', 'map'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`pb-4 px-2 text-sm font-medium capitalize whitespace-nowrap transition-colors ${
+                  className={`pb-4 px-2 text-sm font-medium capitalize whitespace-nowrap transition-colors flex items-center gap-2 ${
                     activeTab === tab
                       ? 'border-b-2 border-orange-600 text-orange-600'
                       : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                   }`}
                 >
-                  {tab === 'meeting' ? 'Meeting Point' : tab}
-                  {tab === 'reviews' && tour.reviews && ` (${tour.reviews.length})`}
+                  {tab === 'meeting' && <span>📍</span>}
+                  {tab === 'map' && <span>🗺️</span>}
+                  <span>
+                    {tab === 'meeting' ? 'Meeting Point' : tab === 'map' ? 'Maps & Directions' : tab}
+                    {tab === 'reviews' && tour.reviews && ` (${tour.reviews.length})`}
+                  </span>
                 </button>
               ))}
             </nav>
@@ -376,6 +381,10 @@ export const TourDetailPage = () => {
                 averageRating={tour.rating}
                 totalReviews={tour.reviewCount}
               />
+            )}
+
+            {activeTab === 'map' && (
+              <TourDetailMap tour={tour} />
             )}
           </div>
         </div>
