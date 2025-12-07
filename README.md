@@ -54,6 +54,16 @@ An AI-powered tourism platform for Ethiopia featuring intelligent chat assistanc
   - Location sharing with maps
   - Itinerary previews with timelines
 
+- ✅ **Tour Discovery & Search**
+  - Advanced search with debouncing
+  - Multi-criteria filtering (price, duration, difficulty, dates)
+  - Sort options (price, rating, duration, popularity)
+  - Date range picker for tour dates
+  - Price range slider
+  - Enhanced tour cards with ratings and reviews
+  - Responsive tour grid layout
+  - Tour detail pages
+
 ### 🚧 Upcoming Features (Weeks 6-8)
 - Backend API integration
 - Real AI model integration
@@ -95,7 +105,8 @@ EthioAI/
 │   │   ├── features/         # Feature modules
 │   │   │   ├── auth/         # Authentication
 │   │   │   ├── chat/         # AI Chat
-│   │   │   └── dashboard/    # Dashboard
+│   │   │   ├── dashboard/    # Dashboard
+│   │   │   └── tours/        # Tour Discovery & Search
 │   │   ├── hooks/            # Custom hooks
 │   │   ├── routes/           # Route configuration
 │   │   ├── services/         # API services
@@ -155,8 +166,10 @@ Detailed documentation for each feature:
 - [Week 3: Chat Features](frontend/WEEK3_CHAT_COMPLETE.md)
 - [Week 4: Voice Features](frontend/WEEK4_VOICE_COMPLETE.md)
 - [Week 5: Advanced Chat](frontend/WEEK5_ADVANCED_CHAT_COMPLETE.md)
+- [Week 5: Tour Discovery](frontend/WEEK5_TOUR_DISCOVERY_COMPLETE.md)
 - [Multi-Language Support](frontend/MULTILINGUAL_CHAT_COMPLETE.md)
 - [Rich Messages](frontend/RICH_MESSAGES_COMPLETE.md)
+- [Tour Search & Filters](frontend/TOUR_SEARCH_FILTERS_COMPLETE.md)
 - [API Requirements](frontend/API_REQUIREMENTS.md)
 
 ## 🌍 Supported Languages
