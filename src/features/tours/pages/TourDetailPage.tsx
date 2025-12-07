@@ -5,6 +5,7 @@ import { TourImageGallery } from '../components/TourImageGallery'
 import { TourReviews } from '../components/TourReviews'
 import { TourMeetingPoint } from '../components/TourMeetingPoint'
 import { TourDetailMap } from '../components/TourDetailMap'
+import { RecommendedTours } from '../components/RecommendedTours'
 
 // Mock data - replace with API call
 const mockTour: Tour = {
@@ -455,6 +456,23 @@ export const TourDetailPage = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Recommendations Section */}
+      <div className="mt-12 space-y-12">
+        {/* Similar Tours */}
+        <RecommendedTours
+          currentTour={tour}
+          variant="similar"
+          maxItems={4}
+        />
+
+        {/* Popular in Region */}
+        <RecommendedTours
+          variant="regional"
+          region={tour.region}
+          maxItems={4}
+        />
       </div>
     </div>
   )
