@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import { LoginPage, RegisterPage, ForgotPasswordPage, ProfilePage, EditProfilePage } from '@features/auth/pages'
 import { HomePage } from '@features/dashboard/pages'
 import { ChatPage } from '@features/chat/pages'
+import { BookingPage, CartPage } from '@features/booking/pages'
 import { MainLayout } from '@components/layout'
 import { PrivateRoute } from './PrivateRoute'
 import { PublicRoute } from './PublicRoute'
@@ -137,6 +138,16 @@ export const AppRoutes = () => {
         <Route
           path="/chat"
           element={<ChatPage />}
+        />
+
+        {/* Booking & Cart Pages */}
+        <Route
+          path="/booking/:tourId"
+          element={<BookingPage />}
+        />
+        <Route
+          path="/cart"
+          element={<CartPage />}
         />
       </Route>
 
