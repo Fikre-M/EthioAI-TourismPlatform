@@ -1,3 +1,11 @@
+export interface AddOn {
+  id: string
+  name: string
+  price: number
+  description: string
+  type: 'meal' | 'transport' | 'guide'
+}
+
 export interface BookingItem {
   id: string
   tourId: string
@@ -10,9 +18,11 @@ export interface BookingItem {
   }
   pricePerAdult: number
   pricePerChild: number
+  addOns: AddOn[]
   totalPrice: number
   meetingPoint: string
   duration: string
+  specialRequests?: string
 }
 
 export interface BookingFormData {
@@ -20,14 +30,27 @@ export interface BookingFormData {
   date: string
   adults: number
   children: number
+  selectedAddOns: string[]
   specialRequests?: string
   contactName: string
   contactEmail: string
   contactPhone: string
 }
 
+export interface PromoCode {
+  code: string
+  discount: number // percentage or fixed amount
+  type: 'percentage' | 'fixed'
+  minPurchase?: number
+  maxDiscount?: number
+  expiryDate?: string
+}
+
 export interface CartState {
   items: BookingItem[]
   totalItems: number
+  subtotal: number
+  discount: number
   totalPrice: number
+  appliedPromo: PromoCode | null
 }

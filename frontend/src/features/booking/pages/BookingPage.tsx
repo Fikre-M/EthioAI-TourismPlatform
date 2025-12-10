@@ -1,7 +1,7 @@
 import { useParams, Navigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import BookingForm from '../components/BookingForm'
-import Loader from '@components/common/Loader/Loader'
+import { Loader } from '@components/common/Loader/Loader'
 
 // Mock tour data - replace with actual API call
 const mockTour = {
