@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import { LoginPage, RegisterPage, ForgotPasswordPage, ProfilePage, EditProfilePage } from '@features/auth/pages'
 import { HomePage } from '@features/dashboard/pages'
 import { ChatPage } from '@features/chat/pages'
-import { BookingPage, CartPage, CheckoutPage } from '@features/booking/pages'
+import { BookingPage, CartPage, CheckoutPage, MyBookingsPage } from '@features/booking/pages'
 import { PaymentPage, ConfirmationPage } from '@features/payment/pages'
 import { MainLayout } from '@components/layout'
 import { PrivateRoute } from './PrivateRoute'
@@ -85,7 +85,7 @@ export const AppRoutes = () => {
           path={ROUTES.BOOKINGS}
           element={
             <PrivateRoute>
-              <PlaceholderPage title="My Bookings" icon="📅" />
+              <MyBookingsPage />
             </PrivateRoute>
           }
         />
