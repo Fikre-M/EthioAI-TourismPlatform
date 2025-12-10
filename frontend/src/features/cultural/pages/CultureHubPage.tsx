@@ -291,7 +291,7 @@ const CultureHubPage: React.FC = () => {
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <Button
                   variant="primary"
-                  onClick={() => navigate('/cultural/museum')}
+                  onClick={() => navigate('/cultural/museum/national-museum-ethiopia')}
                   className="bg-gradient-to-r from-yellow-500 to-orange-600 text-black hover:from-yellow-400 hover:to-orange-500 font-semibold"
                 >
                   <FaPlay className="mr-2" />
@@ -611,9 +611,10 @@ const CultureHubPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               variant="primary"
+              onClick={() => navigate('/cultural/editor')}
               className="bg-white text-green-600 hover:bg-gray-100"
             >
-              📝 Submit Content
+              📝 Create Article
             </Button>
             <Button
               variant="outline"

@@ -1,3 +1,6 @@
 export { default as CultureHubPage } from './CultureHubPage'
 export { default as VirtualMuseumPage } from './VirtualMuseumPage'
+export { default as ArtifactDetailPage } from './ArtifactDetailPage'
 export { default as ArticlePage } from './ArticlePage'
+export { default as ArticleEditorPage } from './ArticleEditorPage'
+export { default as CulturalCategoriesPage } from './CulturalCategoriesPage'
