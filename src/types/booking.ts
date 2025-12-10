@@ -46,6 +46,44 @@ export interface PromoCode {
   expiryDate?: string
 }
 
+export interface TravelerDetails {
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  dateOfBirth: string
+  nationality: string
+  passportNumber?: string
+  dietaryRequirements?: string
+  medicalConditions?: string
+}
+
+export interface EmergencyContact {
+  name: string
+  relationship: string
+  phone: string
+  email: string
+}
+
+export interface CheckoutFormData {
+  contactInfo: {
+    firstName: string
+    lastName: string
+    email: string
+    phone: string
+    address: string
+    city: string
+    country: string
+    postalCode: string
+  }
+  travelers: TravelerDetails[]
+  emergencyContact: EmergencyContact
+  travelInsurance: boolean
+  termsAccepted: boolean
+  marketingConsent: boolean
+  specialRequests?: string
+}
+
 export interface CartState {
   items: BookingItem[]
   totalItems: number

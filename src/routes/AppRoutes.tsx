@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import { LoginPage, RegisterPage, ForgotPasswordPage, ProfilePage, EditProfilePage } from '@features/auth/pages'
 import { HomePage } from '@features/dashboard/pages'
 import { ChatPage } from '@features/chat/pages'
-import { BookingPage, CartPage } from '@features/booking/pages'
+import { BookingPage, CartPage, CheckoutPage, PaymentPage, ConfirmationPage } from '@features/booking/pages'
 import { MainLayout } from '@components/layout'
 import { PrivateRoute } from './PrivateRoute'
 import { PublicRoute } from './PublicRoute'
@@ -148,6 +148,18 @@ export const AppRoutes = () => {
         <Route
           path="/cart"
           element={<CartPage />}
+        />
+        <Route
+          path="/checkout"
+          element={<CheckoutPage />}
+        />
+        <Route
+          path="/payment"
+          element={<PaymentPage />}
+        />
+        <Route
+          path="/confirmation"
+          element={<ConfirmationPage />}
         />
       </Route>
 
