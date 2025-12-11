@@ -204,6 +204,15 @@ const contentCategories = [
     link: '/cultural/language'
   },
   {
+    id: 'recipes',
+    name: 'Traditional Recipes',
+    icon: FaUtensils,
+    color: 'from-orange-500 to-red-600',
+    description: 'Authentic Ethiopian dishes and cooking guides',
+    count: 25,
+    link: '/cultural/recipes'
+  },
+  {
     id: 'traditions',
     name: 'Cultural Traditions',
     icon: FaHeart,

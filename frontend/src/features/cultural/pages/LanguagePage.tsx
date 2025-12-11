@@ -7,6 +7,9 @@ import {
   FaHandPaper, FaSearch, FaStar, FaCheck
 } from 'react-icons/fa'
 import { PhraseCard } from '../components/PhraseCard'
+import { VoiceRecorder } from '../components/VoiceRecorder'
+import { FlashcardDeck } from '../components/FlashcardDeck'
+import { ProgressTracker } from '../components/ProgressTracker'
 
 interface Phrase {
   id: string
@@ -39,6 +42,10 @@ const LanguagePage: React.FC = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [showAnswer, setShowAnswer] = useState(false)
   const [completedPhrases, setCompletedPhrases] = useState<Set<string>>(new Set())
+  const [showVoiceRecorder, setShowVoiceRecorder] = useState(false)
+  const [showFlashcards, setShowFlashcards] = useState(false)
+  const [showProgress, setShowProgress] = useState(false)
+  const [recordingPhrase, setRecordingPhrase] = useState<Phrase | null>(null)
 
   // Mock phrases data
   const phrases: Phrase[] = [
@@ -323,6 +330,20 @@ const LanguagePage: React.FC = () => {
               >
                 Practice
               </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowFlashcards(true)}
+              >
+                Flashcards
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowProgress(true)}
+              >
+                Progress
+              </Button>
             </div>
           </div>
 
@@ -426,6 +447,10 @@ const LanguagePage: React.FC = () => {
                   isCompleted={completedPhrases.has(phrase.id)}
                   onToggleFavorite={() => toggleFavorite(phrase.id)}
                   onMarkCompleted={() => markAsCompleted(phrase.id)}
+                  onStartRecording={() => {
+                    setRecordingPhrase(phrase)
+                    setShowVoiceRecorder(true)
+                  }}
                 />
               ))}
             </div>
@@ -552,6 +577,10 @@ const LanguagePage: React.FC = () => {
                         isCompleted={completedPhrases.has(phrase.id)}
                         onToggleFavorite={() => toggleFavorite(phrase.id)}
                         onMarkCompleted={() => markAsCompleted(phrase.id)}
+                        onStartRecording={() => {
+                          setRecordingPhrase(phrase)
+                          setShowVoiceRecorder(true)
+                        }}
                         practiceMode={true}
                       />
                     ))}
@@ -572,6 +601,46 @@ const LanguagePage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Voice Recorder Modal */}
+      {showVoiceRecorder && recordingPhrase && (
+        <VoiceRecorder
+          targetPhrase={recordingPhrase.amharic}
+          onRecordingComplete={(_audioBlob, confidence) => {
+            console.log('Recording completed with confidence:', confidence)
+            setShowVoiceRecorder(false)
+            setRecordingPhrase(null)
+            // Here you could save the recording or update progress
+          }}
+          onClose={() => {
+            setShowVoiceRecorder(false)
+            setRecordingPhrase(null)
+          }}
+        />
+      )}
+
+      {/* Flashcards Modal */}
+      {showFlashcards && (
+        <FlashcardDeck
+          phrases={filteredPhrases}
+          onComplete={(results) => {
+            console.log('Flashcard session completed:', results)
+            setShowFlashcards(false)
+            // Here you could save the session results
+          }}
+          onClose={() => setShowFlashcards(false)}
+        />
+      )}
+
+      {/* Progress Tracker Modal */}
+      {showProgress && (
+        <ProgressTracker
+          sessions={[]} // Mock sessions - in real app, load from storage
+          totalPhrases={phrases.length}
+          completedPhrases={completedPhrases.size}
+          onClose={() => setShowProgress(false)}
+        />
+      )}
     </div>
   )
 }

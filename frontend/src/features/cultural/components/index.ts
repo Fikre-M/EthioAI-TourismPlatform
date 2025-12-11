@@ -9,6 +9,9 @@ export { default as MusicDanceVideos } from './MusicDanceVideos'
 export { default as FestivalCalendar } from './FestivalCalendar'
 export { default as RegionalTraditions } from './RegionalTraditions'
 export { PhraseCard } from './PhraseCard'
+export { VoiceRecorder } from './VoiceRecorder'
+export { FlashcardDeck } from './FlashcardDeck'
+export { ProgressTracker } from './ProgressTracker'
 export { 
   ImageGallery, 
   VideoPlayer, 

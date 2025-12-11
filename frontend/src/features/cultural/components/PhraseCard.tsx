@@ -4,7 +4,7 @@ import {
   FaVolumeUp, FaHeart, FaPlay, FaPause, FaCheck,
   FaInfoCircle, FaBookmark, FaGraduationCap,
   FaShoppingCart, FaExclamationTriangle, FaUtensils,
-  FaHandPaper, FaStar, FaRedo
+  FaHandPaper, FaStar, FaRedo, FaMicrophone
 } from 'react-icons/fa'
 
 interface Phrase {
@@ -24,6 +24,7 @@ interface PhraseCardProps {
   isCompleted: boolean
   onToggleFavorite: () => void
   onMarkCompleted: () => void
+  onStartRecording?: () => void
   practiceMode?: boolean
 }
 
@@ -33,6 +34,7 @@ export const PhraseCard: React.FC<PhraseCardProps> = ({
   isCompleted,
   onToggleFavorite,
   onMarkCompleted,
+  onStartRecording,
   practiceMode = false
 }) => {
   const [isPlaying, setIsPlaying] = useState(false)
@@ -244,6 +246,12 @@ export const PhraseCard: React.FC<PhraseCardProps> = ({
                 <FaVolumeUp className="mr-1" />
                 Hear Pronunciation
               </Button>
+              {onStartRecording && (
+                <Button size="sm" variant="outline" onClick={onStartRecording}>
+                  <FaMicrophone className="mr-1" />
+                  Record Yourself
+                </Button>
+              )}
             </div>
           </div>
         )}
