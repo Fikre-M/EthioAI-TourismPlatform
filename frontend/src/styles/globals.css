@@ -281,3 +281,132 @@
     @apply bg-gray-100 dark:bg-gray-800 font-semibold;
   }
 }
+
+/* Amharic Language Learning Styles */
+@layer components {
+  /* Amharic font styling */
+  .font-amharic {
+    font-family: 'Noto Sans Ethiopic', 'Nyala', 'Abyssinica SIL', serif;
+    font-size: 1.2em;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+  }
+  
+  /* Language learning card animations */
+  .phrase-card {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  }
+  
+  .phrase-card.completed {
+    @apply ring-2 ring-green-200 bg-green-50;
+  }
+  
+  .phrase-card.favorite {
+    @apply ring-2 ring-red-200 bg-red-50;
+  }
+  
+  /* Audio visualization */
+  .audio-playing {
+    animation: pulse-audio 1.5s ease-in-out infinite;
+  }
+  
+  @keyframes pulse-audio {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 0.8;
+    }
+  }
+  
+  /* Quiz animations */
+  .quiz-option {
+    @apply transition-all duration-200 hover:bg-gray-50;
+  }
+  
+  .quiz-option.correct {
+    @apply bg-green-100 border-green-500 text-green-800;
+    animation: correct-answer 0.5s ease-out;
+  }
+  
+  .quiz-option.incorrect {
+    @apply bg-red-100 border-red-500 text-red-800;
+    animation: incorrect-answer 0.5s ease-out;
+  }
+  
+  @keyframes correct-answer {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+  }
+  
+  @keyframes incorrect-answer {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+    100% { transform: translateX(0); }
+  }
+  
+  /* Progress indicators */
+  .progress-bar {
+    @apply bg-gray-200 rounded-full overflow-hidden;
+    height: 8px;
+  }
+  
+  .progress-fill {
+    @apply bg-gradient-to-r from-green-400 to-green-600 h-full transition-all duration-500 ease-out;
+  }
+  
+  /* Category badges */
+  .category-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border;
+  }
+  
+  .category-badge.greetings {
+    @apply bg-blue-100 text-blue-800 border-blue-200;
+  }
+  
+  .category-badge.shopping {
+    @apply bg-green-100 text-green-800 border-green-200;
+  }
+  
+  .category-badge.emergency {
+    @apply bg-red-100 text-red-800 border-red-200;
+  }
+  
+  .category-badge.food {
+    @apply bg-orange-100 text-orange-800 border-orange-200;
+  }
+  
+  /* Difficulty indicators */
+  .difficulty-badge {
+    @apply px-2 py-1 rounded text-xs font-medium;
+  }
+  
+  .difficulty-badge.beginner {
+    @apply bg-green-100 text-green-800;
+  }
+  
+  .difficulty-badge.intermediate {
+    @apply bg-yellow-100 text-yellow-800;
+  }
+  
+  .difficulty-badge.advanced {
+    @apply bg-red-100 text-red-800;
+  }
+}
+
+/* Responsive typography for Amharic text */
+@media (max-width: 640px) {
+  .font-amharic {
+    font-size: 1.1em;
+  }
+}
+
+@media (min-width: 1024px) {
+  .font-amharic {
+    font-size: 1.3em;
+  }
+}

@@ -8,6 +8,7 @@ export { default as TraditionalClothingShowcase } from './TraditionalClothingSho
 export { default as MusicDanceVideos } from './MusicDanceVideos'
 export { default as FestivalCalendar } from './FestivalCalendar'
 export { default as RegionalTraditions } from './RegionalTraditions'
+export { PhraseCard } from './PhraseCard'
 export { 
   ImageGallery, 
   VideoPlayer, 

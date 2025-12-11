@@ -195,6 +195,15 @@ const contentCategories = [
     count: 1
   },
   {
+    id: 'language',
+    name: 'Language Learning',
+    icon: FaPlay,
+    color: 'from-blue-500 to-indigo-600',
+    description: 'Learn Amharic phrases and pronunciation',
+    count: 15,
+    link: '/cultural/language'
+  },
+  {
     id: 'traditions',
     name: 'Cultural Traditions',
     icon: FaHeart,
@@ -371,7 +380,13 @@ const CultureHubPage: React.FC = () => {
             return (
               <div
                 key={category.id}
-                onClick={() => setSelectedCategory(category.name)}
+                onClick={() => {
+                  if (category.link) {
+                    navigate(category.link)
+                  } else {
+                    setSelectedCategory(category.name)
+                  }
+                }}
                 className="group cursor-pointer"
               >
                 <div className={`bg-gradient-to-br ${category.color} rounded-xl p-6 text-white transform group-hover:scale-105 transition-all duration-300 shadow-lg`}>
