@@ -12,6 +12,8 @@ export { PhraseCard } from './PhraseCard'
 export { VoiceRecorder } from './VoiceRecorder'
 export { FlashcardDeck } from './FlashcardDeck'
 export { ProgressTracker } from './ProgressTracker'
+export { InteractiveCulturalMap } from './InteractiveCulturalMap'
+export { CulturalTimeline } from './CulturalTimeline'
 export { 
   ImageGallery, 
   VideoPlayer, 

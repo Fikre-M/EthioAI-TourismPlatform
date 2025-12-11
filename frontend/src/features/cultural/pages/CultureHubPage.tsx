@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ContentCard, { CulturalContent } from '../components/ContentCard'
 import { Button } from '@components/common/Button/Button'
-import { FaSearch, FaFilter, FaMap, FaCalendar, FaFire, FaPalette, FaMusic, FaUtensils, FaHeart, FaChartLine, FaPlay, FaArrowRight, FaStar } from 'react-icons/fa'
+import { FaSearch, FaFilter, FaMap, FaCalendar, FaFire, FaPalette, FaMusic, FaUtensils, FaHeart, FaChartLine, FaPlay, FaArrowRight, FaStar, FaGraduationCap } from 'react-icons/fa'
 
 // Mock cultural content data
 const mockCulturalContent: CulturalContent[] = [
@@ -211,6 +211,15 @@ const contentCategories = [
     description: 'Authentic Ethiopian dishes and cooking guides',
     count: 25,
     link: '/cultural/recipes'
+  },
+  {
+    id: 'learning',
+    name: 'Learning Hub',
+    icon: FaGraduationCap,
+    color: 'from-purple-500 to-indigo-600',
+    description: 'Interactive cultural education and progress tracking',
+    count: 12,
+    link: '/cultural/learning'
   },
   {
     id: 'traditions',
