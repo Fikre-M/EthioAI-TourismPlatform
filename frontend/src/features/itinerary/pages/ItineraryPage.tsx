@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@components/common/Button/Button'
 import DayPlan from '../components/DayPlan'
+import RouteOptimizer from '../components/RouteOptimizer'
+import BudgetCalculator from '../components/BudgetCalculator'
+import MapView from '../components/MapView'
 import {
   FaCalendarAlt, FaPlus, FaMapMarkedAlt, FaSave, FaShare,
-  FaClock, FaUsers, FaRoute,
-  FaEdit
+  FaClock, FaUsers, FaRoute, FaEdit, FaCalculator, FaMap
 } from 'react-icons/fa'
 
 export interface ItineraryItem {
@@ -53,6 +55,9 @@ const ItineraryPage: React.FC = () => {
   const [itinerary, setItinerary] = useState<Itinerary | null>(null)
   const [selectedDay, setSelectedDay] = useState(0)
   const [isEditing, setIsEditing] = useState(false)
+  const [showRouteOptimizer, setShowRouteOptimizer] = useState(false)
+  const [showBudgetCalculator, setShowBudgetCalculator] = useState(false)
+  const [showMapView, setShowMapView] = useState(false)
 
   // Mock itinerary data
   const mockItinerary: Itinerary = {
@@ -228,6 +233,29 @@ const ItineraryPage: React.FC = () => {
     }
   }
 
+  const handleOptimizeRoute = (optimizedItems: ItineraryItem[]) => {
+    if (!itinerary) return
+    
+    const updatedDay = {
+      ...itinerary.days[selectedDay],
+      items: optimizedItems,
+      totalCost: optimizedItems.reduce((sum, item) => sum + item.price, 0),
+      totalDuration: optimizedItems.reduce((sum, item) => sum + item.duration, 0)
+    }
+    
+    handleUpdateDay(selectedDay, updatedDay)
+  }
+
+  const handleBudgetUpdate = (newBudget: number) => {
+    if (!itinerary) return
+    
+    setItinerary({
+      ...itinerary,
+      totalBudget: newBudget,
+      updatedAt: new Date().toISOString()
+    })
+  }
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       weekday: 'long',
@@ -308,7 +336,29 @@ const ItineraryPage: React.FC = () => {
                 </div>
               </div>
               
-              <div className="flex items-center space-x-3">
+              <div className="flex flex-wrap items-center gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowMapView(true)}
+                >
+                  <FaMap className="mr-2" />
+                  Map View
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setShowRouteOptimizer(true)}
+                  disabled={!itinerary.days[selectedDay] || itinerary.days[selectedDay].items.length < 2}
+                >
+                  <FaRoute className="mr-2" />
+                  Optimize Route
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setShowBudgetCalculator(true)}
+                >
+                  <FaCalculator className="mr-2" />
+                  Budget
+                </Button>
                 <Button
                   variant="outline"
                   onClick={() => setIsEditing(!isEditing)}
@@ -432,6 +482,29 @@ const ItineraryPage: React.FC = () => {
             Add Activity
           </Button>
         </div>
+
+        {/* Modal Components */}
+        <RouteOptimizer
+          items={itinerary.days[selectedDay]?.items || []}
+          onOptimize={handleOptimizeRoute}
+          isOpen={showRouteOptimizer}
+          onClose={() => setShowRouteOptimizer(false)}
+        />
+
+        <BudgetCalculator
+          days={itinerary.days}
+          totalBudget={itinerary.totalBudget}
+          travelers={itinerary.travelers}
+          isOpen={showBudgetCalculator}
+          onClose={() => setShowBudgetCalculator(false)}
+          onBudgetUpdate={handleBudgetUpdate}
+        />
+
+        <MapView
+          items={itinerary.days[selectedDay]?.items || []}
+          isOpen={showMapView}
+          onClose={() => setShowMapView(false)}
+        />
       </div>
     </div>
   )
