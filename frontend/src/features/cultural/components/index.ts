@@ -14,6 +14,8 @@ export { FlashcardDeck } from './FlashcardDeck'
 export { ProgressTracker } from './ProgressTracker'
 export { InteractiveCulturalMap } from './InteractiveCulturalMap'
 export { CulturalTimeline } from './CulturalTimeline'
+export { LiveCulturalEvents } from './LiveCulturalEvents'
+export { CulturalMarketplace } from './CulturalMarketplace'
 export { 
   ImageGallery, 
   VideoPlayer, 

@@ -222,6 +222,15 @@ const contentCategories = [
     link: '/cultural/learning'
   },
   {
+    id: 'community',
+    name: 'Community Hub',
+    icon: FaUsers,
+    color: 'from-blue-500 to-cyan-600',
+    description: 'Live events, marketplace, and cultural discussions',
+    count: 8,
+    link: '/cultural/community'
+  },
+  {
     id: 'traditions',
     name: 'Cultural Traditions',
     icon: FaHeart,
