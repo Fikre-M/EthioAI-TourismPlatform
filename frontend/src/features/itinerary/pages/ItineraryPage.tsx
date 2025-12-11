@@ -465,22 +465,31 @@ const ItineraryPage: React.FC = () => {
         </div>
 
         {/* Action Bar */}
-        <div className="fixed bottom-6 right-6 flex items-center space-x-3">
+        <div className="fixed bottom-6 right-6 flex flex-col items-end space-y-3">
           <Button
-            variant="outline"
-            className="bg-white shadow-lg"
-            onClick={() => navigate('/transport')}
+            onClick={() => navigate('/itinerary/generate')}
+            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg"
           >
             <FaRoute className="mr-2" />
-            Add Transport
+            AI Generate Itinerary
           </Button>
-          <Button
-            className="bg-purple-600 hover:bg-purple-700 text-white shadow-lg"
-            onClick={() => alert('Add activity functionality coming soon!')}
-          >
-            <FaPlus className="mr-2" />
-            Add Activity
-          </Button>
+          <div className="flex items-center space-x-3">
+            <Button
+              variant="outline"
+              className="bg-white shadow-lg"
+              onClick={() => navigate('/transport')}
+            >
+              <FaRoute className="mr-2" />
+              Add Transport
+            </Button>
+            <Button
+              className="bg-purple-600 hover:bg-purple-700 text-white shadow-lg"
+              onClick={() => alert('Add activity functionality coming soon!')}
+            >
+              <FaPlus className="mr-2" />
+              Add Activity
+            </Button>
+          </div>
         </div>
 
         {/* Modal Components */}
