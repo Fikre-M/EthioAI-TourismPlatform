@@ -24,6 +24,16 @@ interface Festival {
   nextOccurrence?: string
   popularity: number
   attendees?: number
+  history?: string
+  culturalImpact?: string
+  modernCelebration?: string
+  relatedTours?: {
+    id: string
+    name: string
+    price: number
+    duration: string
+    highlights: string[]
+  }[]
 }
 
 interface FestivalCalendarProps {
@@ -62,7 +72,26 @@ const FestivalCalendar: React.FC<FestivalCalendarProps> = ({
       isRecurring: true,
       nextOccurrence: '2025-01-19',
       popularity: 95,
-      attendees: 500000
+      attendees: 500000,
+      history: 'Timkat has been celebrated for over 1,600 years, dating back to the 4th century when Christianity was introduced to Ethiopia. The festival commemorates the baptism of Jesus Christ in the Jordan River by John the Baptist.',
+      culturalImpact: 'Timkat is the most important religious festival in Ethiopia, bringing together millions of Orthodox Christians in a celebration of faith, community, and cultural identity.',
+      modernCelebration: 'Today, Timkat is celebrated with elaborate processions, traditional music, and the blessing of water, maintaining its ancient traditions while adapting to modern times.',
+      relatedTours: [
+        {
+          id: 'timkat-gondar-tour',
+          name: 'Timkat Festival Experience in Gondar',
+          price: 450,
+          duration: '3 days / 2 nights',
+          highlights: ['Festival procession', 'Fasilides Bath ceremony', 'Traditional music', 'Local cuisine']
+        },
+        {
+          id: 'timkat-lalibela-tour',
+          name: 'Timkat Pilgrimage to Lalibela',
+          price: 650,
+          duration: '4 days / 3 nights',
+          highlights: ['Rock churches visit', 'Religious ceremonies', 'Cultural performances', 'Photography tour']
+        }
+      ]
     },
     {
       id: '2',
@@ -499,6 +528,45 @@ const FestivalCalendar: React.FC<FestivalCalendarProps> = ({
                             <FaUtensils className="mr-1" />
                             {food}
                           </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Festival History */}
+                  {selectedFestival.history && (
+                    <div className="mb-6">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-3">Festival History</h3>
+                      <p className="text-gray-700 leading-relaxed">{selectedFestival.history}</p>
+                    </div>
+                  )}
+
+                  {/* Related Tours */}
+                  {selectedFestival.relatedTours && selectedFestival.relatedTours.length > 0 && (
+                    <div className="mb-6">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                        <FaMapMarkerAlt className="mr-2 text-blue-600" />
+                        Tours During This Festival
+                      </h3>
+                      <div className="space-y-3">
+                        {selectedFestival.relatedTours.map(tour => (
+                          <div key={tour.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                            <div className="flex items-start justify-between mb-2">
+                              <h4 className="font-medium text-gray-900">{tour.name}</h4>
+                              <span className="text-lg font-bold text-green-600">${tour.price}</span>
+                            </div>
+                            <p className="text-sm text-gray-600 mb-2">{tour.duration}</p>
+                            <div className="flex flex-wrap gap-1 mb-3">
+                              {tour.highlights.map(highlight => (
+                                <span key={highlight} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                                  {highlight}
+                                </span>
+                              ))}
+                            </div>
+                            <Button size="sm" className="w-full">
+                              Book Festival Tour
+                            </Button>
+                          </div>
                         ))}
                       </div>
                     </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ContentCard, { CulturalContent } from '../components/ContentCard'
 import { Button } from '@components/common/Button/Button'
-import { FaSearch, FaFilter, FaMap, FaCalendar, FaFire, FaPalette, FaMusic, FaUtensils, FaHeart, FaChartLine, FaPlay, FaArrowRight, FaStar, FaGraduationCap } from 'react-icons/fa'
+import { FaSearch, FaFilter, FaMap, FaCalendar, FaFire, FaPalette, FaMusic, FaUtensils, FaHeart, FaChartLine, FaPlay, FaArrowRight, FaStar, FaGraduationCap, FaUpload, FaUsers } from 'react-icons/fa'
 
 // Mock cultural content data
 const mockCulturalContent: CulturalContent[] = [
@@ -229,6 +229,24 @@ const contentCategories = [
     description: 'Live events, marketplace, and cultural discussions',
     count: 8,
     link: '/cultural/community'
+  },
+  {
+    id: 'quiz',
+    name: 'Cultural Quiz',
+    icon: FaPlay,
+    color: 'from-green-500 to-emerald-600',
+    description: 'Test your knowledge with interactive cultural quizzes',
+    count: 50,
+    link: '/cultural/quiz'
+  },
+  {
+    id: 'contribute',
+    name: 'Share Your Story',
+    icon: FaUpload,
+    color: 'from-pink-500 to-rose-600',
+    description: 'Submit stories, photos, and travel experiences',
+    count: 5,
+    link: '/cultural/contribute'
   },
   {
     id: 'traditions',
