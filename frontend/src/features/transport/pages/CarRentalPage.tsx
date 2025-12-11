@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@components/common/Button/Button'
+import CarCard, { CarRental } from '../components/CarCard'
+import CarDetailsModal from '../components/CarDetailsModal'
+import CarFiltersComponent, { CarFilters } from '../components/CarFilters'
 import {
-  FaCar, FaArrowLeft, FaSearch, FaFilter, FaCalendarAlt,
-  FaMapMarkerAlt, FaUsers, FaCog, FaShieldAlt, FaGasPump,
-  FaRoad, FaStar, FaDollarSign
+  FaCar, FaArrowLeft, FaSearch, FaCalendarAlt,
+  FaMapMarkerAlt, FaShieldAlt,
+  FaRoad, FaStar, FaDollarSign, FaSort, FaCheckCircle
 } from 'react-icons/fa'
 
 interface CarSearchForm {
@@ -16,18 +19,7 @@ interface CarSearchForm {
   driverAge: number
 }
 
-interface CarType {
-  id: string
-  name: string
-  category: 'economy' | 'compact' | 'suv' | 'luxury' | 'van'
-  image: string
-  features: string[]
-  pricePerDay: number
-  passengers: number
-  luggage: number
-  transmission: 'manual' | 'automatic'
-  fuelType: 'petrol' | 'diesel' | 'hybrid'
-}
+
 
 const CarRentalPage: React.FC = () => {
   const navigate = useNavigate()
@@ -41,6 +33,23 @@ const CarRentalPage: React.FC = () => {
   })
   const [isSearching, setIsSearching] = useState(false)
   const [showResults, setShowResults] = useState(false)
+  const [cars, setCars] = useState<CarRental[]>([])
+  const [filteredCars, setFilteredCars] = useState<CarRental[]>([])
+  const [selectedCar, setSelectedCar] = useState<CarRental | null>(null)
+  const [showDetailsModal, setShowDetailsModal] = useState(false)
+  const [showFilters, setShowFilters] = useState(false)
+  const [sortBy, setSortBy] = useState<'price' | 'rating' | 'category' | 'company'>('price')
+  const [searchDays, setSearchDays] = useState(1)
+  const [filters, setFilters] = useState<CarFilters>({
+    priceRange: [20, 200],
+    categories: [],
+    companies: [],
+    transmission: [],
+    fuelType: [],
+    passengers: 2,
+    features: [],
+    rating: 0
+  })
 
   const popularLocations = [
     'Addis Ababa - Bole Airport',
@@ -53,49 +62,246 @@ const CarRentalPage: React.FC = () => {
     'Axum'
   ]
 
-  const carTypes: CarType[] = [
+  // Mock car rental data
+  const mockCars: CarRental[] = [
     {
-      id: 'economy',
-      name: 'Economy Car',
+      id: 'eco-001',
+      name: 'Toyota Corolla',
       category: 'economy',
-      image: '/images/cars/economy.jpg',
-      features: ['Air Conditioning', 'Radio', 'Manual Transmission'],
+      company: 'Budget Car Rental',
+      image: '/images/cars/corolla.jpg',
+      features: ['Bluetooth', 'USB Charging', 'Power Steering'],
       pricePerDay: 35,
-      passengers: 4,
+      totalPrice: 35 * searchDays,
+      passengers: 5,
       luggage: 2,
+      doors: 4,
       transmission: 'manual',
-      fuelType: 'petrol'
+      fuelType: 'petrol',
+      airConditioning: true,
+      gps: false,
+      insurance: ['Third Party', 'Collision Damage Waiver'],
+      rating: 4.2,
+      reviews: 156,
+      availability: true,
+      fuelPolicy: 'Full to Full',
+      mileage: 'Unlimited',
+      deposit: 200,
+      location: 'Addis Ababa Airport'
     },
     {
-      id: 'suv',
-      name: '4WD SUV',
+      id: 'suv-001',
+      name: 'Toyota Land Cruiser',
       category: 'suv',
-      image: '/images/cars/suv.jpg',
-      features: ['4WD', 'Air Conditioning', 'GPS', 'Automatic'],
-      pricePerDay: 65,
+      company: 'Ethiopian Car Rental',
+      image: '/images/cars/landcruiser.jpg',
+      features: ['4WD', 'Roof Rack', 'Spare Tire', 'Tool Kit', 'First Aid Kit'],
+      pricePerDay: 85,
+      totalPrice: 85 * searchDays,
+      passengers: 7,
+      luggage: 5,
+      doors: 5,
+      transmission: 'automatic',
+      fuelType: 'diesel',
+      airConditioning: true,
+      gps: true,
+      insurance: ['Full Coverage', 'Third Party', 'Theft Protection'],
+      rating: 4.7,
+      reviews: 89,
+      availability: true,
+      fuelPolicy: 'Full to Full',
+      mileage: 'Unlimited',
+      deposit: 500,
+      location: 'Addis Ababa City Center'
+    },
+    {
+      id: 'comp-001',
+      name: 'Hyundai Elantra',
+      category: 'compact',
+      company: 'Hertz Ethiopia',
+      image: '/images/cars/elantra.jpg',
+      features: ['Automatic', 'Bluetooth', 'Backup Camera', 'Cruise Control'],
+      pricePerDay: 45,
+      totalPrice: 45 * searchDays,
+      passengers: 5,
+      luggage: 3,
+      doors: 4,
+      transmission: 'automatic',
+      fuelType: 'petrol',
+      airConditioning: true,
+      gps: true,
+      insurance: ['Third Party', 'Collision Damage Waiver'],
+      rating: 4.4,
+      reviews: 203,
+      availability: true,
+      fuelPolicy: 'Full to Full',
+      mileage: 'Unlimited',
+      deposit: 300,
+      location: 'Bahir Dar'
+    },
+    {
+      id: 'van-001',
+      name: 'Toyota Hiace',
+      category: 'van',
+      company: 'Galaxy Express',
+      image: '/images/cars/hiace.jpg',
+      features: ['12 Seats', 'Large Storage', 'Power Steering', 'Radio/CD'],
+      pricePerDay: 95,
+      totalPrice: 95 * searchDays,
+      passengers: 12,
+      luggage: 8,
+      doors: 4,
+      transmission: 'manual',
+      fuelType: 'diesel',
+      airConditioning: true,
+      gps: false,
+      insurance: ['Third Party', 'Passenger Insurance'],
+      rating: 4.1,
+      reviews: 67,
+      availability: true,
+      fuelPolicy: 'Full to Full',
+      mileage: 'Unlimited',
+      deposit: 400,
+      location: 'Gondar'
+    },
+    {
+      id: 'lux-001',
+      name: 'BMW X5',
+      category: 'luxury',
+      company: 'Premium Car Rental',
+      image: '/images/cars/bmwx5.jpg',
+      features: ['Leather Seats', 'Sunroof', 'Premium Sound', 'Navigation', 'Heated Seats'],
+      pricePerDay: 150,
+      totalPrice: 150 * searchDays,
       passengers: 5,
       luggage: 4,
+      doors: 5,
       transmission: 'automatic',
-      fuelType: 'diesel'
+      fuelType: 'petrol',
+      airConditioning: true,
+      gps: true,
+      insurance: ['Full Coverage', 'Luxury Vehicle Protection'],
+      rating: 4.8,
+      reviews: 45,
+      availability: false,
+      fuelPolicy: 'Full to Full',
+      mileage: 'Unlimited',
+      deposit: 800,
+      location: 'Addis Ababa Sheraton'
     },
     {
-      id: 'van',
-      name: 'Minivan',
-      category: 'van',
-      image: '/images/cars/van.jpg',
-      features: ['8 Seats', 'Air Conditioning', 'GPS', 'Large Storage'],
-      pricePerDay: 85,
-      passengers: 8,
-      luggage: 6,
+      id: 'eco-002',
+      name: 'Suzuki Alto',
+      category: 'economy',
+      company: 'Budget Car Rental',
+      image: '/images/cars/alto.jpg',
+      features: ['Fuel Efficient', 'Easy Parking', 'Radio'],
+      pricePerDay: 25,
+      totalPrice: 25 * searchDays,
+      passengers: 4,
+      luggage: 1,
+      doors: 4,
       transmission: 'manual',
-      fuelType: 'diesel'
+      fuelType: 'petrol',
+      airConditioning: false,
+      gps: false,
+      insurance: ['Third Party'],
+      rating: 3.9,
+      reviews: 124,
+      availability: true,
+      fuelPolicy: 'Full to Full',
+      mileage: 'Unlimited',
+      deposit: 150,
+      location: 'Hawassa'
     }
   ]
+
+  const availableCompanies = Array.from(new Set(mockCars.map(c => c.company)))
+
+  // Calculate search days
+  useEffect(() => {
+    if (searchForm.pickupDate && searchForm.returnDate) {
+      const pickup = new Date(searchForm.pickupDate)
+      const returnDate = new Date(searchForm.returnDate)
+      const diffTime = Math.abs(returnDate.getTime() - pickup.getTime())
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      setSearchDays(diffDays || 1)
+    }
+  }, [searchForm.pickupDate, searchForm.returnDate])
+
+  // Filter and sort cars
+  useEffect(() => {
+    let filtered = [...cars]
+
+    // Apply filters
+    if (filters.categories.length > 0) {
+      filtered = filtered.filter(c => filters.categories.includes(c.category))
+    }
+
+    if (filters.companies.length > 0) {
+      filtered = filtered.filter(c => filters.companies.includes(c.company))
+    }
+
+    if (filters.transmission.length > 0) {
+      filtered = filtered.filter(c => filters.transmission.includes(c.transmission))
+    }
+
+    if (filters.fuelType.length > 0) {
+      filtered = filtered.filter(c => filters.fuelType.includes(c.fuelType))
+    }
+
+    if (filters.passengers > 2) {
+      filtered = filtered.filter(c => c.passengers >= filters.passengers)
+    }
+
+    if (filters.rating > 0) {
+      filtered = filtered.filter(c => c.rating >= filters.rating)
+    }
+
+    // Price filter
+    filtered = filtered.filter(c => 
+      c.pricePerDay >= filters.priceRange[0] && c.pricePerDay <= filters.priceRange[1]
+    )
+
+    // Features filter
+    if (filters.features.length > 0) {
+      filtered = filtered.filter(c => {
+        if (filters.features.includes('airConditioning') && !c.airConditioning) return false
+        if (filters.features.includes('gps') && !c.gps) return false
+        return true
+      })
+    }
+
+    // Update total prices based on search days
+    filtered = filtered.map(car => ({
+      ...car,
+      totalPrice: car.pricePerDay * searchDays
+    }))
+
+    // Sort cars
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'price':
+          return a.pricePerDay - b.pricePerDay
+        case 'rating':
+          return b.rating - a.rating
+        case 'category':
+          return a.category.localeCompare(b.category)
+        case 'company':
+          return a.company.localeCompare(b.company)
+        default:
+          return 0
+      }
+    })
+
+    setFilteredCars(filtered)
+  }, [cars, filters, sortBy, searchDays])
 
   const handleSearch = async () => {
     setIsSearching(true)
     // Simulate API call
     setTimeout(() => {
+      setCars(mockCars)
       setIsSearching(false)
       setShowResults(true)
     }, 2000)
@@ -103,6 +309,29 @@ const CarRentalPage: React.FC = () => {
 
   const handleInputChange = (field: keyof CarSearchForm, value: any) => {
     setSearchForm(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handleSelectCar = (car: CarRental) => {
+    // Add to booking logic will be implemented in Phase 4
+    alert(`Car ${car.name} selected! This will be integrated with the booking system.`)
+  }
+
+  const handleViewDetails = (car: CarRental) => {
+    setSelectedCar(car)
+    setShowDetailsModal(true)
+  }
+
+  const clearFilters = () => {
+    setFilters({
+      priceRange: [20, 200],
+      categories: [],
+      companies: [],
+      transmission: [],
+      fuelType: [],
+      passengers: 2,
+      features: [],
+      rating: 0
+    })
   }
 
   return (
@@ -241,79 +470,103 @@ const CarRentalPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Car Types */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Available Car Types</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {carTypes.map((car) => (
-              <div key={car.id} className="border border-gray-200 rounded-xl p-6 hover:border-green-500 hover:shadow-lg transition-all">
-                <div className="text-center mb-4">
-                  <FaCar className="text-4xl text-green-600 mx-auto mb-2" />
-                  <h3 className="text-xl font-semibold">{car.name}</h3>
-                  <p className="text-2xl font-bold text-green-600">${car.pricePerDay}/day</p>
-                </div>
-                
-                <div className="space-y-3 mb-4">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="flex items-center">
-                      <FaUsers className="mr-2 text-gray-400" />
-                      Passengers
-                    </span>
-                    <span className="font-medium">{car.passengers}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="flex items-center">
-                      <FaCog className="mr-2 text-gray-400" />
-                      Transmission
-                    </span>
-                    <span className="font-medium capitalize">{car.transmission}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="flex items-center">
-                      <FaGasPump className="mr-2 text-gray-400" />
-                      Fuel Type
-                    </span>
-                    <span className="font-medium capitalize">{car.fuelType}</span>
-                  </div>
-                </div>
 
-                <div className="mb-4">
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Features</h4>
-                  <div className="flex flex-wrap gap-1">
-                    {car.features.map((feature, index) => (
-                      <span key={index} className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
-                        {feature}
-                      </span>
-                    ))}
-                  </div>
-                </div>
 
-                <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
-                  Select This Car
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Search Results Placeholder */}
+        {/* Search Results */}
         {showResults && (
           <div className="bg-white rounded-2xl shadow-lg p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Available Cars</h2>
-              <Button variant="outline">
-                <FaFilter className="mr-2" />
-                Filters
-              </Button>
+            {/* Results Header */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 space-y-4 md:space-y-0">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {filteredCars.length} Cars Available
+                </h2>
+                <p className="text-gray-600">
+                  {searchForm.location} • {searchForm.pickupDate} to {searchForm.returnDate} ({searchDays} days)
+                </p>
+              </div>
+              
+              <div className="flex items-center space-x-4">
+                {/* Sort Options */}
+                <div className="flex items-center space-x-2">
+                  <FaSort className="text-gray-400" />
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as any)}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  >
+                    <option value="price">Price (Low to High)</option>
+                    <option value="rating">Rating (Highest)</option>
+                    <option value="category">Category</option>
+                    <option value="company">Company</option>
+                  </select>
+                </div>
+
+                {/* Filters */}
+                <CarFiltersComponent
+                  filters={filters}
+                  onFiltersChange={setFilters}
+                  onClearFilters={clearFilters}
+                  isOpen={showFilters}
+                  onToggle={() => setShowFilters(!showFilters)}
+                  availableCompanies={availableCompanies}
+                />
+              </div>
             </div>
-            
-            <div className="text-center py-12">
-              <FaCar className="text-6xl text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">Car search results will appear here</h3>
-              <p className="text-gray-500">This will be implemented in the next phase with actual car inventory and booking functionality.</p>
-            </div>
+
+            {/* Car Results */}
+            {filteredCars.length > 0 ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-1 gap-6">
+                {filteredCars.map((car) => (
+                  <CarCard
+                    key={car.id}
+                    car={car}
+                    onSelect={handleSelectCar}
+                    onViewDetails={handleViewDetails}
+                    searchDays={searchDays}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <FaCar className="text-6xl text-gray-300 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">No cars found</h3>
+                <p className="text-gray-500 mb-4">
+                  Try adjusting your search criteria or filters to find more options.
+                </p>
+                <Button
+                  onClick={clearFilters}
+                  variant="outline"
+                >
+                  Clear Filters
+                </Button>
+              </div>
+            )}
+
+            {/* Success Message */}
+            {filteredCars.length > 0 && (
+              <div className="mt-8 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div className="flex items-center">
+                  <FaCheckCircle className="text-green-600 mr-2" />
+                  <span className="text-green-800">
+                    Found {filteredCars.length} available cars for your dates
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         )}
+
+        {/* Car Details Modal */}
+        <CarDetailsModal
+          car={selectedCar}
+          isOpen={showDetailsModal}
+          onClose={() => setShowDetailsModal(false)}
+          onSelect={handleSelectCar}
+          searchDays={searchDays}
+          pickupDate={searchForm.pickupDate}
+          returnDate={searchForm.returnDate}
+        />
 
         {/* Features */}
         <div className="grid md:grid-cols-4 gap-6 mt-8">
