@@ -8,6 +8,7 @@ import { CultureHubPage, VirtualMuseumPage, ArticlePage, ArtifactDetailPage, Art
 import { TransportPage, FlightsPage, CarRentalPage } from '@features/transport/pages'
 import { ItineraryPage, GenerateItineraryPage, GeneratedItineraryPage, SharedItineraryPage, CollaborationDemoPage } from '@features/itinerary/pages'
 import { MarketplacePage, ProductDetailPage, CategoriesPage, CategoryPage, MyOrdersPage, VendorPage, VendorDashboardPage } from '@features/marketplace/pages'
+import { ReviewsPage } from '@features/reviews/pages'
 import { MainLayout } from '@components/layout'
 import { PrivateRoute } from './PrivateRoute'
 import { PublicRoute } from './PublicRoute'
@@ -263,6 +264,11 @@ export const AppRoutes = () => {
               <VendorDashboardPage />
             </PrivateRoute>
           }
+        />
+
+        <Route
+          path="/reviews"
+          element={<ReviewsPage />}
         />
 
         <Route
