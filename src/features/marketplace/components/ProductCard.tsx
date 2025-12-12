@@ -4,7 +4,7 @@ import { Product } from '../pages/MarketplacePage'
 import {
   FaHeart, FaShoppingCart, FaStar, FaMapMarkerAlt, FaTag,
   FaShieldAlt, FaTruck, FaFire, FaGift, FaEye, FaRegHeart,
-  FaCheck, FaClock, FaExclamationTriangle
+  FaCheck, FaClock, FaExclamationTriangle, FaFlag
 } from 'react-icons/fa'
 
 interface ProductCardProps {
@@ -126,6 +126,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
             {/* Badges */}
             <div className="absolute top-2 left-2 flex flex-col space-y-1">
+              {product.madeInEthiopia && (
+                <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full flex items-center">
+                  <FaFlag className="mr-1" />
+                  Made in Ethiopia
+                </span>
+              )}
               {product.isFeatured && (
                 <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full flex items-center">
                   <FaFire className="mr-1" />
@@ -290,6 +296,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* Badges */}
         <div className="absolute top-2 left-2 flex flex-col space-y-1">
+          {product.madeInEthiopia && (
+            <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full flex items-center">
+              <FaFlag className="mr-1" />
+              Made in Ethiopia
+            </span>
+          )}
           {product.isFeatured && (
             <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full flex items-center">
               <FaFire className="mr-1" />

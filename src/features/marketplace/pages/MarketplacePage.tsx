@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@components/common/Button/Button'
 import ProductCard from '../components/ProductCard'
@@ -6,7 +6,8 @@ import ProductFilters from '../components/ProductFilters'
 import {
   FaSearch, FaFilter, FaSort, FaGrid3X3, FaList, FaHeart,
   FaShoppingCart, FaStar, FaMapMarkerAlt, FaTag, FaFire,
-  FaGift, FaShieldAlt, FaTruck, FaArrowUp, FaArrowDown
+  FaGift, FaShieldAlt, FaTruck, FaArrowUp, FaArrowDown,
+  FaSpinner, FaFlag
 } from 'react-icons/fa'
 
 export interface Product {
@@ -40,6 +41,8 @@ export interface Product {
   isFeatured: boolean
   isNew: boolean
   createdAt: string
+  madeInEthiopia: boolean
+  popularity: number
 }
 
 interface FilterOptions {
@@ -50,6 +53,7 @@ interface FilterOptions {
   shipping: string[]
   vendors: string[]
   features: string[]
+  madeInEthiopia: boolean
 }
 
 const MarketplacePage: React.FC = () => {
@@ -64,14 +68,28 @@ const MarketplacePage: React.FC = () => {
     availability: [],
     shipping: [],
     vendors: [],
-    features: []
+    features: [],
+    madeInEthiopia: false
   })
-  const [sortBy, setSortBy] = useState<'relevance' | 'price-low' | 'price-high' | 'rating' | 'newest'>('relevance')
+  const [sortBy, setSortBy] = useState<'relevance' | 'price-low' | 'price-high' | 'rating' | 'newest' | 'popularity'>('relevance')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [showFilters, setShowFilters] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
+  const [page, setPage] = useState(1)
   const [itemsPerPage] = useState(12)
+  const observerRef = useRef<IntersectionObserver | null>(null)
+  const lastProductElementRef = useCallback((node: HTMLDivElement) => {
+    if (isLoadingMore) return
+    if (observerRef.current) observerRef.current.disconnect()
+    observerRef.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        loadMoreProducts()
+      }
+    })
+    if (node) observerRef.current.observe(node)
+  }, [isLoadingMore, hasMore])
 
   // Mock product data
   const mockProducts: Product[] = [
@@ -108,7 +126,9 @@ const MarketplacePage: React.FC = () => {
       isWishlisted: false,
       isFeatured: true,
       isNew: false,
-      createdAt: '2024-01-15'
+      createdAt: '2024-01-15',
+      madeInEthiopia: true,
+      popularity: 95
     },
     {
       id: 'prod-002',
@@ -141,7 +161,9 @@ const MarketplacePage: React.FC = () => {
       isWishlisted: true,
       isFeatured: false,
       isNew: true,
-      createdAt: '2024-01-20'
+      createdAt: '2024-01-20',
+      madeInEthiopia: true,
+      popularity: 78
     },
     {
       id: 'prod-003',
@@ -174,7 +196,9 @@ const MarketplacePage: React.FC = () => {
       isWishlisted: false,
       isFeatured: true,
       isNew: false,
-      createdAt: '2024-01-10'
+      createdAt: '2024-01-10',
+      madeInEthiopia: true,
+      popularity: 89
     },
     {
       id: 'prod-004',
@@ -209,7 +233,9 @@ const MarketplacePage: React.FC = () => {
       isWishlisted: false,
       isFeatured: false,
       isNew: true,
-      createdAt: '2024-01-18'
+      createdAt: '2024-01-18',
+      madeInEthiopia: true,
+      popularity: 82
     },
     {
       id: 'prod-005',
@@ -242,7 +268,9 @@ const MarketplacePage: React.FC = () => {
       isWishlisted: true,
       isFeatured: false,
       isNew: false,
-      createdAt: '2024-01-12'
+      createdAt: '2024-01-12',
+      madeInEthiopia: true,
+      popularity: 71
     },
     {
       id: 'prod-006',
@@ -275,18 +303,96 @@ const MarketplacePage: React.FC = () => {
       isWishlisted: false,
       isFeatured: true,
       isNew: false,
-      createdAt: '2024-01-08'
+      createdAt: '2024-01-08',
+      madeInEthiopia: true,
+      popularity: 93
     }
   ]
 
+  // Generate additional mock products for infinite scroll
+  const generateMoreProducts = (startId: number, count: number): Product[] => {
+    const additionalProducts: Product[] = []
+    const categories = ['Food & Beverages', 'Fashion & Accessories', 'Art & Collectibles', 'Home & Garden', 'Books & Media']
+    const vendors = ['Addis Coffee Roasters', 'Heritage Textiles', 'Cultural Artifacts Co.', 'Spice Route Ethiopia', 'Silver Traditions', 'Golden Hive Collective']
+    
+    for (let i = 0; i < count; i++) {
+      const id = startId + i
+      const category = categories[Math.floor(Math.random() * categories.length)]
+      const vendor = vendors[Math.floor(Math.random() * vendors.length)]
+      
+      additionalProducts.push({
+        id: `prod-${String(id).padStart(3, '0')}`,
+        name: `Ethiopian Product ${id}`,
+        description: `Authentic Ethiopian product featuring traditional craftsmanship and cultural significance. Product ${id} represents the rich heritage of Ethiopia.`,
+        price: Math.floor(Math.random() * 200) + 20,
+        originalPrice: Math.random() > 0.7 ? Math.floor(Math.random() * 250) + 50 : undefined,
+        discount: Math.random() > 0.7 ? Math.floor(Math.random() * 30) + 10 : undefined,
+        rating: Math.floor(Math.random() * 20) / 10 + 3.5, // 3.5 to 5.0
+        reviewCount: Math.floor(Math.random() * 200) + 10,
+        images: [
+          `/products/product-${id}-1.jpg`,
+          `/products/product-${id}-2.jpg`
+        ],
+        category,
+        subcategory: 'Traditional',
+        vendor: {
+          id: `vendor-${Math.floor(Math.random() * 6) + 1}`,
+          name: vendor,
+          rating: Math.floor(Math.random() * 10) / 10 + 4.0,
+          verified: Math.random() > 0.2,
+          location: 'Ethiopia'
+        },
+        features: ['Handmade', 'Traditional', 'Authentic'].slice(0, Math.floor(Math.random() * 3) + 1),
+        tags: ['ethiopian', 'traditional', 'handmade'],
+        availability: Math.random() > 0.1 ? 'in-stock' : Math.random() > 0.5 ? 'limited' : 'out-of-stock',
+        shipping: {
+          free: Math.random() > 0.3,
+          estimatedDays: Math.floor(Math.random() * 7) + 3,
+          cost: Math.random() > 0.3 ? undefined : Math.floor(Math.random() * 15) + 5
+        },
+        isWishlisted: Math.random() > 0.8,
+        isFeatured: Math.random() > 0.8,
+        isNew: Math.random() > 0.7,
+        createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        madeInEthiopia: Math.random() > 0.1, // 90% are made in Ethiopia
+        popularity: Math.floor(Math.random() * 100) + 1
+      })
+    }
+    
+    return additionalProducts
+  }
+
   useEffect(() => {
-    // Simulate loading
+    // Simulate initial loading
     setTimeout(() => {
-      setProducts(mockProducts)
-      setFilteredProducts(mockProducts)
+      const allProducts = [...mockProducts, ...generateMoreProducts(7, 50)]
+      setProducts(allProducts)
+      setFilteredProducts(allProducts.slice(0, itemsPerPage))
       setIsLoading(false)
     }, 1000)
   }, [])
+
+  const loadMoreProducts = useCallback(() => {
+    if (isLoadingMore || !hasMore) return
+    
+    setIsLoadingMore(true)
+    
+    // Simulate API call delay
+    setTimeout(() => {
+      const startIndex = page * itemsPerPage
+      const endIndex = startIndex + itemsPerPage
+      const moreProducts = products.slice(startIndex, endIndex)
+      
+      if (moreProducts.length === 0) {
+        setHasMore(false)
+      } else {
+        setFilteredProducts(prev => [...prev, ...moreProducts])
+        setPage(prev => prev + 1)
+      }
+      
+      setIsLoadingMore(false)
+    }, 1000)
+  }, [page, products, itemsPerPage, isLoadingMore, hasMore])
 
   useEffect(() => {
     applyFiltersAndSort()
@@ -333,6 +439,11 @@ const MarketplacePage: React.FC = () => {
       filtered = filtered.filter(product => product.shipping.free)
     }
 
+    // Apply Made in Ethiopia filter
+    if (filters.madeInEthiopia) {
+      filtered = filtered.filter(product => product.madeInEthiopia)
+    }
+
     // Apply sorting
     switch (sortBy) {
       case 'price-low':
@@ -347,6 +458,9 @@ const MarketplacePage: React.FC = () => {
       case 'newest':
         filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
         break
+      case 'popularity':
+        filtered.sort((a, b) => b.popularity - a.popularity)
+        break
       default:
         // Relevance - featured first, then by rating
         filtered.sort((a, b) => {
@@ -356,8 +470,10 @@ const MarketplacePage: React.FC = () => {
         })
     }
 
-    setFilteredProducts(filtered)
-    setCurrentPage(1)
+    // Reset infinite scroll when filters change
+    setFilteredProducts(filtered.slice(0, itemsPerPage))
+    setPage(1)
+    setHasMore(filtered.length > itemsPerPage)
   }
 
   const handleFilterChange = (newFilters: FilterOptions) => {
@@ -381,12 +497,6 @@ const MarketplacePage: React.FC = () => {
   const handleProductClick = (productId: string) => {
     navigate(`/marketplace/product/${productId}`)
   }
-
-  // Pagination
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage)
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const currentProducts = filteredProducts.slice(startIndex, endIndex)
 
   const categories = Array.from(new Set(products.map(p => p.category)))
   const vendors = Array.from(new Set(products.map(p => p.vendor.name)))
@@ -443,6 +553,7 @@ const MarketplacePage: React.FC = () => {
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="relevance">Sort by Relevance</option>
+                <option value="popularity">Most Popular</option>
                 <option value="price-low">Price: Low to High</option>
                 <option value="price-high">Price: High to Low</option>
                 <option value="rating">Highest Rated</option>
@@ -486,7 +597,8 @@ const MarketplacePage: React.FC = () => {
             {/* Results Info */}
             <div className="flex items-center justify-between mb-6">
               <div className="text-gray-600">
-                Showing {startIndex + 1}-{Math.min(endIndex, filteredProducts.length)} of {filteredProducts.length} products
+                Showing {filteredProducts.length} products
+                {!hasMore && ` (all results)`}
               </div>
               
               {/* Featured Tags */}
@@ -499,27 +611,54 @@ const MarketplacePage: React.FC = () => {
                   <FaGift className="mr-1" />
                   New Arrivals
                 </span>
+                <span className="flex items-center text-sm bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+                  <FaFlag className="mr-1" />
+                  Made in Ethiopia
+                </span>
               </div>
             </div>
 
             {/* Products */}
-            {currentProducts.length > 0 ? (
-              <div className={`grid gap-6 ${
-                viewMode === 'grid' 
-                  ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
-                  : 'grid-cols-1'
-              }`}>
-                {currentProducts.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    viewMode={viewMode}
-                    onWishlistToggle={handleWishlistToggle}
-                    onAddToCart={handleAddToCart}
-                    onClick={handleProductClick}
-                  />
-                ))}
-              </div>
+            {filteredProducts.length > 0 ? (
+              <>
+                <div className={`grid gap-6 ${
+                  viewMode === 'grid' 
+                    ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
+                    : 'grid-cols-1'
+                }`}>
+                  {filteredProducts.map((product, index) => (
+                    <div
+                      key={product.id}
+                      ref={index === filteredProducts.length - 1 ? lastProductElementRef : null}
+                    >
+                      <ProductCard
+                        product={product}
+                        viewMode={viewMode}
+                        onWishlistToggle={handleWishlistToggle}
+                        onAddToCart={handleAddToCart}
+                        onClick={handleProductClick}
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                {/* Loading More Indicator */}
+                {isLoadingMore && (
+                  <div className="flex items-center justify-center py-8">
+                    <FaSpinner className="animate-spin text-blue-600 mr-2" />
+                    <span className="text-gray-600">Loading more products...</span>
+                  </div>
+                )}
+
+                {/* End of Results */}
+                {!hasMore && filteredProducts.length > itemsPerPage && (
+                  <div className="text-center py-8">
+                    <div className="text-gray-500">
+                      You've reached the end of the results
+                    </div>
+                  </div>
+                )}
+              </>
             ) : (
               <div className="text-center py-12">
                 <div className="text-6xl mb-4">🔍</div>
@@ -534,42 +673,11 @@ const MarketplacePage: React.FC = () => {
                     availability: [],
                     shipping: [],
                     vendors: [],
-                    features: []
+                    features: [],
+                    madeInEthiopia: false
                   })
                 }}>
                   Clear All Filters
-                </Button>
-              </div>
-            )}
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center space-x-2 mt-8">
-                <Button
-                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                  disabled={currentPage === 1}
-                  variant="outline"
-                >
-                  Previous
-                </Button>
-                
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <Button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    variant={currentPage === page ? 'default' : 'outline'}
-                    className={currentPage === page ? 'bg-blue-600 text-white' : ''}
-                  >
-                    {page}
-                  </Button>
-                ))}
-                
-                <Button
-                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                  disabled={currentPage === totalPages}
-                  variant="outline"
-                >
-                  Next
                 </Button>
               </div>
             )}

@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { Button } from '@components/common/Button/Button'
 import {
   FaFilter, FaTimes, FaStar, FaCheck, FaTruck, FaShieldAlt,
-  FaTag, FaMapMarkerAlt, FaDollarSign, FaChevronDown, FaChevronUp
+  FaTag, FaMapMarkerAlt, FaDollarSign, FaChevronDown, FaChevronUp,
+  FaFlag
 } from 'react-icons/fa'
 
 interface FilterOptions {
@@ -13,6 +14,7 @@ interface FilterOptions {
   shipping: string[]
   vendors: string[]
   features: string[]
+  madeInEthiopia: boolean
 }
 
 interface ProductFiltersProps {
@@ -92,6 +94,10 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
     onFiltersChange({ ...filters, features: newFeatures })
   }
 
+  const handleMadeInEthiopiaChange = () => {
+    onFiltersChange({ ...filters, madeInEthiopia: !filters.madeInEthiopia })
+  }
+
   const clearAllFilters = () => {
     onFiltersChange({
       categories: [],
@@ -100,7 +106,8 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
       availability: [],
       shipping: [],
       vendors: [],
-      features: []
+      features: [],
+      madeInEthiopia: false
     })
   }
 
@@ -112,6 +119,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
       filters.shipping.length +
       filters.vendors.length +
       filters.features.length +
+      (filters.madeInEthiopia ? 1 : 0) +
       (filters.priceRange[0] !== priceRange[0] || filters.priceRange[1] !== priceRange[1] ? 1 : 0)
     )
   }
@@ -366,6 +374,28 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
               </div>
             </label>
           ))}
+        </div>
+      </FilterSection>
+
+      {/* Made in Ethiopia */}
+      <FilterSection
+        title="Origin"
+        icon={<FaFlag className="text-blue-600" />}
+        sectionKey="origin"
+      >
+        <div className="space-y-2">
+          <label className="flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded">
+            <input
+              type="checkbox"
+              checked={filters.madeInEthiopia}
+              onChange={handleMadeInEthiopiaChange}
+              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <div className="ml-2 flex items-center">
+              <FaFlag className="text-blue-500 mr-1" />
+              <span className="text-sm text-gray-700 font-medium">Made in Ethiopia</span>
+            </div>
+          </label>
         </div>
       </FilterSection>
 
