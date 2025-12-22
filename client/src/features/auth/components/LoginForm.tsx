@@ -3,8 +3,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { loginSchema, type LoginFormData } from '../schemas/validation'
-import { Input } from '@components/common/Input/Input'
-import { Button } from '@components/common/Button/Button'
+import { Input } from '@/components/ui/Input'
+import { Button } from '@/components/ui/Button'
 import { ROUTES } from '@utils/constants'
 
 export interface LoginFormProps {

@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import { LoginForm } from '../components/LoginForm'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@components/common/Card/Card'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card'
+import { Alert } from '@/components/ui/Alert'
 import { useAuth } from '@hooks/useAuth'
 import { ROUTES } from '@utils/constants'
 import type { LoginFormData } from '../schemas/validation'
@@ -26,6 +27,7 @@ export const LoginPage = () => {
       navigate(ROUTES.DASHBOARD)
     } catch (err) {
       console.error('Login failed:', err)
+      // Error is handled by the auth slice and displayed in the form
     }
   }
 
@@ -55,11 +57,13 @@ export const LoginPage = () => {
           </CardContent>
         </Card>
 
-        <div className="mt-4 text-center text-sm text-muted-foreground">
-          <p>Demo credentials for testing:</p>
-          <p className="font-mono text-xs mt-1">
-            Email: demo@example.com | Password: Demo123!
-          </p>
+        <div className="mt-4 text-center">
+          <Alert 
+            variant="info" 
+            title="Demo Credentials" 
+            description="Email: demo@example.com | Password: Demo123!"
+            className="text-left"
+          />
         </div>
       </motion.div>
     </div>

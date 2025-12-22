@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import { RegisterForm } from '../components/RegisterForm'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@components/common/Card/Card'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card'
+import { Alert } from '@/components/ui/Alert'
 import { useAuth } from '@hooks/useAuth'
 import { ROUTES } from '@utils/constants'
 import type { RegisterFormData } from '../schemas/validation'
@@ -23,10 +24,10 @@ export const RegisterPage = () => {
   const handleRegister = async (data: RegisterFormData) => {
     try {
       await register(data)
-      // Show success message or navigate to verification page
       navigate(ROUTES.DASHBOARD)
     } catch (err) {
       console.error('Registration failed:', err)
+      // Error is handled by the auth slice and displayed in the form
     }
   }
 
@@ -55,6 +56,15 @@ export const RegisterPage = () => {
             />
           </CardContent>
         </Card>
+
+        <div className="mt-4 text-center">
+          <Alert 
+            variant="info" 
+            title="Mock Registration" 
+            description="This is a demo. You can create any account with a valid email format."
+            className="text-left"
+          />
+        </div>
       </motion.div>
     </div>
   )
