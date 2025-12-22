@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '@hooks/useAuth'
 import { Button } from '@components/common/Button'
 import { Card } from '@components/common/Card'
-import { AuthTest } from '@/components/examples/AuthTest'
 
 interface Tour {
   id: string
@@ -288,14 +287,6 @@ export const HomePage = () => {
               <div className="text-sm sm:text-base text-muted-foreground">Average Rating</div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Auth Test Section - Temporary for testing */}
-      <section className="py-8 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold mb-4 text-center">Authentication Test</h2>
-          <AuthTest />
         </div>
       </section>
 

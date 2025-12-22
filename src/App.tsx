@@ -7,7 +7,6 @@ import { ErrorBoundary } from '@/components/ui/ErrorBoundary'
 import { ToastContainer } from '@/components/ui/ToastContainer'
 import { LoadingState } from '@/components/ui/LoadingState'
 import './i18n'
-import '@api/interceptors' // Import axios interceptors
 
 function App() {
   return (
