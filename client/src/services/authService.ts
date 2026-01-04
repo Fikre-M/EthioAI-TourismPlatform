@@ -1,4 +1,6 @@
-import { mockAuthService } from './mockAuthService'
+import api from '@api/axios.config'
+import { AUTH_ENDPOINTS } from '@api/endpoints'
+import { setToken, setUser, clearAuth, getToken } from '@utils/storage'
 import type { 
   LoginCredentials, 
   RegisterData, 
@@ -13,10 +15,17 @@ class AuthService {
    */
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
-      return await mockAuthService.login(credentials)
-    } catch (error) {
+      const response = await api.post<AuthResponse>(AUTH_ENDPOINTS.LOGIN, credentials)
+      const { user, token } = response.data
+      
+      // Store token and user data
+      setToken(token)
+      setUser(user)
+      
+      return response.data
+    } catch (error: any) {
       console.error('Login error:', error)
-      throw error
+      throw new Error(error.response?.data?.message || 'Login failed. Please check your credentials.')
     }
   }
 
@@ -25,10 +34,17 @@ class AuthService {
    */
   async register(data: RegisterData): Promise<AuthResponse> {
     try {
-      return await mockAuthService.register(data)
-    } catch (error) {
+      const response = await api.post<AuthResponse>(AUTH_ENDPOINTS.REGISTER, data)
+      const { user, token } = response.data
+      
+      // Store token and user data
+      setToken(token)
+      setUser(user)
+      
+      return response.data
+    } catch (error: any) {
       console.error('Registration error:', error)
-      throw error
+      throw new Error(error.response?.data?.message || 'Registration failed. Please try again.')
     }
   }
 
@@ -37,10 +53,10 @@ class AuthService {
    */
   async forgotPassword(data: ForgotPasswordData): Promise<void> {
     try {
-      await mockAuthService.forgotPassword(data)
-    } catch (error) {
+      await api.post(AUTH_ENDPOINTS.FORGOT_PASSWORD, data)
+    } catch (error: any) {
       console.error('Forgot password error:', error)
-      throw error
+      throw new Error(error.response?.data?.message || 'Failed to process password reset request.')
     }
   }
 
@@ -49,10 +65,16 @@ class AuthService {
    */
   async getCurrentUser(): Promise<User> {
     try {
-      return await mockAuthService.getCurrentUser()
-    } catch (error) {
+      const response = await api.get<User>(AUTH_ENDPOINTS.ME)
+      setUser(response.data) // Update stored user data
+      return response.data
+    } catch (error: any) {
       console.error('Get current user error:', error)
-      throw error
+      // Clear auth data if the request fails (e.g., token expired)
+      if (error.response?.status === 401) {
+        clearAuth()
+      }
+      throw new Error(error.response?.data?.message || 'Failed to fetch user data.')
     }
   }
 
@@ -61,18 +83,22 @@ class AuthService {
    */
   async logout(): Promise<void> {
     try {
-      await mockAuthService.logout()
+      // Call the logout endpoint to invalidate the token on the server
+      await api.post(AUTH_ENDPOINTS.LOGOUT)
     } catch (error) {
-      console.error('Logout error:', error)
-      throw error
+      console.error('Logout API error:', error)
+      // Even if the API call fails, we still want to clear the local auth state
+    } finally {
+      // Clear local auth state regardless of API call success
+      clearAuth()
     }
   }
 
   /**
-   * Check if user is authenticated
+   * Check if user is authenticated by checking for a valid token
    */
   isAuthenticated(): boolean {
-    return mockAuthService.isAuthenticated()
+    return !!getToken()
   }
 }
 
