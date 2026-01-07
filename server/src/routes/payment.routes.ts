@@ -1,35 +1,31 @@
 import { Router } from "express";
-import {
+
+// Use mock controllers in development when STRIPE_SECRET_KEY is not set
+const useMock = !process.env.STRIPE_SECRET_KEY && process.env.NODE_ENV !== 'production';
+
+// Import real or mock controllers based on environment
+const { 
   createPaymentIntent,
   getPublishableKey,
-} from "../controllers/payment.controller";
-import { handleWebhook } from "../controllers/webhook.controller";
-import {
+  handleWebhook,
   createSubscription,
-  cancelSubscription,
-} from "../controllers/subscription.controller";
-import {
-  getPaymentHistory,
-  getInvoices,
-} from "../controllers/paymentHistory.controller";
+  getPaymentHistory 
+} = useMock 
+  ? require('../controllers/payment.controller.mock')
+  : {
+      ...require('../controllers/payment.controller'),
+      ...require('../controllers/webhook.controller'),
+      ...require('../controllers/subscription.controller'),
+      ...require('../controllers/paymentHistory.controller')
+    };
 
 const router = Router();
 
-// Get Stripe publishable key
+// Use the appropriate implementation based on environment
 router.get("/config", getPublishableKey);
-
-// Create payment intent
 router.post("/create-payment-intent", createPaymentIntent);
-
-// Handle Stripe webhooks
 router.post("/webhook", handleWebhook);
-
-// Subscription routes
 router.post("/subscriptions", createSubscription);
-router.delete("/subscriptions/:subscriptionId", cancelSubscription);
-
-// Payment history routes
 router.get("/history", getPaymentHistory);
-router.get("/invoices", getInvoices);
 
 export default router;

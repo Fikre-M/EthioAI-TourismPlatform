@@ -8,7 +8,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
 export const handleWebhook = async (req: Request, res: Response) => {
   const sig = req.headers["stripe-signature"] as string;
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
-
   let event: Stripe.Event;
 
   try {
@@ -18,28 +17,26 @@ export const handleWebhook = async (req: Request, res: Response) => {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  // Handle the event
+  // Handle events
   switch (event.type) {
     case "payment_intent.succeeded":
-      const paymentIntent = event.data.object as Stripe.PaymentIntent;
-      console.log("PaymentIntent was successful!", paymentIntent.id);
-      // Update your database here
+      // Handle successful payment
       break;
     case "payment_intent.payment_failed":
-      const paymentFailed = event.data.object as Stripe.PaymentIntent;
-      console.log("Payment failed", paymentFailed.id);
       // Handle failed payment
       break;
     case "customer.subscription.created":
-      const subscription = event.data.object as Stripe.Subscription;
-      console.log("Subscription created", subscription.id);
-      // Handle new subscription
+    case "customer.subscription.updated":
+    case "customer.subscription.deleted":
+      // Handle subscription events
       break;
-    // ... handle other event types
-    default:
-      console.log(`Unhandled event type ${event.type}`);
+    case "invoice.payment_succeeded":
+      // Handle successful invoice payment
+      break;
+    case "invoice.payment_failed":
+      // Handle failed invoice payment
+      break;
   }
 
-  // Return a 200 response to acknowledge receipt of the event
   res.json({ received: true });
 };

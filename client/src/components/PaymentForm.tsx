@@ -1,105 +1,75 @@
-import React, { useState, useEffect } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
-import {
-  PaymentElement,
-  Elements,
-  useStripe,
-  useElements,
-} from '@stripe/react-stripe-js';
+// client/src/components/PaymentForm.tsx
+import React, { useState } from "react";
+import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
+import { createPaymentIntent } from "../utils/api";
 
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || '');
-
-const CheckoutForm = () => {
+const PaymentForm = () => {
   const stripe = useStripe();
   const elements = useElements();
-  const [message, setMessage] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [amount, setAmount] = useState<number>(10.0);
-  const [clientSecret, setClientSecret] = useState('');
-
-  useEffect(() => {
-    // Create PaymentIntent as soon as the page loads
-    fetch('http://localhost:5000/api/payments/create-payment-intent', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount }),
-    })
-      .then((res) => res.json())
-      .then(({ clientSecret }) => setClientSecret(clientSecret));
-  }, [amount]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!stripe || !elements) return;
 
-    if (!stripe || !elements) {
-      return;
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { clientSecret } = await createPaymentIntent(1000, "usd");
+      const { error } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement)!,
+        },
+      });
+
+      if (error) throw error;
+      alert("Payment successful!");
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
-
-    setIsLoading(true);
-
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: window.location.origin + '/payment/success',
-      },
-      redirect: 'if_required',
-    });
-
-    if (error) {
-      setMessage(error.message || 'An unexpected error occurred');
-    } else {
-      setMessage('Payment successful!');
-    }
-
-    setIsLoading(false);
   };
 
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md"
+    >
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="amount">
-          Amount (USD)
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="amount"
-          type="number"
-          min="1"
-          step="0.01"
-          value={amount}
-          onChange={(e) => setAmount(parseFloat(e.target.value))}
-          disabled={isLoading}
+        <CardElement
+          options={{
+            style: {
+              base: {
+                fontSize: "16px",
+                "::placeholder": {
+                  color: "#aab7c4",
+                },
+              },
+              invalid: {
+                color: "#fa755a",
+              },
+            },
+          }}
         />
       </div>
-      
-      <PaymentElement id="payment-element" options={{ layout: 'tabs' }} />
-      
       <button
-        className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
-        disabled={isLoading || !stripe || !elements}
-        id="submit"
+        type="submit"
+        disabled={!stripe || loading}
+        className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
       >
-        {isLoading ? 'Processing...' : 'Pay Now'}
+        {loading ? "Processing..." : "Pay $10.00"}
       </button>
-      
-      {message && (
-        <div className="mt-4 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700">
-          <p>{message}</p>
+      {error && (
+        <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
         </div>
       )}
     </form>
   );
 };
 
-const PaymentForm = () => {
-  return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">Complete Payment</h2>
-      <Elements stripe={stripePromise} options={{ appearance: { theme: 'stripe' } }}>
-        <CheckoutForm />
-      </Elements>
-    </div>
-  );
-};
-
+// Add this line to export the component as default
 export default PaymentForm;

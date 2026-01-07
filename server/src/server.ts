@@ -21,8 +21,26 @@ const prisma = new PrismaClient({
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Security middleware
-app.use(helmet());
+// Security middleware with custom CSP
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        fontSrc: ["'self'", "data:", "https://fonts.gstatic.com", "https://cdn.jsdelivr.net"],
+        imgSrc: ["'self'", "data:", "https://*.stripe.com"],
+        connectSrc: ["'self'", "https://api.stripe.com", `http://localhost:${PORT}`],
+        frameSrc: ["'self'", "https://js.stripe.com", "https://hooks.stripe.com"],
+        objectSrc: ["'none'"],
+        upgradeInsecureRequests: [],
+      },
+    },
+    crossOriginEmbedderPolicy: false, // Required for Stripe Elements
+  })
+);
+
 app.use(compression());
 
 // Rate limiting
