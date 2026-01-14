@@ -179,4 +179,54 @@ router.get("/me", async (req, res) => {
   }
 });
 
+// Logout user
+router.post("/logout", async (req, res) => {
+  try {
+    // In a real app, you might invalidate the token here
+    // For now, we'll just return success and let the client clear the token
+    res.status(200).json({
+      success: true,
+      message: "Logout successful",
+    });
+  } catch (error) {
+    console.error("Logout error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+});
+
+// Forgot password
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+    }
+
+    // Check if user exists
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    // Always return success to prevent email enumeration
+    // In production, send actual password reset email here
+    res.status(200).json({
+      success: true,
+      message: "If an account with that email exists, a password reset link has been sent",
+    });
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+});
+
 export default router;
