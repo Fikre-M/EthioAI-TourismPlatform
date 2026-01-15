@@ -85,7 +85,16 @@ export const API_ENDPOINTS = {
   BOOKINGS: {
     LIST: '/api/bookings',
     CREATE: '/api/bookings',
-    DETAIL: (id: string) => `/api/bookings/${id}`,
+    BY_ID: (id: string) => `/api/bookings/${id}`,
+    BY_NUMBER: (bookingNumber: string) => `/api/bookings/number/${bookingNumber}`,
+    UPDATE: (id: string) => `/api/bookings/${id}`,
+    CANCEL: (id: string) => `/api/bookings/${id}/cancel`,
+    UPDATE_STATUS: (id: string) => `/api/bookings/${id}/status`,
+    MY_BOOKINGS: '/api/bookings/my-bookings',
+    UPCOMING: '/api/bookings/upcoming',
+    PAST: '/api/bookings/past',
+    VALIDATE_PROMO: '/api/bookings/validate-promo',
+    STATS: '/api/bookings/admin/stats',
   },
   PAYMENTS: {
     CREATE_INTENT: '/api/payments/create-payment-intent',
