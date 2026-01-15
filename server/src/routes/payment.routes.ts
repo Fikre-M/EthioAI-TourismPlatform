@@ -1,31 +1,99 @@
-import { Router } from "express";
-
-// Use mock controllers in development when STRIPE_SECRET_KEY is not set
-const useMock = !process.env.STRIPE_SECRET_KEY && process.env.NODE_ENV !== 'production';
-
-// Import real or mock controllers based on environment
-const { 
-  createPaymentIntent,
-  getPublishableKey,
-  handleWebhook,
-  createSubscription,
-  getPaymentHistory 
-} = useMock 
-  ? require('../controllers/payment.controller.mock')
-  : {
-      ...require('../controllers/payment.controller'),
-      ...require('../controllers/webhook.controller'),
-      ...require('../controllers/subscription.controller'),
-      ...require('../controllers/paymentHistory.controller')
-    };
+import { Router } from 'express';
+import { PaymentController } from '../controllers/payment.controller';
+import { authenticate, requireRoles } from '../middlewares/auth.middleware';
+import { validate, commonSchemas } from '../middlewares/validation.middleware';
+import {
+  createPaymentIntentSchema,
+  initializeChapaPaymentSchema,
+  confirmPaymentSchema,
+  paymentQuerySchema,
+  refundPaymentSchema,
+  paymentStatsQuerySchema,
+} from '../schemas/payment.schemas';
 
 const router = Router();
 
-// Use the appropriate implementation based on environment
-router.get("/config", getPublishableKey);
-router.post("/create-payment-intent", createPaymentIntent);
-router.post("/webhook", handleWebhook);
-router.post("/subscriptions", createSubscription);
-router.get("/history", getPaymentHistory);
+/**
+ * Payment Routes
+ * All routes are prefixed with /api/payments
+ */
+
+// Stripe routes
+router.post('/stripe/create-intent', 
+  authenticate, 
+  validate({ body: createPaymentIntentSchema }), 
+  PaymentController.createStripePaymentIntent
+);
+
+router.post('/stripe/confirm', 
+  authenticate, 
+  validate({ body: confirmPaymentSchema }), 
+  PaymentController.confirmStripePayment
+);
+
+router.get('/stripe/config', 
+  authenticate, 
+  PaymentController.getStripeConfig
+);
+
+// Stripe webhook (no authentication - verified by signature)
+router.post('/stripe/webhook', 
+  PaymentController.handleStripeWebhook
+);
+
+// Chapa routes
+router.post('/chapa/initialize', 
+  authenticate, 
+  validate({ body: initializeChapaPaymentSchema }), 
+  PaymentController.initializeChapaPayment
+);
+
+router.get('/chapa/verify/:txRef', 
+  authenticate, 
+  PaymentController.verifyChapaPayment
+);
+
+// Chapa webhook (no authentication - verified by signature)
+router.post('/chapa/webhook', 
+  PaymentController.handleChapaWebhook
+);
+
+// User payment routes
+router.get('/my-payments', 
+  authenticate,
+  validate({ query: paymentQuerySchema }), 
+  PaymentController.getMyPayments
+);
+
+router.get('/:id', 
+  authenticate,
+  validate({ params: commonSchemas.uuidParam.params }), 
+  PaymentController.getPaymentById
+);
+
+// Admin routes
+router.get('/', 
+  authenticate, 
+  requireRoles.admin,
+  validate({ query: paymentQuerySchema }), 
+  PaymentController.getPayments
+);
+
+router.post('/:id/refund', 
+  authenticate, 
+  requireRoles.admin,
+  validate({ 
+    params: commonSchemas.uuidParam.params,
+    body: refundPaymentSchema 
+  }), 
+  PaymentController.refundPayment
+);
+
+router.get('/admin/stats', 
+  authenticate, 
+  requireRoles.admin,
+  validate({ query: paymentStatsQuerySchema }), 
+  PaymentController.getPaymentStats
+);
 
 export default router;

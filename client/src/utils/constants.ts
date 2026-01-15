@@ -97,8 +97,21 @@ export const API_ENDPOINTS = {
     STATS: '/api/bookings/admin/stats',
   },
   PAYMENTS: {
-    CREATE_INTENT: '/api/payments/create-payment-intent',
-    CONFIG: '/api/payments/config',
-    HISTORY: '/api/payments/history',
+    LIST: '/api/payments',
+    BY_ID: (id: string) => `/api/payments/${id}`,
+    MY_PAYMENTS: '/api/payments/my-payments',
+    REFUND: (id: string) => `/api/payments/${id}/refund`,
+    STATS: '/api/payments/admin/stats',
+    STRIPE: {
+      CREATE_INTENT: '/api/payments/stripe/create-intent',
+      CONFIRM: '/api/payments/stripe/confirm',
+      CONFIG: '/api/payments/stripe/config',
+      WEBHOOK: '/api/payments/stripe/webhook',
+    },
+    CHAPA: {
+      INITIALIZE: '/api/payments/chapa/initialize',
+      VERIFY: (txRef: string) => `/api/payments/chapa/verify/${txRef}`,
+      WEBHOOK: '/api/payments/chapa/webhook',
+    },
   },
 } as const

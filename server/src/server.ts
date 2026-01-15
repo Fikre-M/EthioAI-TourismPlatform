@@ -15,6 +15,7 @@ import { config } from "./config";
 import authRoutes from "./routes/auth.routes";
 import tourRoutes from "./routes/tour.routes";
 import bookingRoutes from "./routes/booking.routes";
+import paymentRoutes from "./routes/payment.routes";
 
 // Initialize Prisma Client
 const prisma = new PrismaClient({
@@ -130,6 +131,7 @@ app.get("/api/status", (req: Request, res: Response) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/tours", tourRoutes);
 app.use("/api/bookings", bookingRoutes);
+app.use("/api/payments", paymentRoutes);
 
 // Error logging middleware (before error handlers)
 app.use(errorLogger);

@@ -23,11 +23,13 @@ export const config = {
   },
   clientUrl: process.env.CLIENT_URL || process.env.FRONTEND_URL || 'http://localhost:3001',
   stripe: {
-    secretKey: process.env.STRIPE_SECRET_KEY,
-    webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+    secretKey: process.env.STRIPE_SECRET_KEY || '',
+    publishableKey: process.env.STRIPE_PUBLISHABLE_KEY || '',
+    webhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
   },
   chapa: {
-    secretKey: process.env.CHAPA_SECRET_KEY,
+    secretKey: process.env.CHAPA_SECRET_KEY || '',
+    publicKey: process.env.CHAPA_PUBLIC_KEY || '',
   },
   cloudinary: {
     cloudName: process.env.CLOUDINARY_CLOUD_NAME,

@@ -212,3 +212,10 @@ export class ConflictError extends AppError {
     this.name = 'ConflictError';
   }
 }
+
+export class PaymentError extends AppError {
+  constructor(message: string = 'Payment processing failed', meta?: any) {
+    super(message, 402, 'PAYMENT_ERROR', meta);
+    this.name = 'PaymentError';
+  }
+}
