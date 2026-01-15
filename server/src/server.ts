@@ -4,22 +4,19 @@ import helmet from "helmet";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
-import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
 import { errorHandler, notFound } from "./middlewares/error.middleware";
+import { config } from "./config";
 
 // Import routes
 import authRoutes from "./routes/auth.routes";
 
-dotenv.config();
-
 // Initialize Prisma Client
 const prisma = new PrismaClient({
-  log: ["query", "info", "warn", "error"],
+  log: config.nodeEnv === 'development' ? ["query", "info", "warn", "error"] : ["error"],
 });
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 // Security middleware with custom CSP
 app.use(
@@ -31,7 +28,7 @@ app.use(
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "data:", "https://fonts.gstatic.com", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
         imgSrc: ["'self'", "data:", "https:", "blob:"],
-        connectSrc: ["'self'", "https://api.stripe.com", `http://localhost:${PORT}`, "http://localhost:3002"],
+        connectSrc: ["'self'", "https://api.stripe.com", `http://localhost:${config.port}`, config.clientUrl],
         frameSrc: ["'self'", "https://js.stripe.com", "https://hooks.stripe.com"],
         objectSrc: ["'none'"],
         upgradeInsecureRequests: [],
@@ -43,21 +40,23 @@ app.use(
 
 app.use(compression());
 
-// Rate limiting
+// Rate limiting with configurable values
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  windowMs: config.rateLimit.windowMs,
+  max: config.rateLimit.maxRequests,
   message: "Too many requests from this IP, please try again later.",
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 app.use("/api/", limiter);
 
-// CORS configuration
+// CORS configuration using config
 app.use(
   cors({
-    origin: process.env.CLIENT_URL?.split(",") || "http://localhost:3000",
+    origin: config.clientUrl.split(","),
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })
 );
 
@@ -72,7 +71,8 @@ app.get("/health", (req: Request, res: Response) => {
     status: "OK",
     message: "EthioAI Tourism Server is running",
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || "development",
+    environment: config.nodeEnv,
+    version: "1.0.0",
   });
 });
 
@@ -86,22 +86,42 @@ app.use(notFound);
 app.use(errorHandler);
 
 // Start server
-const server = app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📄 API Documentation: http://localhost:${PORT}/api-docs`);
+const server = app.listen(config.port, () => {
+  console.log(`🚀 Server running on port ${config.port}`);
+  console.log(`🌍 Environment: ${config.nodeEnv}`);
+  console.log(`🔗 Client URL: ${config.clientUrl}`);
+  console.log(`📄 Health Check: http://localhost:${config.port}/health`);
 });
+
+// Graceful shutdown handling
+const gracefulShutdown = (signal: string) => {
+  console.log(`\n📡 Received ${signal}. Starting graceful shutdown...`);
+  
+  server.close(async () => {
+    console.log('🔌 HTTP server closed');
+    
+    // Close database connection
+    await prisma.$disconnect();
+    console.log('🗄️ Database connection closed');
+    
+    console.log('✅ Graceful shutdown completed');
+    process.exit(0);
+  });
+};
+
+// Handle shutdown signals
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
 // Handle unhandled promise rejections
 process.on("unhandledRejection", (err: Error) => {
   console.error(`❌ Unhandled Rejection: ${err.message}`);
-  // Close server & exit process
   server.close(() => process.exit(1));
 });
 
 // Handle uncaught exceptions
 process.on("uncaughtException", (err: Error) => {
   console.error(`❌ Uncaught Exception: ${err.message}`);
-  // Close server & exit process
   server.close(() => process.exit(1));
 });
 

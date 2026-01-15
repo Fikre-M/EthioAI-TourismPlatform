@@ -1,15 +1,14 @@
 import axios, { AxiosError } from "axios";
+import { API_BASE_URL } from '@utils/constants'
 
-// Use Vite's environment variables
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-
-// Create an axios instance with default config
+// Create an axios instance with default config using standardized base URL
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: `${API_BASE_URL}/api`,
   headers: {
     "Content-Type": "application/json",
   },
   withCredentials: true, // Important for cookies if you're using them
+  timeout: 10000,
 });
 
 // Add a response interceptor for error handling
@@ -23,7 +22,9 @@ api.interceptors.response.use(
 
 interface PaymentIntentResponse {
   clientSecret: string;
-  // Add other fields as needed
+  mock?: boolean;
+  amount: number;
+  currency: string;
 }
 
 export const createPaymentIntent = async (
@@ -44,21 +45,4 @@ export const createPaymentIntent = async (
   }
 };
 
-// // Add other API calls as needed
-
-// import axios from "axios";
-
-// const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-
-// export const createPaymentIntent = async (amount: number, currency: string) => {
-//   try {
-//     const response = await axios.post(
-//       `${API_URL}/payments/create-payment-intent`,
-//       { amount, currency }
-//     );
-//     return response.data;
-//   } catch (error) {
-//     console.error("Error creating payment intent:", error);
-//     throw error;
-//   }
-// };
+export default api;
