@@ -5,7 +5,7 @@
 ### **1. CORS Configuration Fixed** ✅
 **File**: `server/.env`
 ```env
-CLIENT_URL=http://localhost:3002
+CLIENT_URL=http://localhost:3001
 ```
 **Impact**: Server now accepts requests from the correct client port
 
@@ -87,7 +87,7 @@ api.interceptors.request.use((config) => {
 The application is now ready for end-to-end testing:
 
 1. **Register Flow**
-   - Navigate to: http://localhost:3002
+   - Navigate to: http://localhost:3001
    - Click "Sign Up"
    - Fill in registration form
    - Submit and verify user is created
@@ -113,7 +113,7 @@ The application is now ready for end-to-end testing:
 | Component | Status | Notes |
 |-----------|--------|-------|
 | Server Port | ✅ 5000 | Running |
-| Client Port | ✅ 3002 | Running |
+| Client Port | ✅ 3001 | Running |
 | CORS | ✅ Fixed | Allows client requests |
 | Auth Endpoints | ✅ Complete | All endpoints implemented |
 | Database | ✅ Connected | MySQL via Prisma |

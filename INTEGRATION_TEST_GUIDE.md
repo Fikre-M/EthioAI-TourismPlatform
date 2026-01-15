@@ -4,11 +4,11 @@
 
 ### **Servers Running**
 - ✅ **Backend**: http://localhost:5000 (Express + TypeScript + Prisma)
-- ✅ **Frontend**: http://localhost:3002 (React + Vite + TypeScript)
+- ✅ **Frontend**: http://localhost:3001 (React + Vite + TypeScript)
 - ✅ **Database**: MySQL on localhost:3307
 
 ### **Configuration Applied**
-- ✅ CORS configured for port 3002
+- ✅ CORS configured for port 3001
 - ✅ Environment variables set correctly
 - ✅ Auth token interceptor active
 - ✅ All auth endpoints implemented
@@ -36,7 +36,7 @@ curl http://localhost:5000/health
 ### **2. User Registration Flow**
 
 #### **Step 1: Open Application**
-- Navigate to: **http://localhost:3002**
+- Navigate to: **http://localhost:3001**
 - You should see the EthioAI Tourism Platform homepage
 
 #### **Step 2: Click Sign Up**

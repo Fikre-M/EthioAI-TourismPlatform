@@ -34,7 +34,7 @@ CLIENT_URL=http://localhost:3001
 **Server CORS Config**: `server/src/server.ts`
 ```typescript
 cors({
-  origin: process.env.CLIENT_URL?.split(",") || "http://localhost:3000",
+  origin: process.env.CLIENT_URL?.split(",") || "http://localhost:3001",
   credentials: true,
 })
 ```
@@ -151,7 +151,7 @@ app.use("/api/auth", authRoutes);  // ✅ Matches
 1. **Fix CORS Configuration**
    ```bash
    # Update server/.env
-   CLIENT_URL=http://localhost:3002
+   CLIENT_URL=http://localhost:3001
    ```
 
 2. **Fix Client Environment Variable**
@@ -228,7 +228,7 @@ app.use("/api/auth", authRoutes);  // ✅ Matches
 - ⚠️ Needs missing endpoints added
 
 ## 📝 **Current Client Status**
-- ✅ Running on port 3002
+- ✅ Running on port 3001
 - ✅ TypeScript compilation successful
 - ✅ No compilation errors
 - ⚠️ Needs environment variable fix
