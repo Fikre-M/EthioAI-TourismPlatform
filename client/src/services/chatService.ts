@@ -441,5 +441,3 @@ function getSimulatedResponse(userMessage: string): string {
 
   return "That's a great question! Ethiopia has so much to offer. Could you tell me more about what you're interested in? I can help with:\n\n• Tour recommendations\n• Cultural information\n• Travel tips\n• Destination details\n• Food and dining\n• Best times to visit"
 }
-
-export default chatService
