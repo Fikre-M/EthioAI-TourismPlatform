@@ -11,51 +11,70 @@ export interface ChatMessage {
 
 export interface SendMessageRequest {
   message: string
-  conversationId?: string
-  context?: Record<string, any>
+  language?: 'en' | 'am' | 'om'
+  messageType?: 'text' | 'tour_recommendation' | 'cultural_info' | 'travel_advice'
+  context?: {
+    tourId?: string
+    location?: string
+    budget?: number
+    interests?: string[]
+    travelDates?: {
+      startDate?: string
+      endDate?: string
+    }
+  }
 }
 
 export interface SendMessageResponse {
-  id: string
-  content: string
-  role: 'assistant'
-  timestamp: string
-  conversationId: string
+  userMessage: {
+    id: string
+    message: string
+    language: string
+    messageType: string
+    createdAt: string
+  }
+  aiResponse: {
+    id: string
+    message: string
+    response: string
+    language: string
+    messageType: string
+    createdAt: string
+  }
 }
 
 export interface ChatHistoryResponse {
-  conversationId: string
-  messages: ChatMessage[]
-  createdAt: string
-  updatedAt: string
-}
-
-export interface ConversationListResponse {
-  conversations: Array<{
+  messages: Array<{
     id: string
-    title: string
-    lastMessage: string
-    messageCount: number
+    message: string
+    response?: string
+    language: string
+    messageType: string
     createdAt: string
-    updatedAt: string
+    user?: {
+      id: string
+      name: string
+      avatar?: string
+    }
   }>
-  total: number
+  pagination: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
 }
 
 // Chat Service
 export const chatService = {
   /**
    * Send a message to the AI and get a response
-   * @param data - Message content and optional conversation ID
+   * @param data - Message content and optional context
    * @returns AI response
    */
   sendMessage: async (data: SendMessageRequest): Promise<SendMessageResponse> => {
     try {
-      const response = await api.post<SendMessageResponse>('/chat/messages', {
-        message: data.message,
-        conversationId: data.conversationId,
-        context: data.context,
-      })
+      const response = await api.post<SendMessageResponse>('/chat/messages', data)
       return response.data
     } catch (error: any) {
       throw new Error(
@@ -65,15 +84,23 @@ export const chatService = {
   },
 
   /**
-   * Get chat history for a specific conversation
-   * @param conversationId - Conversation ID
-   * @returns Chat history with all messages
+   * Get chat history with pagination and filtering
+   * @param params - Optional pagination and filter params
+   * @returns Chat history with messages
    */
-  getChatHistory: async (conversationId: string): Promise<ChatHistoryResponse> => {
+  getChatHistory: async (params?: {
+    page?: number
+    limit?: number
+    language?: 'en' | 'am' | 'om'
+    messageType?: 'text' | 'tour_recommendation' | 'cultural_info' | 'travel_advice'
+    search?: string
+    startDate?: string
+    endDate?: string
+  }): Promise<ChatHistoryResponse> => {
     try {
-      const response = await api.get<ChatHistoryResponse>(
-        `/chat/conversations/${conversationId}`
-      )
+      const response = await api.get<ChatHistoryResponse>('/chat/messages', {
+        params,
+      })
       return response.data
     } catch (error: any) {
       throw new Error(
@@ -83,101 +110,85 @@ export const chatService = {
   },
 
   /**
-   * Get list of all conversations for the current user
-   * @param params - Optional pagination and filter params
-   * @returns List of conversations
+   * Get recent messages for the current user
+   * @param limit - Number of recent messages to retrieve
+   * @returns Recent messages
    */
-  getConversations: async (params?: {
-    page?: number
-    limit?: number
-    search?: string
-  }): Promise<ConversationListResponse> => {
+  getRecentMessages: async (limit: number = 10): Promise<{
+    messages: Array<{
+      id: string
+      message: string
+      response?: string
+      language: string
+      messageType: string
+      createdAt: string
+    }>
+  }> => {
     try {
-      const response = await api.get<ConversationListResponse>('/chat/conversations', {
-        params,
+      const response = await api.get('/chat/recent', {
+        params: { limit },
       })
       return response.data
     } catch (error: any) {
       throw new Error(
-        error.response?.data?.message || 'Failed to load conversations.'
+        error.response?.data?.message || 'Failed to load recent messages.'
       )
     }
   },
 
   /**
-   * Create a new conversation
-   * @param title - Optional conversation title
-   * @returns New conversation ID
+   * Get specific message by ID
+   * @param messageId - Message ID
+   * @returns Message details
    */
-  createConversation: async (title?: string): Promise<{ id: string; title: string }> => {
+  getMessageById: async (messageId: string): Promise<{
+    message: {
+      id: string
+      message: string
+      response?: string
+      language: string
+      messageType: string
+      createdAt: string
+      user?: {
+        id: string
+        name: string
+        avatar?: string
+      }
+    }
+  }> => {
     try {
-      const response = await api.post<{ id: string; title: string }>(
-        '/chat/conversations',
-        { title }
-      )
+      const response = await api.get(`/chat/messages/${messageId}`)
       return response.data
     } catch (error: any) {
       throw new Error(
-        error.response?.data?.message || 'Failed to create conversation.'
+        error.response?.data?.message || 'Failed to load message.'
       )
     }
   },
 
   /**
-   * Update conversation title
-   * @param conversationId - Conversation ID
-   * @param title - New title
+   * Delete a specific message
+   * @param messageId - Message ID
    */
-  updateConversation: async (
-    conversationId: string,
-    title: string
-  ): Promise<void> => {
+  deleteMessage: async (messageId: string): Promise<void> => {
     try {
-      await api.patch(`/chat/conversations/${conversationId}`, { title })
+      await api.delete(`/chat/messages/${messageId}`)
     } catch (error: any) {
       throw new Error(
-        error.response?.data?.message || 'Failed to update conversation.'
+        error.response?.data?.message || 'Failed to delete message.'
       )
     }
   },
 
   /**
-   * Delete a conversation and all its messages
-   * @param conversationId - Conversation ID
+   * Clear all messages for the current user
    */
-  deleteConversation: async (conversationId: string): Promise<void> => {
+  clearAllMessages: async (): Promise<void> => {
     try {
-      await api.delete(`/chat/conversations/${conversationId}`)
+      await api.delete('/chat/messages')
     } catch (error: any) {
       throw new Error(
-        error.response?.data?.message || 'Failed to delete conversation.'
-      )
-    }
-  },
-
-  /**
-   * Clear chat session (delete all messages in a conversation)
-   * @param conversationId - Conversation ID
-   */
-  clearChatSession: async (conversationId: string): Promise<void> => {
-    try {
-      await api.delete(`/chat/conversations/${conversationId}/messages`)
-    } catch (error: any) {
-      throw new Error(
-        error.response?.data?.message || 'Failed to clear chat session.'
-      )
-    }
-  },
-
-  /**
-   * Clear all conversations for the current user
-   */
-  clearAllConversations: async (): Promise<void> => {
-    try {
-      await api.delete('/chat/conversations')
-    } catch (error: any) {
-      throw new Error(
-        error.response?.data?.message || 'Failed to clear all conversations.'
+        error.response?.data?.message || 'Failed to clear all messages.'
       )
     }
   },
@@ -187,83 +198,186 @@ export const chatService = {
    * @param context - Context for suggestions (e.g., current location, interests)
    * @returns Array of suggested questions
    */
-  getSuggestions: async (context?: Record<string, any>): Promise<string[]> => {
+  getSuggestions: async (context?: {
+    location?: string
+    budget?: number
+    interests?: string[]
+    language?: 'en' | 'am' | 'om'
+  }): Promise<string[]> => {
     try {
       const response = await api.post<{ suggestions: string[] }>(
         '/chat/suggestions',
-        { context }
+        context || {}
       )
       return response.data.suggestions
     } catch (error: any) {
       // Return default suggestions on error
+      const language = context?.language || 'en'
+      
+      if (language === 'am') {
+        return [
+          'በኢትዮጵያ ውስጥ ምርጥ የቱሪዝም ቦታዎች የትኞቹ ናቸው?',
+          'ስለ ላሊበላ ቤተ ክርስቲያናት ንገረኝ',
+          'የኢትዮጵያ ባህላዊ ምግቦች ምንድን ናቸው?',
+        ]
+      }
+      
+      if (language === 'om') {
+        return [
+          'Bakka turizimii Itoophiyaa keessaa hundarra gaarii kamtu?',
+          'Waaʼee mana sagadaa Lalibaalaa natti himi',
+          'Nyaanni aadaa Itoophiyaa maali?',
+        ]
+      }
+      
       return [
         'What are the best tours in Ethiopia?',
-        'Tell me about Ethiopian coffee',
+        'Tell me about Ethiopian coffee culture',
         'What should I visit in Lalibela?',
       ]
     }
   },
 
   /**
-   * Rate a message (feedback for AI improvement)
+   * Submit feedback for a message
    * @param messageId - Message ID
-   * @param rating - Rating (1-5 or thumbs up/down)
+   * @param rating - Rating (1-5)
    * @param feedback - Optional feedback text
    */
-  rateMessage: async (
+  submitFeedback: async (
     messageId: string,
-    rating: number | 'up' | 'down',
+    rating: number,
     feedback?: string
   ): Promise<void> => {
     try {
-      await api.post(`/chat/messages/${messageId}/rating`, {
+      await api.post(`/chat/messages/${messageId}/feedback`, {
         rating,
         feedback,
       })
     } catch (error: any) {
-      // Silent fail for ratings
-      console.error('Failed to submit rating:', error)
+      // Silent fail for feedback - don't interrupt user experience
+      console.error('Failed to submit feedback:', error)
     }
   },
 
   /**
-   * Report a message (for inappropriate content)
-   * @param messageId - Message ID
-   * @param reason - Reason for reporting
-   */
-  reportMessage: async (messageId: string, reason: string): Promise<void> => {
-    try {
-      await api.post(`/chat/messages/${messageId}/report`, { reason })
-    } catch (error: any) {
-      throw new Error(
-        error.response?.data?.message || 'Failed to report message.'
-      )
-    }
-  },
-
-  /**
-   * Export conversation as text or JSON
-   * @param conversationId - Conversation ID
+   * Export conversation history
    * @param format - Export format ('text' | 'json')
-   * @returns Exported data
+   * @returns Exported data as downloadable content
    */
-  exportConversation: async (
-    conversationId: string,
-    format: 'text' | 'json' = 'text'
-  ): Promise<string> => {
+  exportChatHistory: async (format: 'text' | 'json' = 'json'): Promise<string> => {
     try {
-      const response = await api.get<{ data: string }>(
-        `/chat/conversations/${conversationId}/export`,
-        { params: { format } }
-      )
-      return response.data.data
+      const response = await api.get('/chat/export', {
+        params: { format },
+        responseType: 'text',
+      })
+      return response.data
     } catch (error: any) {
       throw new Error(
-        error.response?.data?.message || 'Failed to export conversation.'
+        error.response?.data?.message || 'Failed to export chat history.'
+      )
+    }
+  },
+
+  /**
+   * Get conversation summary
+   * @param limit - Number of messages to include in summary
+   * @returns Conversation summary
+   */
+  getConversationSummary: async (limit: number = 50): Promise<{
+    summary: {
+      totalMessages: number
+      dateRange: {
+        earliest?: string
+        latest?: string
+      }
+      languages: string[]
+      messageTypes: string[]
+      hasResponses: boolean
+      averageMessageLength: number
+    }
+  }> => {
+    try {
+      const response = await api.get('/chat/summary', {
+        params: { limit },
+      })
+      return response.data
+    } catch (error: any) {
+      throw new Error(
+        error.response?.data?.message || 'Failed to get conversation summary.'
+      )
+    }
+  },
+
+  /**
+   * Check chat system health
+   * @returns System health status
+   */
+  getSystemHealth: async (): Promise<{
+    status: string
+    timestamp: string
+    services: {
+      database: string
+      openai: string
+    }
+    features: {
+      aiResponses: boolean
+      messageStorage: boolean
+      multilingual: boolean
+      feedback: boolean
+    }
+  }> => {
+    try {
+      const response = await api.get('/chat/health')
+      return response.data
+    } catch (error: any) {
+      throw new Error(
+        error.response?.data?.message || 'Failed to check system health.'
+      )
+    }
+  },
+
+  /**
+   * Test AI response (development only)
+   * @param message - Test message
+   * @param context - Optional context
+   * @returns AI response for testing
+   */
+  testAIResponse: async (
+    message: string,
+    context?: {
+      language?: 'en' | 'am' | 'om'
+      messageType?: 'text' | 'tour_recommendation' | 'cultural_info' | 'travel_advice'
+      tourId?: string
+      location?: string
+      budget?: number
+      interests?: string[]
+      travelDates?: {
+        startDate?: string
+        endDate?: string
+      }
+    }
+  ): Promise<{
+    userMessage: string
+    aiResponse: string
+    context?: any
+    timestamp: string
+  }> => {
+    try {
+      const response = await api.post('/chat/test', {
+        message,
+        context,
+      })
+      return response.data
+    } catch (error: any) {
+      throw new Error(
+        error.response?.data?.message || 'Failed to test AI response.'
       )
     }
   },
 }
+
+export default chatService
 
 // Simulated responses for development (remove when backend is ready)
 export const simulatedChatService = {

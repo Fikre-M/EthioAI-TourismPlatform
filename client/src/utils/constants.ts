@@ -161,4 +161,23 @@ export const API_ENDPOINTS = {
       DELETE: (id: string) => `/api/marketplace/categories/${id}`,
     },
   },
+  CHAT: {
+    MESSAGES: {
+      SEND: '/api/chat/messages',
+      LIST: '/api/chat/messages',
+      BY_ID: (id: string) => `/api/chat/messages/${id}`,
+      UPDATE: (id: string) => `/api/chat/messages/${id}`,
+      DELETE: (id: string) => `/api/chat/messages/${id}`,
+      CLEAR_ALL: '/api/chat/messages',
+      FEEDBACK: (id: string) => `/api/chat/messages/${id}/feedback`,
+    },
+    SUGGESTIONS: '/api/chat/suggestions',
+    RECENT: '/api/chat/recent',
+    EXPORT: '/api/chat/export',
+    SUMMARY: '/api/chat/summary',
+    HEALTH: '/api/chat/health',
+    TEST: '/api/chat/test',
+    STATS: '/api/chat/stats',
+    TOPICS: '/api/chat/topics',
+  },
 } as const
