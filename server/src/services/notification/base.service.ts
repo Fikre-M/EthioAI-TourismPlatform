@@ -240,7 +240,7 @@ export class BaseNotificationService implements INotificationService {
   }
 
   // Helper methods
-  private validateCreateRequest(request: CreateNotificationRequest): void {
+  protected validateCreateRequest(request: CreateNotificationRequest): void {
     if (!request.userId) {
       throw new ValidationError('User ID is required')
     }
@@ -255,7 +255,7 @@ export class BaseNotificationService implements INotificationService {
     }
   }
 
-  private mapPriorityToPrismaEnum(priority: NotificationPriority): string {
+  protected mapPriorityToPrismaEnum(priority: NotificationPriority): string {
     switch (priority) {
       case NotificationPriority.LOW:
         return 'LOW'
@@ -270,7 +270,7 @@ export class BaseNotificationService implements INotificationService {
     }
   }
 
-  private determineEffectiveChannels(
+  protected determineEffectiveChannels(
     request: CreateNotificationRequest,
     preferences: NotificationPreferences
   ): DeliveryChannel[] {
@@ -291,7 +291,7 @@ export class BaseNotificationService implements INotificationService {
     return request.channels.filter(channel => userChannels.includes(channel))
   }
 
-  private isInQuietHours(preferences: NotificationPreferences): boolean {
+  protected isInQuietHours(preferences: NotificationPreferences): boolean {
     if (!preferences.quietHours?.enabled) {
       return false
     }
@@ -312,7 +312,7 @@ export class BaseNotificationService implements INotificationService {
     }
   }
 
-  private getDefaultChannelPreferences(): any {
+  protected getDefaultChannelPreferences(): any {
     return {
       [NotificationType.BOOKING_CONFIRMATION]: [DeliveryChannel.IN_APP, DeliveryChannel.EMAIL],
       [NotificationType.BOOKING_REMINDER]: [DeliveryChannel.IN_APP, DeliveryChannel.PUSH],
@@ -327,7 +327,7 @@ export class BaseNotificationService implements INotificationService {
     }
   }
 
-  private async getAudienceUserIds(audience: UserSegment): Promise<string[]> {
+  protected async getAudienceUserIds(audience: UserSegment): Promise<string[]> {
     if (audience.all) {
       const users = await this.prisma.user.findMany({
         select: { id: true },
@@ -355,7 +355,7 @@ export class BaseNotificationService implements INotificationService {
     return users.map(user => user.id)
   }
 
-  private mapPrismaNotification(notification: any): Notification {
+  protected mapPrismaNotification(notification: any): Notification {
     return {
       id: notification.id,
       userId: notification.userId,
@@ -374,7 +374,7 @@ export class BaseNotificationService implements INotificationService {
     }
   }
 
-  private mapPrismaPreferences(preferences: any): NotificationPreferences {
+  protected mapPrismaPreferences(preferences: any): NotificationPreferences {
     return {
       userId: preferences.userId,
       channels: preferences.channels,
