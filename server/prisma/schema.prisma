@@ -93,6 +93,11 @@ model User {
   guideProfile    GuideProfile?
   payments        Payment[]
   wishlistItems   WishlistItem[]
+  
+  // Notification system relations
+  notifications           Notification[]
+  notificationPreferences NotificationPreferences?
+  deviceRegistrations     DeviceRegistration[]
 
   @@map("users")
 }
@@ -561,4 +566,141 @@ model PromoCode {
   @@index([code])
   @@index([validFrom, validUntil])
   @@map("promo_codes")
+}
+
+// Notification System Enums
+enum NotificationType {
+  BOOKING_CONFIRMATION
+  BOOKING_REMINDER
+  BOOKING_CANCELLED
+  PAYMENT_SUCCESS
+  PAYMENT_FAILED
+  CHAT_MESSAGE
+  CHAT_MENTION
+  SYSTEM_ANNOUNCEMENT
+  SECURITY_ALERT
+  PROMOTIONAL
+}
+
+enum DeliveryChannel {
+  IN_APP
+  PUSH
+  EMAIL
+  SMS
+}
+
+enum NotificationPriority {
+  LOW
+  NORMAL
+  HIGH
+  CRITICAL
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  DELIVERED
+  READ
+  FAILED
+}
+
+enum Platform {
+  IOS
+  ANDROID
+  WEB
+}
+
+// Notification System Models
+model Notification {
+  id          String               @id @default(uuid())
+  userId      String
+  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  type        NotificationType
+  title       String
+  content     String               @db.Text
+  data        Json?                // Additional notification data
+  channels    Json                 // Array of DeliveryChannel
+  priority    NotificationPriority @default(NORMAL)
+  status      NotificationStatus   @default(PENDING)
+  
+  readAt      DateTime?
+  scheduledAt DateTime?
+  expiresAt   DateTime?
+  
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  @@index([userId])
+  @@index([type])
+  @@index([status])
+  @@index([createdAt])
+  @@index([scheduledAt])
+  @@map("notifications")
+}
+
+model NotificationPreferences {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Channel preferences for each notification type
+  channels    Json     // ChannelPreferences object
+  
+  // Quiet hours settings
+  quietHours  Json?    // QuietHours object
+  
+  // General settings
+  frequency   String   @default("immediate") // immediate, hourly, daily
+  language    String   @default("en")
+  timezone    String   @default("UTC")
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("notification_preferences")
+}
+
+model DeviceRegistration {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  deviceToken String   @unique
+  platform    Platform
+  appVersion  String?
+  isActive    Boolean  @default(true)
+  lastUsed    DateTime @default(now())
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([deviceToken])
+  @@index([isActive])
+  @@map("device_registrations")
+}
+
+model NotificationTemplate {
+  id          String           @id @default(uuid())
+  type        NotificationType
+  locale      String           @default("en")
+  
+  title       String
+  content     String           @db.Text
+  emailSubject String?
+  pushTitle   String?
+  pushBody    String?
+  
+  variables   Json?            // Array of template variables
+  version     Int              @default(1)
+  isActive    Boolean          @default(true)
+  
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@unique([type, locale, version])
+  @@index([type, locale])
+  @@index([isActive])
+  @@map("notification_templates")
 }
