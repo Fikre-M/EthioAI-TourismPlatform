@@ -4,6 +4,9 @@ import crypto from 'crypto';
 import { generateTokenPair, verifyRefreshToken } from '../utils/jwt';
 import { config } from '../config';
 import { log } from '../utils/logger';
+import { EmailService } from './email.service';
+import { PasswordResetService } from './password-reset.service';
+import { EmailVerificationService } from './email-verification.service';
 import { 
   RegisterInput, 
   LoginInput, 
@@ -64,7 +67,14 @@ export class AuthService {
       },
     });
 
-    log.auth('User registered', user.id, { email: user.email });
+    // Send welcome email with verification
+    try {
+      const verificationResult = await EmailVerificationService.sendVerificationEmail(user.id);
+      log.info('Welcome email sent', { userId: user.id, email: user.email });
+    } catch (emailError) {
+      log.error('Failed to send welcome email:', emailError);
+      // Don't fail registration if email fails
+    }
 
     // Return user without password hash
     const { passwordHash: _, ...userWithoutPassword } = user;
@@ -263,60 +273,24 @@ export class AuthService {
    * Forgot password (generate reset token)
    */
   static async forgotPassword(data: ForgotPasswordInput): Promise<{ message: string }> {
-    const user = await prisma.user.findUnique({
-      where: { email: data.email },
-    });
-
-    // Always return success message for security (don't reveal if email exists)
-    if (!user) {
-      log.security('Password reset attempted for non-existent email', undefined, undefined, { email: data.email });
-      return { message: 'If an account with that email exists, a password reset link has been sent.' };
-    }
-
-    // Generate reset token (in a real app, you'd send this via email)
-    const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-
-    // Store reset token (you'd need to add this to your schema)
-    // For now, we'll just log it
-    log.auth('Password reset requested', user.id, { 
-      email: user.email, 
-      resetToken, 
-      expiresAt: resetTokenExpiry 
-    });
-
-    // TODO: Send email with reset link
-    // await emailService.sendPasswordResetEmail(user.email, resetToken);
-
-    return { message: 'If an account with that email exists, a password reset link has been sent.' };
+    return PasswordResetService.requestPasswordReset(data.email);
   }
 
   /**
    * Reset password with token
    */
   static async resetPassword(data: ResetPasswordInput): Promise<{ message: string }> {
-    // In a real implementation, you'd verify the reset token from database
-    // For now, we'll just validate the token format and update password
-    
-    // TODO: Implement proper reset token verification
-    // const resetRecord = await prisma.passwordReset.findUnique({
-    //   where: { token: data.token },
-    //   include: { user: true }
-    // });
-
-    throw new ValidationError('Password reset functionality not fully implemented yet');
+    return PasswordResetService.resetPassword(data.token, data.newPassword);
   }
 
   /**
-   * Verify email (placeholder)
+   * Verify email (complete implementation)
    */
   static async verifyEmail(userId: string, token: string): Promise<void> {
-    // TODO: Implement email verification
-    await prisma.user.update({
-      where: { id: userId },
-      data: { isEmailVerified: true },
-    });
-
-    log.auth('Email verified', userId);
+    const result = await EmailVerificationService.verifyEmail(token);
+    
+    if (result.user.id !== userId) {
+      throw new UnauthorizedError('Token does not belong to this user');
+    }
   }
 }

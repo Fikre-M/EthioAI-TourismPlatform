@@ -1,250 +1,252 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { PrismaClient, UserRole } from '@prisma/client';
 import { config } from '../config';
-
-const prisma = new PrismaClient();
+import { UnauthorizedError, ForbiddenError } from './error.middleware';
+import { log } from '../utils/logger';
 
 export interface AuthRequest extends Request {
   userId?: string;
-  userRole?: UserRole;
-  user?: {
-    id: string;
-    email: string;
-    name: string | null;
-    role: UserRole;
-    isEmailVerified: boolean;
-  };
-}
-
-export interface JwtPayload {
-  userId: string;
-  role: UserRole;
-  type: 'access' | 'refresh';
-  iat?: number;
-  exp?: number;
+  userRole?: string;
 }
 
 /**
- * Authentication middleware
- * Verifies JWT token and attaches user info to request
+ * Authenticate user using JWT token
  */
-export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction) => {
-  try {
-    // Get token from Authorization header
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({
-        success: false,
-        message: 'Access token required',
-        code: 'NO_TOKEN'
-      });
-    }
-
-    const token = authHeader.split(' ')[1];
-    
-    // Verify token
-    const decoded = jwt.verify(token, config.jwt.accessSecret) as JwtPayload;
-    
-    // Check token type
-    if (decoded.type !== 'access') {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid token type',
-        code: 'INVALID_TOKEN_TYPE'
-      });
-    }
-    
-    // Check if user still exists and is active
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        isEmailVerified: true,
-      },
-    });
-
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'User not found',
-        code: 'USER_NOT_FOUND'
-      });
-    }
-
-    // Attach user info to request object
-    req.userId = user.id;
-    req.userRole = user.role;
-    req.user = user;
-
-    next();
-  } catch (error) {
-    if (error instanceof jwt.TokenExpiredError) {
-      return res.status(401).json({
-        success: false,
-        message: 'Access token expired',
-        code: 'TOKEN_EXPIRED'
-      });
-    }
-    if (error instanceof jwt.JsonWebTokenError) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid access token',
-        code: 'INVALID_TOKEN'
-      });
-    }
-    console.error('Authentication error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Authentication service error'
-    });
-  }
-};
-
-/**
- * Authorization middleware factory
- * Checks if user has required roles
- */
-export const authorize = (roles: UserRole[] = []) => {
-  return (req: AuthRequest, res: Response, next: NextFunction) => {
-    if (!req.userId) {
-      return res.status(401).json({
-        success: false,
-        message: 'Authentication required',
-        code: 'AUTH_REQUIRED'
-      });
-    }
-
-    if (roles.length && !roles.includes(req.userRole as UserRole)) {
-      return res.status(403).json({
-        success: false,
-        message: 'Insufficient permissions',
-        code: 'INSUFFICIENT_PERMISSIONS',
-        required: roles,
-        current: req.userRole
-      });
-    }
-
-    next();
-  };
-};
-
-/**
- * Optional authentication middleware
- * Attaches user info if token is provided, but doesn't require it
- */
-export const optionalAuth = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const authenticate = (req: AuthRequest, res: Response, next: NextFunction): void => {
   try {
     const authHeader = req.headers.authorization;
+    
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return next(); // No token provided, continue without auth
+      throw new UnauthorizedError('No token provided');
     }
 
-    const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, config.jwt.accessSecret) as JwtPayload;
-    
-    if (decoded.type === 'access') {
-      const user = await prisma.user.findUnique({
-        where: { id: decoded.userId },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          role: true,
-          isEmailVerified: true,
-        },
-      });
+    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
 
-      if (user) {
-        req.userId = user.id;
-        req.userRole = user.role;
-        req.user = user;
+    try {
+      const decoded = jwt.verify(token, config.jwt.accessSecret) as any;
+      
+      req.userId = decoded.userId;
+      req.userRole = decoded.role;
+      
+      next();
+    } catch (jwtError: any) {
+      if (jwtError.name === 'TokenExpiredError') {
+        throw new UnauthorizedError('Token expired');
+      } else if (jwtError.name === 'JsonWebTokenError') {
+        throw new UnauthorizedError('Invalid token');
+      } else {
+        throw new UnauthorizedError('Token verification failed');
       }
     }
-
-    next();
   } catch (error) {
-    // If token is invalid, continue without auth (optional)
-    next();
+    next(error);
   }
 };
 
 /**
- * Refresh token validation middleware
+ * Optional authentication - doesn't fail if no token provided
  */
-export const validateRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
+export const optionalAuth = (req: AuthRequest, res: Response, next: NextFunction): void => {
+  try {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return next(); // Continue without authentication
+    }
+
+    const token = authHeader.substring(7);
+
+    try {
+      const decoded = jwt.verify(token, config.jwt.accessSecret) as any;
+      req.userId = decoded.userId;
+      req.userRole = decoded.role;
+    } catch (jwtError) {
+      // Ignore JWT errors for optional auth
+      log.warn('Optional auth failed:', jwtError);
+    }
+    
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Require specific roles
+ */
+export const requireRole = (allowedRoles: string[]) => {
+  return (req: AuthRequest, res: Response, next: NextFunction): void => {
+    try {
+      if (!req.userRole) {
+        throw new UnauthorizedError('Authentication required');
+      }
+
+      if (!allowedRoles.includes(req.userRole)) {
+        log.security('Unauthorized role access attempt', req.userId, req.get('User-Agent'), {
+          requiredRoles: allowedRoles,
+          userRole: req.userRole,
+          ip: req.ip
+        });
+        throw new ForbiddenError('Insufficient permissions');
+      }
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
+};
+
+/**
+ * Require admin role
+ */
+export const requireAdmin = requireRole(['ADMIN']);
+
+/**
+ * Require guide or admin role
+ */
+export const requireGuideOrAdmin = requireRole(['GUIDE', 'ADMIN']);
+
+/**
+ * Require vendor or admin role
+ */
+export const requireVendorOrAdmin = requireRole(['VENDOR', 'ADMIN']);
+
+/**
+ * Validate refresh token
+ */
+export const validateRefreshToken = (req: AuthRequest, res: Response, next: NextFunction): void => {
   try {
     const { refreshToken } = req.body;
     
     if (!refreshToken) {
-      return res.status(400).json({
-        success: false,
-        message: 'Refresh token required'
-      });
+      throw new UnauthorizedError('Refresh token required');
     }
 
-    // Verify refresh token
-    const decoded = jwt.verify(refreshToken, config.jwt.refreshSecret) as JwtPayload;
-    
-    if (decoded.type !== 'refresh') {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid token type'
-      });
+    try {
+      const decoded = jwt.verify(refreshToken, config.jwt.refreshSecret) as any;
+      req.userId = decoded.userId;
+      req.userRole = decoded.role;
+      next();
+    } catch (jwtError: any) {
+      if (jwtError.name === 'TokenExpiredError') {
+        throw new UnauthorizedError('Refresh token expired');
+      } else {
+        throw new UnauthorizedError('Invalid refresh token');
+      }
     }
-
-    // Check if refresh token exists in database
-    const storedToken = await prisma.refreshToken.findUnique({
-      where: { token: refreshToken },
-      include: { user: true }
-    });
-
-    if (!storedToken || storedToken.expiresAt < new Date()) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid or expired refresh token'
-      });
-    }
-
-    // Attach user info to request
-    (req as any).userId = storedToken.userId;
-    (req as any).user = storedToken.user;
-    (req as any).refreshTokenId = storedToken.id;
-
-    next();
   } catch (error) {
-    if (error instanceof jwt.TokenExpiredError) {
-      return res.status(401).json({
-        success: false,
-        message: 'Refresh token expired'
-      });
-    }
-    if (error instanceof jwt.JsonWebTokenError) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid refresh token'
-      });
-    }
-    console.error('Refresh token validation error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Token validation service error'
-    });
+    next(error);
   }
 };
 
 /**
- * Role-based access control helpers
+ * Check if user owns resource or is admin
  */
-export const requireRoles = {
-  admin: authorize(['ADMIN']),
-  vendor: authorize(['VENDOR', 'ADMIN']),
-  guide: authorize(['GUIDE', 'ADMIN']),
-  user: authorize(['USER', 'VENDOR', 'GUIDE', 'ADMIN']),
-  vendorOrAdmin: authorize(['VENDOR', 'ADMIN']),
-  guideOrAdmin: authorize(['GUIDE', 'ADMIN']),
-  adminOrVendor: authorize(['ADMIN', 'VENDOR']),
+export const requireOwnershipOrAdmin = (userIdField: string = 'userId') => {
+  return (req: AuthRequest, res: Response, next: NextFunction): void => {
+    try {
+      const resourceUserId = req.params[userIdField] || req.body[userIdField];
+      
+      if (!resourceUserId) {
+        throw new ForbiddenError('Resource user ID not found');
+      }
+
+      // Allow if user owns the resource or is admin
+      if (req.userId === resourceUserId || req.userRole === 'ADMIN') {
+        return next();
+      }
+
+      log.security('Unauthorized resource access attempt', req.userId, req.get('User-Agent'), {
+        resourceUserId,
+        requestedBy: req.userId,
+        ip: req.ip
+      });
+
+      throw new ForbiddenError('Access denied');
+    } catch (error) {
+      next(error);
+    }
+  };
+};
+
+/**
+ * Rate limiting by user
+ */
+export const rateLimitByUser = (maxRequests: number, windowMs: number) => {
+  const userRequests = new Map<string, { count: number; resetTime: number }>();
+
+  return (req: AuthRequest, res: Response, next: NextFunction): void => {
+    try {
+      const userId = req.userId;
+      
+      if (!userId) {
+        return next(); // Skip rate limiting for unauthenticated requests
+      }
+
+      const now = Date.now();
+      const userLimit = userRequests.get(userId);
+
+      if (!userLimit || now > userLimit.resetTime) {
+        // Reset or initialize user limit
+        userRequests.set(userId, {
+          count: 1,
+          resetTime: now + windowMs
+        });
+        return next();
+      }
+
+      if (userLimit.count >= maxRequests) {
+        log.security('Rate limit exceeded', userId, req.get('User-Agent'), {
+          maxRequests,
+          windowMs,
+          ip: req.ip
+        });
+        
+        res.status(429).json({
+          success: false,
+          error: {
+            code: 'RATE_LIMIT_EXCEEDED',
+            message: 'Too many requests. Please try again later.',
+            retryAfter: Math.ceil((userLimit.resetTime - now) / 1000)
+          }
+        });
+        return;
+      }
+
+      // Increment request count
+      userLimit.count++;
+      userRequests.set(userId, userLimit);
+
+      // Add rate limit headers
+      res.set({
+        'X-RateLimit-Limit': maxRequests.toString(),
+        'X-RateLimit-Remaining': (maxRequests - userLimit.count).toString(),
+        'X-RateLimit-Reset': Math.ceil(userLimit.resetTime / 1000).toString()
+      });
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
+};
+
+/**
+ * Check if user's email is verified
+ */
+export const requireEmailVerification = (req: AuthRequest, res: Response, next: NextFunction): void => {
+  // This would require checking the user's email verification status
+  // For now, we'll skip this check if email verification is not required
+  if (!config.features.emailVerificationRequired) {
+    return next();
+  }
+
+  // TODO: Implement email verification check
+  // const user = await getUserById(req.userId);
+  // if (!user.isEmailVerified) {
+  //   throw new ForbiddenError('Email verification required');
+  // }
+
+  next();
 };
