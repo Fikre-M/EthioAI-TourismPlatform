@@ -166,3 +166,22 @@ npx prisma migrate dev --name add_feature_name
 - **Migrations:** ✅ Applied
 
 Last updated: 2026-02-09
+
+
+## 🔧 Recent Fixes
+
+### Token Column Size Fix (2026-02-09)
+**Issue:** JWT tokens were being truncated causing authentication failures  
+**Solution:** Updated token columns from VARCHAR(191) to VARCHAR(500) in:
+- `refresh_tokens.token`
+- `password_reset_tokens.token`
+- `email_verification_tokens.token`
+
+**Reason:** JWT tokens are typically 200-400 characters, VARCHAR(191) was too small and causing "column is too long" database errors during login.
+
+### Demo User
+A demo user has been created for testing:
+- **Email:** demo@example.com
+- **Password:** Demo123!
+- **Role:** USER
+- **Email Verified:** Yes

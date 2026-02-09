@@ -15,17 +15,22 @@ class AuthService {
    */
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
-      const response = await api.post<AuthResponse>(AUTH_ENDPOINTS.LOGIN, credentials)
-      const { user, token } = response.data
+      const response = await api.post<{ success: boolean; data: { user: User; tokens: { accessToken: string; refreshToken: string } } }>(
+        AUTH_ENDPOINTS.LOGIN, 
+        { ...credentials, rememberMe: false }
+      )
       
-      // Store token and user data
-      setToken(token)
+      const { user, tokens } = response.data.data
+      
+      // Store access token and user data
+      setToken(tokens.accessToken)
       setUser(user)
       
-      return response.data
+      // Return in expected format
+      return { user, token: tokens.accessToken }
     } catch (error: any) {
       console.error('Login error:', error)
-      throw new Error(error.response?.data?.message || 'Login failed. Please check your credentials.')
+      throw new Error(error.response?.data?.error?.message || error.response?.data?.message || 'Login failed. Please check your credentials.')
     }
   }
 
@@ -34,17 +39,25 @@ class AuthService {
    */
   async register(data: RegisterData): Promise<AuthResponse> {
     try {
-      const response = await api.post<AuthResponse>(AUTH_ENDPOINTS.REGISTER, data)
-      const { user, token } = response.data
+      // Remove confirmPassword before sending to server
+      const { confirmPassword, ...registerData } = data
       
-      // Store token and user data
-      setToken(token)
+      const response = await api.post<{ success: boolean; data: { user: User; tokens: { accessToken: string; refreshToken: string } } }>(
+        AUTH_ENDPOINTS.REGISTER, 
+        registerData
+      )
+      
+      const { user, tokens } = response.data.data
+      
+      // Store access token and user data
+      setToken(tokens.accessToken)
       setUser(user)
       
-      return response.data
+      // Return in expected format
+      return { user, token: tokens.accessToken }
     } catch (error: any) {
       console.error('Registration error:', error)
-      throw new Error(error.response?.data?.message || 'Registration failed. Please try again.')
+      throw new Error(error.response?.data?.error?.message || error.response?.data?.message || 'Registration failed. Please try again.')
     }
   }
 
@@ -65,16 +78,17 @@ class AuthService {
    */
   async getCurrentUser(): Promise<User> {
     try {
-      const response = await api.get<User>(AUTH_ENDPOINTS.ME)
-      setUser(response.data) // Update stored user data
-      return response.data
+      const response = await api.get<{ success: boolean; data: { user: User } }>(AUTH_ENDPOINTS.ME)
+      const { user } = response.data.data
+      setUser(user) // Update stored user data
+      return user
     } catch (error: any) {
       console.error('Get current user error:', error)
       // Clear auth data if the request fails (e.g., token expired)
       if (error.response?.status === 401) {
         clearAuth()
       }
-      throw new Error(error.response?.data?.message || 'Failed to fetch user data.')
+      throw new Error(error.response?.data?.error?.message || error.response?.data?.message || 'Failed to fetch user data.')
     }
   }
 
