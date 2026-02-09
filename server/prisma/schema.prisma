@@ -89,9 +89,9 @@ model Tour {
   id              String      @id @default(uuid())
   title           String
   slug            String      @unique
-  description     String
+  description     String      @db.Text
   shortDescription String?
-  images          String?     // JSON string of image URLs
+  images          String?     @db.Text // JSON string of image URLs
   price           Decimal
   discountPrice   Decimal?
   duration        Int         // Duration in days
@@ -101,22 +101,22 @@ model Tour {
   featured        Boolean     @default(false)
   
   // Location data as strings
-  startLocation   String?     // JSON string
-  locations       String?     // JSON string
+  startLocation   String?     @db.Text // JSON string
+  locations       String?     @db.Text // JSON string
   
   // Tour details as strings
-  included        String?     // JSON string
-  excluded        String?     // JSON string
-  itinerary       String?     // JSON string
+  included        String?     @db.Text // JSON string
+  excluded        String?     @db.Text // JSON string
+  itinerary       String?     @db.Text // JSON string
   
   // Metadata
-  tags            String?     // JSON string
+  tags            String?     @db.Text // JSON string
   category        String
   language        String      @default("en")
   
   // SEO
   metaTitle       String?
-  metaDescription String?
+  metaDescription String?     @db.Text
   
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
@@ -151,11 +151,11 @@ model Booking {
   
   // Status and metadata
   status          String        @default("PENDING") // PENDING, CONFIRMED, CANCELLED, COMPLETED, REFUNDED
-  notes           String?
-  specialRequests String?
+  notes           String?       @db.Text
+  specialRequests String?       @db.Text
   
   // Participant information as JSON string
-  participants    String?
+  participants    String?       @db.Text
   
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
@@ -187,8 +187,8 @@ model Payment {
   status          String        @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED, REFUNDED
   
   // Payment gateway data as JSON string
-  gatewayResponse String?
-  failureReason   String?
+  gatewayResponse String?       @db.Text
+  failureReason   String?       @db.Text
   
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
@@ -215,11 +215,11 @@ model Order {
   
   // Status and metadata
   status          String      @default("PENDING") // PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED, REFUNDED
-  notes           String?
+  notes           String?     @db.Text
   
   // Shipping information as JSON strings
-  shippingAddress String      // JSON string
-  billingAddress  String?     // JSON string
+  shippingAddress String      @db.Text // JSON string
+  billingAddress  String?     @db.Text // JSON string
   trackingNumber  String?
   
   createdAt       DateTime    @default(now())
@@ -245,8 +245,8 @@ model Review {
   
   rating      Int          // 1-5 stars
   title       String?
-  comment     String
-  images      String?      // JSON string of image URLs
+  comment     String       @db.Text
+  images      String?      @db.Text // JSON string of image URLs
   
   status      String       @default("PENDING") // PENDING, APPROVED, REJECTED
   isVerified  Boolean      @default(false) // Verified purchase/booking
@@ -266,13 +266,13 @@ model ChatMessage {
   userId      String?
   user        User?    @relation(fields: [userId], references: [id])
   
-  message     String
-  response    String?
-  language    String   @default("en")
+  message     String       @db.Text
+  response    String?      @db.Text
+  language    String       @default("en")
   
   // Message metadata
-  messageType String   @default("text") // text, tour_recommendation, etc.
-  metadata    String?  // JSON string for additional message data
+  messageType String       @default("text") // text, tour_recommendation, etc.
+  metadata    String?      @db.Text // JSON string for additional message data
   
   createdAt   DateTime @default(now())
 

@@ -15,7 +15,11 @@
     "lint:fix": "eslint src/**/*.ts --fix",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "seed:all": "node seed-all.js",
+    "seed:tours": "node seed-tours.js",
+    "seed:bookings": "node seed-bookings-reviews.js",
+    "seed:chat": "node seed-chat.js"
   },
   "keywords": [
     "tourism",
