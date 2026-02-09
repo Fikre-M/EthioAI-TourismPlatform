@@ -24,12 +24,14 @@ model User {
   updatedAt       DateTime       @updatedAt
   
   // Relations
-  refreshTokens   RefreshToken[]
-  bookings        Booking[]
-  reviews         Review[]
-  orders          Order[]
-  chatMessages    ChatMessage[]
-  payments        Payment[]
+  refreshTokens           RefreshToken[]
+  bookings                Booking[]
+  reviews                 Review[]
+  orders                  Order[]
+  chatMessages            ChatMessage[]
+  payments                Payment[]
+  passwordResetTokens     PasswordResetToken[]
+  emailVerificationTokens EmailVerificationToken[]
 
   @@map("users")
 }
@@ -45,6 +47,41 @@ model RefreshToken {
 
   @@index([token])
   @@map("refresh_tokens")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([token])
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("password_reset_tokens")
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  email     String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, email])
+  @@index([token])
+  @@index([userId])
+  @@index([email])
+  @@index([expiresAt])
+  @@map("email_verification_tokens")
 }
 
 // Simplified Tour Model

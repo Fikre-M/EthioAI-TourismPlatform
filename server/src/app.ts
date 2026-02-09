@@ -48,14 +48,6 @@ async function initializeServices() {
       // Test database connection
       await prisma.$connect();
       console.log('✅ Database connection successful');
-      
-      // Create required database tables
-      const { createPasswordResetTable } = await import('./services/password-reset.service');
-      const { createEmailVerificationTable } = await import('./services/email-verification.service');
-      
-      await createPasswordResetTable();
-      await createEmailVerificationTable();
-      
       console.log('✅ Database services initialized successfully');
       await prisma.$disconnect();
     } catch (dbError) {

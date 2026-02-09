@@ -52,7 +52,7 @@ async function setupDatabase() {
     if (error.code === 'P1001') {
       console.log('\n💡 Database connection failed. Please check:');
       console.log('   1. MySQL is running on port 3307');
-      console.log('   2. Database "ethioai_tourism" exists');
+      console.log('   2. Database "ethio_ai" exists');
       console.log('   3. Connection string in .env is correct');
       console.log('   4. Run: npx prisma migrate dev');
     }
