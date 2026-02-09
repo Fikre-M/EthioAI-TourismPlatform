@@ -8,9 +8,9 @@ export const Footer = () => {
   return (
     <footer className="border-t bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 sm:gap-8">
           {/* Brand */}
-          <div className="space-y-3 sm:space-y-4 sm:col-span-2 lg:col-span-1">
+          <div className="space-y-3 sm:space-y-4 lg:col-span-1">
             <div className="flex items-center space-x-2">
               <span className="text-xl sm:text-2xl">🌍</span>
               <span className="text-base sm:text-lg font-bold text-gradient-ethiopian">
@@ -57,8 +57,10 @@ export const Footer = () => {
             </div>
           </div>
 
-          {/* Explore */}
-          <div>
+          {/* Footer Links - Horizontal on Mobile, Vertical on Large Screens */}
+          <div className="grid grid-cols-3 gap-4 sm:gap-6 lg:col-span-3 lg:grid-cols-3">
+            {/* Explore */}
+            <div>
             <h3 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">{t('footer.explore.title')}</h3>
             <ul className="space-y-2">
               <li>
@@ -136,6 +138,7 @@ export const Footer = () => {
                 </Link>
               </li>
             </ul>
+          </div>
           </div>
         </div>
 

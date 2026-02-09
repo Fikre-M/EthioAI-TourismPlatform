@@ -179,27 +179,27 @@ export const HomePage = () => {
               >
                 {featuredTours.map((tour) => (
                   <div key={tour.id} className="min-w-full flex-shrink-0 px-1 sm:px-2">
-                    <Card className="overflow-hidden h-full">
-                      <div className="flex flex-col md:flex-row gap-3 sm:gap-4 lg:gap-6 p-3 sm:p-4 lg:p-6 min-w-0 h-full">
+                    <Card className="overflow-visible h-full">
+                      <div className="flex flex-col md:flex-row gap-3 sm:gap-4 lg:gap-6 p-3 sm:p-4 lg:p-6 h-full overflow-visible">
                         {/* Image */}
                         <div className="flex items-center justify-center bg-gradient-to-br from-orange-100 to-yellow-100 dark:from-gray-800 dark:to-gray-700 rounded-lg sm:rounded-xl h-40 sm:h-48 md:h-56 lg:h-64 md:w-1/2 flex-shrink-0 overflow-hidden">
                           <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl">{tour.image}</span>
                         </div>
 
                         {/* Content */}
-                        <div className="flex flex-col justify-center md:w-1/2 min-w-0 overflow-hidden">
-                          <div className="flex items-center gap-2 mb-2 sm:mb-3 min-w-0">
+                        <div className="flex flex-col justify-center md:w-1/2 min-w-0 overflow-visible">
+                          <div className="flex items-center gap-2 mb-2 sm:mb-3 flex-wrap">
                             <span className="text-yellow-500 flex-shrink-0">⭐</span>
                             <span className="font-semibold text-sm sm:text-base flex-shrink-0">{tour.rating}</span>
-                            <span className="text-xs sm:text-sm text-muted-foreground truncate min-w-0">
+                            <span className="text-xs sm:text-sm text-muted-foreground flex-shrink-0">
                               ({tour.reviews} reviews)
                             </span>
                           </div>
-                          <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-2 sm:mb-3 leading-tight line-clamp-2">{tour.title}</h3>
-                          <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4 line-clamp-2">
+                          <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-2 sm:mb-3 leading-tight">{tour.title}</h3>
+                          <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4">
                             📍 {tour.location}
                           </p>
-                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3 sm:mb-4 min-w-0">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3 sm:mb-4 flex-wrap">
                             <div className="flex items-center gap-2 flex-shrink-0">
                               <span className="text-muted-foreground text-sm">⏱️</span>
                               <span className="text-sm sm:text-base whitespace-nowrap">{tour.duration}</span>
@@ -211,11 +211,11 @@ export const HomePage = () => {
                               <span className="text-xs sm:text-sm text-muted-foreground whitespace-nowrap">per person</span>
                             </div>
                           </div>
-                          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 min-w-0 mt-auto">
-                            <Link to={`/tours/${tour.id}`} className="flex-1 sm:flex-none min-w-0">
+                          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-auto">
+                            <Link to={`/tours/${tour.id}`} className="flex-1 sm:flex-none">
                               <Button variant="primary" className="w-full sm:w-auto whitespace-nowrap" size="sm">View Details</Button>
                             </Link>
-                            <Link to={`/tours/${tour.id}/book`} className="flex-1 sm:flex-none min-w-0">
+                            <Link to={`/tours/${tour.id}/book`} className="flex-1 sm:flex-none">
                               <Button variant="outline" className="w-full sm:w-auto whitespace-nowrap" size="sm">Book Now</Button>
                             </Link>
                           </div>
