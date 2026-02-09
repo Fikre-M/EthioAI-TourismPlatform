@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { bookingService, AvailabilityResponse } from '@/services/bookingService'
+import bookingService, { AvailabilityResponse } from '@/services/booking.service'
 
 export const useAvailability = (tourId: string, date: string) => {
   const [availability, setAvailability] = useState<AvailabilityResponse | null>(null)

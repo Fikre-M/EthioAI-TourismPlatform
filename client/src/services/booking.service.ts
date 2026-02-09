@@ -68,6 +68,24 @@ export interface UpdateBookingStatusData {
   refundAmount?: number;
 }
 
+export interface AvailabilityResponse {
+  available: boolean;
+  spotsLeft: number;
+  maxGroupSize: number;
+  currentBookings: number;
+}
+
+export interface WaitlistRequest {
+  tourId: string;
+  date: string;
+  email: string;
+  name: string;
+  participants: {
+    adults: number;
+    children: number;
+  };
+}
+
 class BookingService {
   /**
    * Create a new booking
@@ -169,6 +187,24 @@ class BookingService {
     userId?: string;
   }) {
     const response = await api.get(API_ENDPOINTS.BOOKINGS.STATS, { params });
+    return response.data;
+  }
+
+  /**
+   * Check availability for a tour on a specific date
+   */
+  async checkAvailability(tourId: string, date: string): Promise<AvailabilityResponse> {
+    const response = await api.get(`${API_ENDPOINTS.BOOKINGS.LIST}/availability`, {
+      params: { tourId, date },
+    });
+    return response.data;
+  }
+
+  /**
+   * Join waitlist for a fully booked tour
+   */
+  async joinWaitlist(data: WaitlistRequest) {
+    const response = await api.post(`${API_ENDPOINTS.BOOKINGS.LIST}/waitlist`, data);
     return response.data;
   }
 }

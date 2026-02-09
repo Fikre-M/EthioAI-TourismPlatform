@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button } from '@components/common/Button/Button'
 import { Input } from '@components/common/Input/Input'
-import { bookingService, WaitlistRequest } from '@/services/bookingService'
+import bookingService, { WaitlistRequest } from '@/services/booking.service'
 import { FaTimes, FaCheckCircle, FaSpinner } from 'react-icons/fa'
 
 interface WaitlistModalProps {
