@@ -144,28 +144,28 @@ const ProductCard: React.FC<ProductCardProps> = ({
           onError={handleImageError}
         />
 
-        {/* Badges - Better visibility */}
-        <div className="absolute top-3 left-3 flex flex-col items-start gap-2 z-20">
+        {/* Badges - Moved to bottom of image to not cover title */}
+        <div className="absolute bottom-3 left-3 flex flex-wrap items-start gap-1.5 max-w-[calc(100%-6rem)] z-20">
           {product.madeInEthiopia && (
-            <Badge className="bg-gradient-to-r from-green-600 to-green-700 text-white text-xs font-semibold px-3 py-1.5 shadow-lg">
-              <Flag className="h-3.5 w-3.5 mr-1.5" />
+            <Badge className="bg-gradient-to-r from-green-600 to-green-700 text-white text-xs font-semibold px-2.5 py-1 shadow-lg backdrop-blur-sm">
+              <Flag className="h-3 w-3 mr-1" />
               Made in Ethiopia
             </Badge>
           )}
           {product.isFeatured && (
-            <Badge className="bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-semibold px-3 py-1.5 shadow-lg">
-              <Flame className="h-3.5 w-3.5 mr-1.5" />
+            <Badge className="bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-semibold px-2.5 py-1 shadow-lg backdrop-blur-sm">
+              <Flame className="h-3 w-3 mr-1" />
               Featured
             </Badge>
           )}
           {product.isNew && (
-            <Badge className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-semibold px-3 py-1.5 shadow-lg">
-              <Gift className="h-3.5 w-3.5 mr-1.5" />
+            <Badge className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-semibold px-2.5 py-1 shadow-lg backdrop-blur-sm">
+              <Gift className="h-3 w-3 mr-1" />
               New
             </Badge>
           )}
           {product.discount && (
-            <Badge className="bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold px-3 py-1.5 shadow-lg">
+            <Badge className="bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold px-2.5 py-1 shadow-lg backdrop-blur-sm">
               -{product.discount}% OFF
             </Badge>
           )}
@@ -207,20 +207,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
             </button>
           </div>
         )}
-
-        {/* Image dots indicator */}
-        {product.images.length > 1 && (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-            {product.images.map((_, index) => (
-              <div
-                key={index}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  index === currentImageIndex ? 'w-6 bg-white shadow-md' : 'w-1.5 bg-white/50'
-                }`}
-              />
-            ))}
-          </div>
-        )}
       </div>
 
       {/* Content Section */}
@@ -258,8 +244,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </div>
         </div>
 
-        {/* Product Name */}
-        <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2 leading-tight min-h-[2.5rem]">
+        {/* Product Name - Always fully visible */}
+        <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2 leading-tight">
           {product.name}
         </h3>
 
