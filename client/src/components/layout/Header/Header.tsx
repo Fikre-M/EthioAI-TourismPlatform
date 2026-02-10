@@ -102,7 +102,7 @@ export const Header = () => {
               )}
             </Link>
 
-            {/* Language Switcher - Hidden on small screens */}
+            {/* Language Switcher - Hidden on mobile */}
             <div className="hidden md:block flex-shrink-0">
               <LanguageSwitcher />
             </div>
@@ -138,7 +138,7 @@ export const Header = () => {
                   </svg>
                 </button>
 
-                {/* User Dropdown Menu */}
+                {/* User Dropdown Menu - Shows on both mobile and desktop */}
                 {isUserMenuOpen && (
                   <>
                     <div
@@ -156,7 +156,7 @@ export const Header = () => {
                           </p>
                         </div>
 
-                        {/* Language Switcher for mobile */}
+                        {/* Language Switcher for mobile - Only in user dropdown */}
                         <div className="lg:hidden px-3 py-2 border-b border-gray-200 dark:border-gray-700">
                           <LanguageSwitcher />
                         </div>
@@ -281,7 +281,7 @@ export const Header = () => {
                 )}
               </div>
             ) : (
-              /* Auth buttons - Always visible */
+              /* Desktop Auth buttons - Hidden on mobile */
               <div className="hidden sm:flex items-center gap-1 sm:gap-2 flex-shrink-0">
                 <Button
                   variant="outline"
@@ -302,7 +302,7 @@ export const Header = () => {
               </div>
             )}
 
-            {/* Mobile Menu Button - Always visible and prominent */}
+            {/* Mobile Menu Button - Always visible */}
             <button
               className="lg:hidden p-2 rounded-md hover:bg-accent transition-colors flex-shrink-0 border border-border"
               onClick={() => {
@@ -335,47 +335,47 @@ export const Header = () => {
             </button>
           </div>
 
-          {/* Mobile Navigation Menu - Show for all users on mobile */}
+          {/* Mobile Navigation Menu - Only navigation links */}
           {isMobileMenuOpen && (
             <>
               <div
                 className="fixed inset-0 z-40 lg:hidden"
-                onClick={closeAllMenus}
+                onClick={() => setIsMobileMenuOpen(false)}
               />
               <div className="absolute top-full left-0 right-0 bg-card border-b shadow-lg z-50 lg:hidden animate-in slide-in-from-top-2">
                 <nav className="px-4 py-4 space-y-3">
                   <Link
                     to="/tours"
                     className="block py-2 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
-                    onClick={closeAllMenus}
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {t("nav.tours")}
                   </Link>
                   <Link
                     to="/destinations"
                     className="block py-2 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
-                    onClick={closeAllMenus}
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {t("nav.destinations")}
                   </Link>
                   <Link
                     to="/cultural"
                     className="block py-2 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
-                    onClick={closeAllMenus}
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {t("nav.culture")}
                   </Link>
                   <Link
                     to="/marketplace"
                     className="block py-2 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
-                    onClick={closeAllMenus}
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {t("nav.marketplace")}
                   </Link>
                   <Link
                     to="/cart"
                     className="flex items-center justify-between py-2 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
-                    onClick={closeAllMenus}
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
                     <span>Shopping Cart</span>
                     {totalItems > 0 && (
@@ -385,12 +385,7 @@ export const Header = () => {
                     )}
                   </Link>
 
-                  {/* Show language switcher for mobile */}
-                  <div className="pt-2 border-t">
-                    <LanguageSwitcher />
-                  </div>
-
-                  {/* Show auth buttons for non-authenticated users - Mobile only */}
+                  {/* Auth buttons for non-authenticated users - Mobile only */}
                   {!isAuthenticated && (
                     <div className="pt-2 border-t space-y-2">
                       <Button
@@ -398,7 +393,7 @@ export const Header = () => {
                         size="sm"
                         onClick={() => {
                           navigate(ROUTES.LOGIN);
-                          closeAllMenus();
+                          setIsMobileMenuOpen(false);
                         }}
                         className="w-full justify-start"
                       >
@@ -409,7 +404,7 @@ export const Header = () => {
                         size="sm"
                         onClick={() => {
                           navigate(ROUTES.REGISTER);
-                          closeAllMenus();
+                          setIsMobileMenuOpen(false);
                         }}
                         className="w-full"
                       >
@@ -418,53 +413,22 @@ export const Header = () => {
                     </div>
                   )}
 
-                  {/* Show user menu items for authenticated users - Mobile only */}
+                  {/* For authenticated users on mobile, show link to open user menu */}
                   {isAuthenticated && (
-                    <div className="pt-2 border-t space-y-1">
-                      <div className="px-2 py-2 bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-md mb-2">
-                        <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                          {user?.name}
-                        </p>
-                        <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
-                          {user?.email}
-                        </p>
-                      </div>
-                      <Link
-                        to={ROUTES.DASHBOARD}
-                        className="block py-2 px-2 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-md"
-                        onClick={closeAllMenus}
-                      >
-                        {t("nav.dashboard")}
-                      </Link>
-                      <Link
-                        to={ROUTES.PROFILE}
-                        className="block py-2 px-2 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-md"
-                        onClick={closeAllMenus}
-                      >
-                        {t("nav.profile")}
-                      </Link>
-                      <Link
-                        to="/bookings"
-                        className="block py-2 px-2 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-md"
-                        onClick={closeAllMenus}
-                      >
-                        {t("nav.bookings")}
-                      </Link>
-                      <Link
-                        to="/settings"
-                        className="block py-2 px-2 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-md"
-                        onClick={closeAllMenus}
-                      >
-                        {t("nav.settings")}
-                      </Link>
+                    <div className="pt-2 border-t">
                       <button
                         onClick={() => {
-                          handleLogout();
-                          closeAllMenus();
+                          setIsMobileMenuOpen(false);
+                          setIsUserMenuOpen(true);
                         }}
-                        className="block w-full text-left py-2 px-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors rounded-md"
+                        className="flex items-center gap-2 w-full text-left py-2 px-2 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-md"
                       >
-                        {t("nav.signOut")}
+                        <div className="h-6 w-6 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 flex items-center justify-center text-white text-xs font-bold ring-2 ring-orange-200">
+                          {user?.name?.charAt(0).toUpperCase() || "U"}
+                        </div>
+                        <span className="truncate">
+                          {user?.name?.split(" ")[0] || "User"}'s Account
+                        </span>
                       </button>
                     </div>
                   )}
