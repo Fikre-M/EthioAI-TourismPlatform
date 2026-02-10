@@ -143,7 +143,7 @@ export const Header = () => {
                   <>
                     <div
                       className="fixed inset-0 z-40"
-                      onClick={() => setIsUserMenuOpen(false)}
+                      onClick={closeAllMenus}
                     />
                     <div className="absolute right-0 mt-2 w-56 sm:w-64 rounded-xl shadow-xl bg-card border-2 border-orange-200 dark:border-orange-800 z-50 animate-in slide-in-from-top-2 overflow-hidden">
                       <div className="py-1">
@@ -164,7 +164,7 @@ export const Header = () => {
                         <Link
                           to={ROUTES.DASHBOARD}
                           className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors"
-                          onClick={() => setIsUserMenuOpen(false)}
+                          onClick={closeAllMenus}
                         >
                           <svg
                             className="h-4 w-4 text-orange-600"
@@ -185,7 +185,7 @@ export const Header = () => {
                         <Link
                           to={ROUTES.PROFILE}
                           className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors"
-                          onClick={() => setIsUserMenuOpen(false)}
+                          onClick={closeAllMenus}
                         >
                           <svg
                             className="h-4 w-4 text-orange-600"
@@ -206,7 +206,7 @@ export const Header = () => {
                         <Link
                           to="/bookings"
                           className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors"
-                          onClick={() => setIsUserMenuOpen(false)}
+                          onClick={closeAllMenus}
                         >
                           <svg
                             className="h-4 w-4 text-orange-600"
@@ -227,7 +227,7 @@ export const Header = () => {
                         <Link
                           to="/settings"
                           className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors"
-                          onClick={() => setIsUserMenuOpen(false)}
+                          onClick={closeAllMenus}
                         >
                           <svg
                             className="h-4 w-4 text-orange-600"
@@ -255,7 +255,7 @@ export const Header = () => {
                           <button
                             onClick={() => {
                               handleLogout();
-                              setIsUserMenuOpen(false);
+                              closeAllMenus();
                             }}
                             className="flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors font-medium"
                           >
@@ -340,42 +340,42 @@ export const Header = () => {
             <>
               <div
                 className="fixed inset-0 z-40 lg:hidden"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={closeAllMenus}
               />
               <div className="absolute top-full left-0 right-0 bg-card border-b shadow-lg z-50 lg:hidden animate-in slide-in-from-top-2">
                 <nav className="px-4 py-4 space-y-3">
                   <Link
                     to="/tours"
                     className="block py-2 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={closeAllMenus}
                   >
                     {t("nav.tours")}
                   </Link>
                   <Link
                     to="/destinations"
                     className="block py-2 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={closeAllMenus}
                   >
                     {t("nav.destinations")}
                   </Link>
                   <Link
                     to="/cultural"
                     className="block py-2 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={closeAllMenus}
                   >
                     {t("nav.culture")}
                   </Link>
                   <Link
                     to="/marketplace"
                     className="block py-2 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={closeAllMenus}
                   >
                     {t("nav.marketplace")}
                   </Link>
                   <Link
                     to="/cart"
                     className="flex items-center justify-between py-2 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={closeAllMenus}
                   >
                     <span>Shopping Cart</span>
                     {totalItems > 0 && (
@@ -393,7 +393,7 @@ export const Header = () => {
                         size="sm"
                         onClick={() => {
                           navigate(ROUTES.LOGIN);
-                          setIsMobileMenuOpen(false);
+                          closeAllMenus();
                         }}
                         className="w-full justify-start"
                       >
@@ -404,7 +404,7 @@ export const Header = () => {
                         size="sm"
                         onClick={() => {
                           navigate(ROUTES.REGISTER);
-                          setIsMobileMenuOpen(false);
+                          closeAllMenus();
                         }}
                         className="w-full"
                       >
