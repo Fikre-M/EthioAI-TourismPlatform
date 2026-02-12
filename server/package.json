@@ -33,7 +33,6 @@
   "author": "EthioAI Team",
   "license": "MIT",
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.24.3",
     "@google/generative-ai": "^0.15.0",
     "@nestjs/swagger": "^11.2.3",
     "@prisma/client": "^5.22.0",
@@ -64,7 +63,6 @@
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.9.1",
     "nodemailer": "^6.9.7",
-    "openai": "^4.52.7",
     "prisma": "^5.7.1",
     "socket.io": "^4.8.3",
     "stripe": "^20.1.2",

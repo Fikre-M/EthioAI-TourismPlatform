@@ -19,6 +19,8 @@ import reviewRoutes from './routes/reviews.routes';
 import itineraryRoutes from './routes/itinerary.routes';
 import transportRoutes from './routes/transport.routes';
 import marketplaceRoutes from './routes/marketplace.routes';
+import aiRoutes from './routes/ai.routes';
+import mapRoutes from './routes/map.routes';
 
 // Load environment variables
 config();
@@ -133,6 +135,8 @@ app.use(`${API_PREFIX}/reviews`, reviewRoutes);
 app.use(`${API_PREFIX}/itineraries`, itineraryRoutes);
 app.use(`${API_PREFIX}/transport`, transportRoutes);
 app.use(`${API_PREFIX}/marketplace`, marketplaceRoutes);
+app.use(`${API_PREFIX}/ai`, aiRoutes);
+app.use(`${API_PREFIX}/map`, mapRoutes);
 
 // API documentation endpoint
 app.get(`${API_PREFIX}/docs`, (req: Request, res: Response) => {
@@ -153,7 +157,9 @@ app.get(`${API_PREFIX}/docs`, (req: Request, res: Response) => {
       reviews: `${API_PREFIX}/reviews`,
       itineraries: `${API_PREFIX}/itineraries`,
       transport: `${API_PREFIX}/transport`,
-      marketplace: `${API_PREFIX}/marketplace`
+      marketplace: `${API_PREFIX}/marketplace`,
+      ai: `${API_PREFIX}/ai`,
+      map: `${API_PREFIX}/map`
     }
   });
 });
