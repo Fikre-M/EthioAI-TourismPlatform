@@ -211,15 +211,15 @@ export class ChatController {
    */
   static healthCheck = asyncHandler(async (req: AuthRequest, res: Response) => {
     // Check if OpenAI service is available
-    const { OpenAIService } = await import('../services/openai.service');
-    const modelStatus = await OpenAIService.getModelStatus();
+    const { AIService } = await import('../services/ai.service');
+    const healthStatus = await AIService.getHealthStatus();
     
     const health = {
       status: 'healthy',
       timestamp: new Date().toISOString(),
       services: {
         database: 'connected', // Assume connected if we reach this point
-        openai: modelStatus.available ? 'connected' : 'disconnected',
+        ai: healthStatus.available ? 'connected' : 'disconnected',
       },
       features: {
         aiResponses: modelStatus.available,
@@ -243,10 +243,12 @@ export class ChatController {
       return ResponseUtil.badRequest(res, 'Message is required for testing');
     }
     
-    const { OpenAIService } = await import('../services/openai.service');
+    const { AIService } = await import('../services/ai.service');
     
     try {
-      const response = await OpenAIService.generateChatResponse(message, context);
+      const response = await AIService.generateResponse([
+        { role: 'user', content: message }
+      ], { provider: 'openai' });
       
       return ResponseUtil.success(res, {
         userMessage: message,

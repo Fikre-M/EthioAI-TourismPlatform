@@ -98,9 +98,71 @@ export const config = {
   // OpenAI configuration
   openai: {
     apiKey: process.env.OPENAI_API_KEY || '',
-    model: process.env.OPENAI_MODEL || 'gpt-3.5-turbo',
+    model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
     temperature: parseFloat(process.env.OPENAI_TEMPERATURE || '0.7'),
-    maxTokens: parseInt(process.env.OPENAI_MAX_TOKENS || '1000', 10),
+    maxTokens: parseInt(process.env.OPENAI_MAX_TOKENS || '2000', 10),
+    organizationId: process.env.OPENAI_ORGANIZATION_ID || '',
+  },
+
+  // AI Services configuration
+  ai: {
+    // Anthropic Claude
+    anthropic: {
+      apiKey: process.env.ANTHROPIC_API_KEY || '',
+      model: process.env.ANTHROPIC_MODEL || 'claude-3-haiku-20240307',
+      maxTokens: parseInt(process.env.ANTHROPIC_MAX_TOKENS || '2000', 10),
+    },
+
+    // Google Gemini
+    google: {
+      apiKey: process.env.GOOGLE_AI_API_KEY || '',
+      model: process.env.GOOGLE_AI_MODEL || 'gemini-1.5-flash',
+    },
+
+    // Azure OpenAI
+    azure: {
+      apiKey: process.env.AZURE_OPENAI_API_KEY || '',
+      endpoint: process.env.AZURE_OPENAI_ENDPOINT || '',
+      deploymentName: process.env.AZURE_OPENAI_DEPLOYMENT_NAME || '',
+      apiVersion: process.env.AZURE_OPENAI_API_VERSION || '2024-02-15-preview',
+    },
+
+    // Hugging Face
+    huggingface: {
+      apiKey: process.env.HUGGINGFACE_API_KEY || '',
+    },
+
+    // Stability AI
+    stability: {
+      apiKey: process.env.STABILITY_API_KEY || '',
+    },
+
+    // ElevenLabs
+    elevenlabs: {
+      apiKey: process.env.ELEVENLABS_API_KEY || '',
+    },
+
+    // Rate limiting
+    rateLimiting: {
+      perMinute: parseInt(process.env.AI_RATE_LIMIT_PER_MINUTE || '60', 10),
+      perHour: parseInt(process.env.AI_RATE_LIMIT_PER_HOUR || '1000', 10),
+    },
+  },
+
+  // External APIs
+  external: {
+    mapbox: {
+      secretToken: process.env.MAPBOX_SECRET_TOKEN || '',
+    },
+    weather: {
+      apiKey: process.env.WEATHER_API_KEY || '',
+    },
+    currency: {
+      apiKey: process.env.CURRENCY_API_KEY || '',
+    },
+    translation: {
+      apiKey: process.env.TRANSLATION_API_KEY || '',
+    },
   },
 
   // Admin configuration
