@@ -1,9 +1,11 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import { ForgotPasswordForm } from '../components/ForgotPasswordForm'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@components/common/Card/Card'
 import { authService } from '@services/authService'
+import { ROUTES } from '@utils/constants'
 import type { ForgotPasswordFormData } from '../schemas/validation'
 
 export const ForgotPasswordPage = () => {
@@ -32,6 +34,29 @@ export const ForgotPasswordPage = () => {
         transition={{ duration: 0.4 }}
         className="w-full max-w-md"
       >
+        {/* Back to Home Link */}
+        <div className="mb-6 text-center">
+          <Link
+            to={ROUTES.HOME}
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
+            </svg>
+            {t('auth.backToHome', 'Back to Home')}
+          </Link>
+        </div>
+
         <Card>
           <CardHeader className="space-y-1 text-center">
             <CardTitle className="text-3xl font-bold">

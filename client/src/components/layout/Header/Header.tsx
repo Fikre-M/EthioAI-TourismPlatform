@@ -19,7 +19,7 @@ export const Header = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      navigate(ROUTES.LOGIN);
+      navigate(ROUTES.HOME);
     } catch (error) {
       console.error("Logout failed:", error);
     }
