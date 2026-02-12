@@ -44,7 +44,7 @@ router.post('/chat', async (req: Request, res: Response) => {
 
     // Get the generative model
     const model = googleAI.getGenerativeModel({ 
-      model: process.env.GOOGLE_AI_MODEL || 'gemini-1.5-flash' 
+      model: process.env.GOOGLE_AI_MODEL || 'gemini-1.5-flash-8b' 
     });
 
     // Prepare the prompt with context
@@ -101,7 +101,7 @@ router.post('/analyze', async (req: Request, res: Response) => {
     }
 
     const model = googleAI.getGenerativeModel({ 
-      model: process.env.GOOGLE_AI_MODEL || 'gemini-1.5-flash' 
+      model: process.env.GOOGLE_AI_MODEL || 'gemini-1.5-flash-8b' 
     });
 
     let prompt = '';
@@ -139,6 +139,51 @@ router.post('/analyze', async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: 'Failed to analyze text',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+    });
+  }
+});
+
+/**
+ * GET /api/ai/models
+ * List available models for debugging
+ */
+router.get('/models', async (req: Request, res: Response) => {
+  try {
+    if (!googleAI) {
+      return res.status(503).json({
+        success: false,
+        message: 'Google AI service is not available',
+      });
+    }
+
+    // Try to list models
+    try {
+      const models = await googleAI.listModels();
+      res.json({
+        success: true,
+        data: {
+          models: models.models?.map(model => ({
+            name: model.name,
+            displayName: model.displayName,
+            supportedGenerationMethods: model.supportedGenerationMethods,
+          })) || [],
+        },
+      });
+    } catch (listError: any) {
+      // If listing fails, just return the error info
+      res.json({
+        success: false,
+        message: 'Could not list models',
+        error: listError.message,
+        suggestion: 'Try using models: gemini-pro, gemini-1.5-flash, or gemini-1.5-pro',
+      });
+    }
+
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: 'Models endpoint failed',
       error: process.env.NODE_ENV === 'development' ? error.message : undefined,
     });
   }
