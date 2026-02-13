@@ -54,7 +54,7 @@ const initialState: ChatState = {
 }
 
 // Import chat service
-import { simulatedChatService } from '@services/chatService'
+import { api } from '@api/axios.config'
 
 // Async thunks
 export const sendMessageAsync = createAsyncThunk(
@@ -64,18 +64,27 @@ export const sendMessageAsync = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      // Use simulated service (replace with real chatService when backend is ready)
-      const response = await simulatedChatService.sendMessage({
+      // Use real Google AI API
+      const response = await api.post('/api/ai/chat', {
         message: content,
-        conversationId,
+        context: 'You are a helpful AI guide for Ethiopia tourism. Provide informative, friendly responses about Ethiopian culture, destinations, tours, and travel advice. Keep responses conversational and engaging.'
       })
 
-      return {
-        content: response.content,
-        timestamp: new Date(response.timestamp),
+      if (response.data?.success && response.data?.data?.message) {
+        return {
+          content: response.data.data.message,
+          timestamp: new Date(),
+        }
+      } else {
+        throw new Error('Invalid response from AI service')
       }
     } catch (error: any) {
-      return rejectWithValue(error.message || 'Failed to send message. Please try again.')
+      console.error('AI API Error:', error)
+      return rejectWithValue(
+        error.response?.data?.message || 
+        error.message || 
+        'Failed to send message. Please try again.'
+      )
     }
   }
 )
