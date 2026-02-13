@@ -79,23 +79,37 @@ export const TourCard = ({ tour }: TourCardProps) => {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-700 min-w-0 gap-3">
-            <div className="min-w-0 flex-shrink-0">
-              <p className="text-xs text-gray-500 dark:text-gray-400">From</p>
-              <p className="text-xl font-bold text-orange-600 dark:text-orange-400 whitespace-nowrap">
-                {tour.currency} {tour.price.toLocaleString()}
-              </p>
+          <div className="flex flex-col gap-3 pt-3 border-t border-gray-200 dark:border-gray-700 min-w-0">
+            <div className="flex items-center justify-between min-w-0 gap-3">
+              <div className="min-w-0 flex-shrink-0">
+                <p className="text-xs text-gray-500 dark:text-gray-400">From</p>
+                <p className="text-xl font-bold text-orange-600 dark:text-orange-400 whitespace-nowrap">
+                  {tour.currency} {tour.price.toLocaleString()}
+                </p>
+              </div>
+              <div className="text-right text-xs text-gray-500 dark:text-gray-400">
+                <p>Max {tour.maxGroupSize} guests</p>
+                <p>{tour.difficulty} difficulty</p>
+              </div>
             </div>
-            <div className="flex gap-2 flex-shrink-0">
-              <Link 
-                to={`/tours/${tour.id}`}
-                className="px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
+            
+            {/* Action Buttons */}
+            <div className="flex gap-2 w-full">
+              <button 
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  // Show more details in a modal or expand card
+                  alert(`More details about: ${tour.title}\n\nDuration: ${tour.duration}\nLocation: ${tour.location}\nMax Group: ${tour.maxGroupSize}\nDifficulty: ${tour.difficulty}\n\nHighlights:\n${tour.highlights.join('\n')}\n\nIncluded:\n${tour.included.join('\n')}`)
+                }}
+                className="flex-1 px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors text-center"
               >
-                Details
-              </Link>
+                View Details
+              </button>
               <Link 
                 to={`/booking/${tour.id}`}
-                className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-sm font-medium transition-colors whitespace-nowrap flex items-center gap-1"
+                onClick={(e) => e.stopPropagation()}
+                className="flex-1 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-sm font-medium transition-colors text-center flex items-center justify-center gap-1"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h3a1 1 0 011 1v9a1 1 0 01-1 1H5a1 1 0 01-1-1V8a1 1 0 011-1h3z" />
