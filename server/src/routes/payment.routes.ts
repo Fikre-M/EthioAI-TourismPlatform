@@ -32,7 +32,6 @@ router.post('/stripe/confirm',
 );
 
 router.get('/stripe/config', 
-  authenticate, 
   PaymentController.getStripeConfig
 );
 

@@ -1,10 +1,12 @@
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { clearCart } from '@store/slices/bookingSlice'
 import QRCodeGenerator from '../components/QRCodeGenerator'
-import { PaymentResponse } from '../../../services/paymentService'
 
 interface LocationState {
-  paymentResponse?: PaymentResponse
+  paymentResponse?: any
+  bookings?: any[]
   packageDetails?: {
     id: string
     name: string
@@ -13,19 +15,27 @@ interface LocationState {
     duration: string
     description: string
   }
-  bookingData?: {
-    bookingId: string
-    items: any[]
-    metadata: Record<string, any>
-  }
+  totalAmount?: number
+  paymentMethod?: string
 }
 
 const ConfirmationPage: React.FC = () => {
   const location = useLocation()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const state = location.state as LocationState
 
-  const bookingReference = state?.bookingData?.bookingId || `ETH-${Date.now().toString().slice(-8)}`
+  // Clear cart on successful payment
+  React.useEffect(() => {
+    if (state?.paymentResponse?.success || state?.bookings) {
+      dispatch(clearCart())
+    }
+  }, [state, dispatch])
+
+  const bookings = state?.bookings || []
+  const bookingReference = bookings.length > 0 
+    ? bookings[0].bookingNumber 
+    : `ETH-${Date.now().toString().slice(-8)}`
   
   const paymentResponse = state?.paymentResponse || {
     success: true,
@@ -34,6 +44,9 @@ const ConfirmationPage: React.FC = () => {
     message: 'Payment completed successfully',
     transactionRef: `TXN_${Date.now()}`
   }
+
+  const totalAmount = state?.totalAmount || state?.packageDetails?.price || 0
+  const currency = state?.packageDetails?.currency || 'USD'
 
   const packageDetails = state?.packageDetails || {
     id: 'tour-001',
@@ -86,20 +99,47 @@ const ConfirmationPage: React.FC = () => {
                 
                 <div className="flex justify-between items-center pb-2 border-b">
                   <span className="text-gray-600">Transaction ID:</span>
-                  <span className="font-mono text-sm text-gray-700">{paymentResponse.transactionRef}</span>
+                  <span className="font-mono text-sm text-gray-700">
+                    {paymentResponse.transactionRef || paymentResponse.paymentId}
+                  </span>
+                </div>
+                
+                <div className="flex justify-between items-center pb-2 border-b">
+                  <span className="text-gray-600">Payment Status:</span>
+                  <span className="font-medium text-green-600 capitalize">
+                    {paymentResponse.status || 'Completed'}
+                  </span>
                 </div>
                 
                 <div className="pt-2">
-                  <h3 className="font-medium text-gray-900 mb-2">{packageDetails.name}</h3>
-                  <p className="text-sm text-gray-600 mb-2">{packageDetails.description}</p>
-                  <p className="text-sm text-blue-600">Duration: {packageDetails.duration}</p>
+                  {bookings.length > 0 ? (
+                    <div className="space-y-3">
+                      <h3 className="font-medium text-gray-900">Booked Tours:</h3>
+                      {bookings.map((booking: any, index: number) => (
+                        <div key={index} className="pl-3 border-l-2 border-blue-500">
+                          <p className="font-medium text-gray-900">{booking.tour?.title || 'Tour'}</p>
+                          <p className="text-sm text-gray-600">
+                            {new Date(booking.startDate).toLocaleDateString()} - {booking.numberOfAdults} adult(s)
+                            {booking.numberOfChildren > 0 && `, ${booking.numberOfChildren} child(ren)`}
+                          </p>
+                          <p className="text-sm text-blue-600">${booking.totalPrice}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <>
+                      <h3 className="font-medium text-gray-900 mb-2">{packageDetails.name}</h3>
+                      <p className="text-sm text-gray-600 mb-2">{packageDetails.description}</p>
+                      <p className="text-sm text-blue-600">Duration: {packageDetails.duration}</p>
+                    </>
+                  )}
                 </div>
                 
                 <div className="border-t pt-4">
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-semibold text-gray-900">Total Paid:</span>
                     <span className="text-lg font-bold text-green-600">
-                      {formatAmount(packageDetails.price, packageDetails.currency)}
+                      {formatAmount(totalAmount, currency)}
                     </span>
                   </div>
                 </div>

@@ -74,8 +74,17 @@ export default function CheckoutPage() {
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1)
     } else {
-      // Proceed to payment
-      navigate('/payment', { state: { checkoutData: formData } })
+      // Proceed to payment with complete booking data
+      navigate('/payment', { 
+        state: { 
+          checkoutData: formData,
+          cartItems: items,
+          totalPrice,
+          subtotal,
+          discount,
+          appliedPromo
+        } 
+      })
     }
   }
 
