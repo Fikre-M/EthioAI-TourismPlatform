@@ -4,19 +4,22 @@ import { Header } from './Header'
 import { Footer } from './Footer'
 import { Sidebar } from './Sidebar'
 import { MobileNav } from './MobileNav'
+import { FloatingChatbot } from '@components/chat/FloatingChatbot'
 
 export interface MainLayoutProps {
   children?: React.ReactNode
   showSidebar?: boolean
   showMobileNav?: boolean
   showFooter?: boolean
+  showFloatingChat?: boolean
 }
 
 export const MainLayout = ({ 
   children, 
   showSidebar = false,
   showMobileNav = true,
-  showFooter = true 
+  showFooter = true,
+  showFloatingChat = true
 }: MainLayoutProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
@@ -48,6 +51,9 @@ export const MainLayout = ({
 
       {/* Mobile Navigation */}
       {showMobileNav && <MobileNav />}
+
+      {/* Floating AI Chatbot */}
+      {showFloatingChat && <FloatingChatbot />}
     </div>
   )
 }

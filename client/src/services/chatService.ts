@@ -381,10 +381,35 @@ export default chatService
 
 // Simulated responses for development (remove when backend is ready)
 export const simulatedChatService = {
-  sendMessage: async (data: SendMessageRequest): Promise<SendMessageResponse> => {
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+  sendMessage: async (data: { message: string; conversationId?: string }): Promise<{
+    id: string
+    content: string
+    role: 'assistant'
+    timestamp: string
+    conversationId?: string
+  }> => {
+    try {
+      // Try to use real AI backend first
+      const response = await api.post('/ai/chat', {
+        message: data.message,
+        context: 'You are a helpful AI guide for Ethiopia tourism. Provide informative, friendly responses about Ethiopian culture, destinations, tours, and travel advice.'
+      })
 
+      if (response.data?.success && response.data?.data?.message) {
+        return {
+          id: Date.now().toString(),
+          content: response.data.data.message,
+          role: 'assistant',
+          timestamp: new Date().toISOString(),
+          conversationId: data.conversationId || 'default',
+        }
+      }
+    } catch (error) {
+      console.warn('AI backend not available, using simulated response:', error)
+    }
+
+    // Fallback to simulated response
+    await new Promise((resolve) => setTimeout(resolve, 1500))
     const response = getSimulatedResponse(data.message)
 
     return {
@@ -396,7 +421,12 @@ export const simulatedChatService = {
     }
   },
 
-  getChatHistory: async (conversationId: string): Promise<ChatHistoryResponse> => {
+  getChatHistory: async (conversationId: string): Promise<{
+    conversationId: string
+    messages: any[]
+    createdAt: string
+    updatedAt: string
+  }> => {
     await new Promise((resolve) => setTimeout(resolve, 500))
 
     return {
