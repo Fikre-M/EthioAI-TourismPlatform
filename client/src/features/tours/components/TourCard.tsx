@@ -7,7 +7,7 @@ export interface TourCardProps {
 
 export const TourCard = ({ tour }: TourCardProps) => {
   return (
-    <Link to={`/tours/${tour.id}`} className="group block w-full min-w-0">
+    <div className="group block w-full min-w-0">
       <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 w-full min-w-0">
         {/* Image */}
         <div className="relative h-48 overflow-hidden">
@@ -86,12 +86,26 @@ export const TourCard = ({ tour }: TourCardProps) => {
                 {tour.currency} {tour.price.toLocaleString()}
               </p>
             </div>
-            <button className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0">
-              View Details
-            </button>
+            <div className="flex gap-2 flex-shrink-0">
+              <Link 
+                to={`/tours/${tour.id}`}
+                className="px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
+              >
+                Details
+              </Link>
+              <Link 
+                to={`/booking/${tour.id}`}
+                className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-sm font-medium transition-colors whitespace-nowrap flex items-center gap-1"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h3a1 1 0 011 1v9a1 1 0 01-1 1H5a1 1 0 01-1-1V8a1 1 0 011-1h3z" />
+                </svg>
+                Book Now
+              </Link>
+            </div>
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   )
 }

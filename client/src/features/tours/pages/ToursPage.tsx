@@ -4,130 +4,76 @@ import { EnhancedTourFilters } from '../components/EnhancedTourFilters'
 import { TourSearchBar, SearchSuggestion } from '../components/TourSearchBar'
 import { TourSortDropdown, SortOption } from '../components/TourSortDropdown'
 import { Tour, TourFilters as TourFiltersType } from '@/types/tour'
-
-// Mock data - replace with API call
-const mockTours: Tour[] = [
-  {
-    id: '1',
-    title: 'Historic Route: Lalibela, Gondar & Axum',
-    description: 'Explore the ancient wonders of Northern Ethiopia',
-    shortDescription: 'Visit rock-hewn churches, medieval castles, and ancient obelisks',
-    imageUrl: 'https://images.unsplash.com/photo-1609137144813-7d9921338f24?w=800',
-    images: [],
-    price: 5000,
-    currency: 'ETB',
-    duration: '7 days',
-    durationDays: 7,
-    location: 'Northern Ethiopia',
-    region: 'Amhara',
-    category: 'historical',
-    difficulty: 'moderate',
-    rating: 4.8,
-    reviewCount: 124,
-    maxGroupSize: 12,
-    minAge: 12,
-    highlights: ['Rock-hewn churches', 'Gondar castles', 'Axum obelisks'],
-    included: ['Accommodation', 'Meals', 'Guide', 'Transport'],
-    excluded: ['Flights', 'Personal expenses'],
-    itinerary: [],
-    guide: {
-      id: '1',
-      name: 'Abebe Kebede',
-      avatar: '',
-      languages: ['English', 'Amharic'],
-      rating: 4.9,
-      toursGuided: 150,
-    },
-    availability: [],
-    tags: ['UNESCO', 'History', 'Culture'],
-    featured: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '2',
-    title: 'Simien Mountains Trekking',
-    description: 'Trek through stunning mountain landscapes',
-    shortDescription: 'Experience breathtaking views and unique wildlife',
-    imageUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
-    images: [],
-    price: 3500,
-    currency: 'ETB',
-    duration: '5 days',
-    durationDays: 5,
-    location: 'Simien Mountains',
-    region: 'Amhara',
-    category: 'trekking',
-    difficulty: 'challenging',
-    rating: 4.9,
-    reviewCount: 89,
-    maxGroupSize: 8,
-    minAge: 16,
-    highlights: ['Mountain peaks', 'Gelada baboons', 'Stunning views'],
-    included: ['Camping gear', 'Meals', 'Guide', 'Porter'],
-    excluded: ['Personal gear', 'Tips'],
-    itinerary: [],
-    guide: {
-      id: '2',
-      name: 'Tadesse Alemu',
-      avatar: '',
-      languages: ['English', 'Amharic'],
-      rating: 5.0,
-      toursGuided: 200,
-    },
-    availability: [],
-    tags: ['Trekking', 'Nature', 'Adventure'],
-    featured: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '3',
-    title: 'Danakil Depression Adventure',
-    description: 'Visit one of the hottest places on Earth',
-    shortDescription: 'Explore colorful sulfur springs and salt flats',
-    imageUrl: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800',
-    images: [],
-    price: 4500,
-    currency: 'ETB',
-    duration: '4 days',
-    durationDays: 4,
-    location: 'Danakil Depression',
-    region: 'Afar',
-    category: 'adventure',
-    difficulty: 'extreme',
-    rating: 4.7,
-    reviewCount: 67,
-    maxGroupSize: 10,
-    minAge: 18,
-    highlights: ['Erta Ale volcano', 'Dallol sulfur springs', 'Salt mining'],
-    included: ['4WD transport', 'Camping', 'Meals', 'Guide'],
-    excluded: ['Flights', 'Insurance'],
-    itinerary: [],
-    guide: {
-      id: '3',
-      name: 'Mohammed Ali',
-      avatar: '',
-      languages: ['English', 'Afar'],
-      rating: 4.8,
-      toursGuided: 120,
-    },
-    availability: [],
-    tags: ['Adventure', 'Extreme', 'Unique'],
-    featured: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-]
+import { api } from '@api/axios.config'
 
 export const ToursPage = () => {
-  const [tours, setTours] = useState<Tour[]>(mockTours)
-  const [filteredTours, setFilteredTours] = useState<Tour[]>(mockTours)
+  const [tours, setTours] = useState<Tour[]>([])
+  const [filteredTours, setFilteredTours] = useState<Tour[]>([])
   const [filters, setFilters] = useState<TourFiltersType>({})
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<SortOption>('popularity')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([])
+
+  // Fetch tours from API
+  useEffect(() => {
+    const fetchTours = async () => {
+      try {
+        setIsLoading(true)
+        const response = await api.get('/api/tours')
+        
+        if (response.data?.success && response.data?.data?.tours) {
+          const apiTours = response.data.data.tours.map((tour: any) => ({
+            id: tour.id,
+            title: tour.title,
+            description: tour.description,
+            shortDescription: tour.shortDescription || tour.description.substring(0, 100) + '...',
+            imageUrl: tour.images ? JSON.parse(tour.images)[0] || 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=800' : 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=800',
+            images: tour.images ? JSON.parse(tour.images) : [],
+            price: Number(tour.price),
+            currency: 'USD',
+            duration: `${tour.duration} days`,
+            durationDays: tour.duration,
+            location: tour.startLocation ? JSON.parse(tour.startLocation).description : tour.category,
+            region: 'Ethiopia',
+            category: tour.category.toLowerCase(),
+            difficulty: tour.difficulty.toLowerCase(),
+            rating: 4.5, // Default rating since we don't have this in the API yet
+            reviewCount: 0, // Default review count
+            maxGroupSize: tour.maxGroupSize,
+            minAge: 12,
+            highlights: tour.tags ? JSON.parse(tour.tags) : [],
+            included: tour.included ? JSON.parse(tour.included) : [],
+            excluded: tour.excluded ? JSON.parse(tour.excluded) : [],
+            itinerary: tour.itinerary ? JSON.parse(tour.itinerary) : [],
+            guide: {
+              id: '1',
+              name: 'Professional Guide',
+              avatar: '',
+              languages: ['English', 'Amharic'],
+              rating: 4.8,
+              toursGuided: 50,
+            },
+            availability: [],
+            tags: tour.tags ? JSON.parse(tour.tags) : [],
+            featured: tour.featured,
+            createdAt: new Date(tour.createdAt),
+            updatedAt: new Date(tour.updatedAt),
+          }))
+          
+          setTours(apiTours)
+          setFilteredTours(apiTours)
+        }
+      } catch (error) {
+        console.error('Error fetching tours:', error)
+        // Keep empty array on error
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchTours()
+  }, [])
 
   // Apply filters
   useEffect(() => {
