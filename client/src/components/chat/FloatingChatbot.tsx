@@ -19,6 +19,19 @@ export const FloatingChatbot = ({ className = '' }: FloatingChatbotProps) => {
   const dragRef = useRef<HTMLDivElement>(null)
   const { messages } = useChat()
 
+  // Calculate safe chat window dimensions
+  const getChatDimensions = () => {
+    const viewportHeight = window.innerHeight
+    const viewportWidth = window.innerWidth
+    const padding = 120 // Safe padding from edges
+    
+    return {
+      maxHeight: Math.min(600, viewportHeight - padding),
+      maxWidth: Math.min(450, viewportWidth - 100),
+      minHeight: 400
+    }
+  }
+
   // Check if mobile screen
   useEffect(() => {
     const checkMobile = () => {
@@ -44,13 +57,14 @@ export const FloatingChatbot = ({ className = '' }: FloatingChatbotProps) => {
       const rect = dragRef.current?.getBoundingClientRect()
       if (!rect) return
 
-      // Keep within viewport bounds
-      const maxX = window.innerWidth - rect.width
-      const maxY = window.innerHeight - rect.height
+      // Keep within viewport bounds with padding
+      const padding = 20
+      const maxX = window.innerWidth - rect.width - padding
+      const maxY = window.innerHeight - rect.height - padding
       
       setPosition({
-        x: Math.max(0, Math.min(maxX, e.clientX - rect.width / 2)),
-        y: Math.max(0, Math.min(maxY, e.clientY - rect.height / 2))
+        x: Math.max(padding, Math.min(maxX, e.clientX - rect.width / 2)),
+        y: Math.max(padding, Math.min(maxY, e.clientY - rect.height / 2))
       })
     }
 
@@ -68,6 +82,37 @@ export const FloatingChatbot = ({ className = '' }: FloatingChatbotProps) => {
       document.removeEventListener('mouseup', handleMouseUp)
     }
   }, [isDragging, isMobile])
+
+  // Auto-position chat window to be visible on screen
+  useEffect(() => {
+    if (!isOpen || isMobile || isMinimized) return
+
+    const checkPosition = () => {
+      const rect = dragRef.current?.getBoundingClientRect()
+      if (!rect) return
+
+      const padding = 20
+      const viewportWidth = window.innerWidth
+      const viewportHeight = window.innerHeight
+
+      // Check if window is outside viewport
+      const isOutsideRight = rect.right > viewportWidth - padding
+      const isOutsideBottom = rect.bottom > viewportHeight - padding
+      const isOutsideLeft = rect.left < padding
+      const isOutsideTop = rect.top < padding
+
+      if (isOutsideRight || isOutsideBottom || isOutsideLeft || isOutsideTop) {
+        // Reset to default position (bottom-right with padding)
+        setPosition({ x: 0, y: 0 })
+      }
+    }
+
+    // Check position when window opens or resizes
+    checkPosition()
+    window.addEventListener('resize', checkPosition)
+    
+    return () => window.removeEventListener('resize', checkPosition)
+  }, [isOpen, isMobile, isMinimized])
 
   const toggleChat = () => {
     if (isOpen) {
@@ -185,21 +230,29 @@ export const FloatingChatbot = ({ className = '' }: FloatingChatbotProps) => {
               x: position.x,
               y: position.y,
             }}
+            data-testid="floating-chat"
             className={`fixed z-[100] ${
               isMinimized 
                 ? 'bottom-6 right-6' 
                 : 'bottom-6 right-6'
             }`}
           >
-            <div className={`bg-white dark:bg-gray-900 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-300 ${
-              isMinimized 
-                ? 'w-80 h-16' 
-                : 'w-96 h-[600px] lg:w-[420px] lg:h-[650px]'
-            }`}>
+            <div 
+              className={`bg-white dark:bg-gray-900 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-300 flex flex-col ${
+                isMinimized 
+                  ? 'w-80 h-16' 
+                  : 'w-96 lg:w-[420px] xl:w-[450px]'
+              }`}
+              style={{
+                height: isMinimized ? '64px' : `${getChatDimensions().maxHeight}px`,
+                maxHeight: isMinimized ? '64px' : `${getChatDimensions().maxHeight}px`,
+                minHeight: isMinimized ? '64px' : `${getChatDimensions().minHeight}px`
+              }}
+            >
               
               {/* Header */}
               <div 
-                className="flex items-center justify-between p-4 bg-gradient-to-r from-green-600 to-yellow-500 text-white cursor-move select-none"
+                className="flex items-center justify-between p-4 bg-gradient-to-r from-green-600 to-yellow-500 text-white cursor-move select-none flex-shrink-0"
                 onMouseDown={() => !isMinimized && setIsDragging(true)}
               >
                 <div className="flex items-center gap-3">
@@ -212,7 +265,7 @@ export const FloatingChatbot = ({ className = '' }: FloatingChatbotProps) => {
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-shrink-0">
                   {!isMinimized && (
                     <Button
                       onClick={minimizeChat}
@@ -251,10 +304,8 @@ export const FloatingChatbot = ({ className = '' }: FloatingChatbotProps) => {
 
               {/* Chat Content */}
               {!isMinimized && (
-                <div className="h-full flex flex-col">
-                  <div className="flex-1 overflow-hidden">
-                    <ChatInterface />
-                  </div>
+                <div className="flex-1 overflow-hidden min-h-0">
+                  <ChatInterface />
                 </div>
               )}
 

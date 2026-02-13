@@ -5,6 +5,7 @@ import { Footer } from './Footer'
 import { Sidebar } from './Sidebar'
 import { MobileNav } from './MobileNav'
 import { FloatingChatbot } from '@components/chat/FloatingChatbot'
+// import { ChatPositionDebug } from '@components/chat/ChatPositionDebug' // Uncomment for debugging
 
 export interface MainLayoutProps {
   children?: React.ReactNode
@@ -54,6 +55,9 @@ export const MainLayout = ({
 
       {/* Floating AI Chatbot */}
       {showFloatingChat && <FloatingChatbot />}
+
+      {/* Debug Component - Uncomment to debug positioning */}
+      {/* {showFloatingChat && <ChatPositionDebug />} */}
     </div>
   )
 }
