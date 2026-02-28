@@ -170,9 +170,6 @@ VITE_CHAPA_PUBLIC_KEY=CHAPA_...
 
 # Map Services
 VITE_MAPBOX_ACCESS_TOKEN=pk.eyJ1...
-
-# AI Services
-VITE_OPENAI_API_KEY=sk-...
 ```
 
 ## 🏗️ Architecture
