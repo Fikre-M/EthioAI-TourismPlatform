@@ -13,32 +13,62 @@ const redisConfig = {
   keepAlive: 30000,
   connectTimeout: 10000,
   commandTimeout: 5000,
+  enableOfflineQueue: false, // Don't queue commands when disconnected
 }
 
-// Create Redis instances
+// Track Redis availability
+let isRedisAvailable = false
+
+// Create Redis instances with graceful fallback
 export const redisClient = new Redis(redisConfig)
 export const redisSubscriber = new Redis(redisConfig)
 export const redisPublisher = new Redis(redisConfig)
 
+// Helper to check if Redis is available
+export const isRedisConnected = () => isRedisAvailable
+
+// Graceful Redis wrapper
+export const safeRedisOperation = async <T>(
+  operation: () => Promise<T>,
+  fallback: T
+): Promise<T> => {
+  if (!isRedisAvailable) {
+    logger.debug('Redis not available, using fallback')
+    return fallback
+  }
+  
+  try {
+    return await operation()
+  } catch (error) {
+    logger.warn('Redis operation failed, using fallback:', error)
+    return fallback
+  }
+}
+
 // Redis connection event handlers
 redisClient.on('connect', () => {
   logger.info('Redis client connected')
+  isRedisAvailable = true
 })
 
 redisClient.on('ready', () => {
   logger.info('Redis client ready')
+  isRedisAvailable = true
 })
 
 redisClient.on('error', (error) => {
   logger.error('Redis client error:', error)
+  isRedisAvailable = false
 })
 
 redisClient.on('close', () => {
   logger.warn('Redis client connection closed')
+  isRedisAvailable = false
 })
 
 redisClient.on('reconnecting', () => {
   logger.info('Redis client reconnecting')
+  isRedisAvailable = false
 })
 
 // Subscriber events
@@ -59,25 +89,51 @@ redisPublisher.on('error', (error) => {
   logger.error('Redis publisher error:', error)
 })
 
+// Attempt to connect (but don't crash if it fails)
+const connectRedis = async () => {
+  try {
+    await redisClient.connect()
+    logger.info('✅ Redis connected successfully')
+  } catch (error) {
+    logger.warn('⚠️ Redis connection failed - continuing without Redis:', error)
+    isRedisAvailable = false
+  }
+}
+
+// Connect on startup
+connectRedis()
+
 // Graceful shutdown
 process.on('SIGINT', async () => {
-  logger.info('Closing Redis connections...')
-  await Promise.all([
-    redisClient.quit(),
-    redisSubscriber.quit(),
-    redisPublisher.quit()
-  ])
-  logger.info('Redis connections closed')
+  if (isRedisAvailable) {
+    logger.info('Closing Redis connections...')
+    try {
+      await Promise.all([
+        redisClient.quit(),
+        redisSubscriber.quit(),
+        redisPublisher.quit()
+      ])
+      logger.info('Redis connections closed')
+    } catch (error) {
+      logger.warn('Error closing Redis connections:', error)
+    }
+  }
 })
 
 process.on('SIGTERM', async () => {
-  logger.info('Closing Redis connections...')
-  await Promise.all([
-    redisClient.quit(),
-    redisSubscriber.quit(),
-    redisPublisher.quit()
-  ])
-  logger.info('Redis connections closed')
+  if (isRedisAvailable) {
+    logger.info('Closing Redis connections...')
+    try {
+      await Promise.all([
+        redisClient.quit(),
+        redisSubscriber.quit(),
+        redisPublisher.quit()
+      ])
+      logger.info('Redis connections closed')
+    } catch (error) {
+      logger.warn('Error closing Redis connections:', error)
+    }
+  }
 })
 
 export default redisClient

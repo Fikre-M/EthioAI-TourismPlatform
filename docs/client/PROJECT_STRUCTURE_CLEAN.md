@@ -97,8 +97,8 @@ EthioAI/
 
 ```bash
 # Clone the repository
-git clone https://github.com/Fikre-M/EthioAI.git
-cd EthioAI
+git clone https://github.com/Fikre-M/EthioAI-TourismPlatform.git
+cd EthioAI-TourismPlatform
 
 # Navigate to frontend directory
 cd frontend

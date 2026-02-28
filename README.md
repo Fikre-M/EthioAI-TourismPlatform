@@ -142,8 +142,8 @@ Comprehensive documentation is available in the `/docs` folder:
 
 ```bash
 # Clone the repository
-git clone https://github.com/Fikre-M/EthioAI.git
-cd EthioAI/frontend
+git clone https://github.com/Fikre-M/EthioAI-TourismPlatform.git
+cd EthioAI-TourismPlatform/frontend
 
 # Install dependencies
 npm install
@@ -162,7 +162,7 @@ Visit `http://localhost:3000` to see the application.
 
 ```env
 # API Configuration
-VITE_API_BASE_URL=http://localhost:3000/api
+VITE_API_BASE_URL=http://localhost:5000/api
 
 # Payment Gateways
 VITE_STRIPE_PUBLIC_KEY=pk_test_...
@@ -299,8 +299,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 - **Documentation**: [docs/](./docs/)
-- **Issues**: [GitHub Issues](https://github.com/Fikre-M/EthioAI/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/Fikre-M/EthioAI/discussions)
+- **Issues**: [GitHub Issues](https://github.com/Fikre-M/EthioAI-TourismPlatform/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Fikre-M/EthioAI-TourismPlatform/discussions)
 - **Email**: support@ethioai.com
 
 ---

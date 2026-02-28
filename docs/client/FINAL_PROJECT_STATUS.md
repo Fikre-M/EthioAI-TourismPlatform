@@ -113,8 +113,8 @@ EthioAI/
 ### ✅ **How to Run**
 ```bash
 # Clone and setup
-git clone https://github.com/Fikre-M/EthioAI.git
-cd EthioAI/frontend
+git clone https://github.com/Fikre-M/EthioAI-TourismPlatform.git
+cd EthioAI-TourismPlatform/frontend
 
 # Install dependencies
 npm install
