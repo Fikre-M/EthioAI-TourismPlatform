@@ -2,8 +2,7 @@ import React, { useState, useRef } from 'react'
 import { Button } from '@/components/common/Button/Button'
 import {
   FaStar, FaCamera, FaTimes, FaThumbsUp, FaThumbsDown,
-  FaFlag, FaCheckCircle, FaUser, FaImage, FaUpload,
-  FaTrash, FaEdit, FaReply, FaHeart, FaShare
+  FaFlag, FaCheckCircle, FaReply, FaShare
 } from 'react-icons/fa'
 
 interface ReviewPhoto {
@@ -51,17 +50,13 @@ interface ProductReviewProps {
 }
 
 const ProductReview: React.FC<ProductReviewProps> = ({
-  productId,
   reviews,
   onAddReview,
-  onUpdateReview,
-  onDeleteReview,
   onHelpfulVote,
   canReview = true,
   userHasPurchased = false
 }) => {
   const [showReviewForm, setShowReviewForm] = useState(false)
-  const [editingReview, setEditingReview] = useState<string | null>(null)
   const [newReview, setNewReview] = useState({
     rating: 0,
     title: '',
@@ -122,7 +117,7 @@ const ProductReview: React.FC<ProductReviewProps> = ({
       comment: newReview.comment,
       photos: newReview.photos.map((file, index) => ({
         id: `photo-${Date.now()}-${index}`,
-        url: photoPreview[index],
+        url: URL.createObjectURL(file),
         caption: ''
       })),
       verified: userHasPurchased
