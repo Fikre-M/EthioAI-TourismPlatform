@@ -1,4 +1,6 @@
-import { UserRole } from '@prisma/client';
+import { Request } from 'express';
+
+export type UserRole = 'USER' | 'ADMIN' | 'GUIDE' | 'VENDOR';
 
 export interface RegisterInput {
   name: string;

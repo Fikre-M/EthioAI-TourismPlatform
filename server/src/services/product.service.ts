@@ -76,9 +76,9 @@ export class ProductService {
         sizes: data.sizes || [],
         dimensions: data.dimensions || null,
       },
-      include: { reviews: true,
+      include: {
         vendor: {
-          include: { reviews: true,
+          include: {
             user: {
               select: {
                 name: true,
@@ -220,9 +220,9 @@ export class ProductService {
         orderBy,
         skip,
         take: limit,
-        include: { reviews: true,
+        include: {
           vendor: {
-            include: { reviews: true,
+            include: {
               user: {
                 select: {
                   name: true,
@@ -230,7 +230,6 @@ export class ProductService {
               },
             },
           },
-          category: true,
           reviews: {
             select: {
               rating: true,
@@ -249,11 +248,11 @@ export class ProductService {
     // Calculate average ratings and sales
     const productsWithStats = products.map(product => ({
       ...product,
-      averageRating: 0
-        0
+      averageRating: product.reviews && product.reviews.length > 0 
+        ? product.reviews.reduce((sum, review) => sum + review.rating, 0) / product.reviews.length 
         : null,
       reviewCount: 0,
-      totalSales: product.orderItems.reduce((sum, item) => sum + item.quantity, 0),
+      totalSales: product.orderItems?.reduce((sum, item) => sum + item.quantity, 0) || 0
     }));
 
     const pagination = calculatePagination(page, limit, total);
@@ -322,15 +321,15 @@ export class ProductService {
 
     // Calculate average rating and sales
     const averageRating = product.reviews.length > 0
-      0
-      : null;
-
-    const totalSales = product.orderItems.reduce((sum, item) => sum + item.quantity, 0);
-
+      ? product.reviews.reduce((sum: number, review: any) => sum + review.rating, 0) / product.reviews.length
+      : 0;
+    
+    const totalSales = product.orderItems?.reduce((sum: number, item: any) => sum + item.quantity, 0) || 0;
+    
     return {
       ...product,
       averageRating,
-      reviewCount: 0,
+      reviewCount: product.reviews.length || 0,
       totalSales,
     };
   }
@@ -525,8 +524,8 @@ export class ProductService {
     // Calculate average ratings
     return products.map(product => ({
       ...product,
-      averageRating: 0
-        0
+      averageRating: product.reviews && product.reviews.length > 0 
+        ? product.reviews.reduce((sum, review) => sum + review.rating, 0) / product.reviews.length 
         : null,
       reviewCount: 0,
     })) as any;
@@ -566,8 +565,8 @@ export class ProductService {
 
     return products.map(product => ({
       ...product,
-      averageRating: 0
-        0
+      averageRating: product.reviews && product.reviews.length > 0 
+        ? product.reviews.reduce((sum, review) => sum + review.rating, 0) / product.reviews.length 
         : null,
       reviewCount: 0,
     })) as any;

@@ -3,11 +3,7 @@ import jwt from 'jsonwebtoken';
 import { config } from '../config/index';
 import { UnauthorizedError, ForbiddenError } from './error.middleware';
 import { log } from '../utils/logger';
-
-export interface AuthRequest extends Request {
-  userId?: string;
-  userRole?: string;
-}
+import { AuthRequest, UserRole } from '../modules/auth/auth.types';
 
 /**
  * Authenticate user using JWT token
@@ -25,8 +21,11 @@ export const authenticate = (req: AuthRequest, res: Response, next: NextFunction
     try {
       const decoded = jwt.verify(token, config.jwt.accessSecret) as any;
       
-      req.userId = decoded.userId;
-      req.userRole = decoded.role;
+      req.user = {
+        id: decoded.userId,
+        email: decoded.email,
+        role: decoded.role as UserRole
+      };
       
       next();
     } catch (jwtError: any) {
@@ -58,8 +57,11 @@ export const optionalAuth = (req: AuthRequest, res: Response, next: NextFunction
 
     try {
       const decoded = jwt.verify(token, config.jwt.accessSecret) as any;
-      req.userId = decoded.userId;
-      req.userRole = decoded.role;
+      req.user = {
+        id: decoded.userId,
+        email: decoded.email,
+        role: decoded.role as UserRole
+      };
     } catch (jwtError) {
       // Ignore JWT errors for optional auth
       log.warn('Optional auth failed:', jwtError);
@@ -77,14 +79,14 @@ export const optionalAuth = (req: AuthRequest, res: Response, next: NextFunction
 export const requireRole = (allowedRoles: string[]) => {
   return (req: AuthRequest, res: Response, next: NextFunction): void => {
     try {
-      if (!req.userRole) {
+      if (!req.user?.role) {
         throw new UnauthorizedError('Authentication required');
       }
 
-      if (!allowedRoles.includes(req.userRole)) {
-        log.security('Unauthorized role access attempt', req.userId, req.get('User-Agent'), {
+      if (!allowedRoles.includes(req.user.role)) {
+        log.security('Unauthorized role access attempt', req.user?.id, req.get('User-Agent'), {
           requiredRoles: allowedRoles,
-          userRole: req.userRole,
+          userRole: req.user.role,
           ip: req.ip
         });
         throw new ForbiddenError('Insufficient permissions');
@@ -121,8 +123,11 @@ export const validateRefreshToken = (req: AuthRequest, res: Response, next: Next
 
     try {
       const decoded = jwt.verify(refreshToken, config.jwt.refreshSecret) as any;
-      req.userId = decoded.userId;
-      req.userRole = decoded.role;
+      req.user = {
+        id: decoded.userId,
+        email: decoded.email,
+        role: decoded.role as UserRole
+      };
       next();
     } catch (jwtError: any) {
       if (jwtError.name === 'TokenExpiredError') {
@@ -149,13 +154,13 @@ export const requireOwnershipOrAdmin = (userIdField: string = 'userId') => {
       }
 
       // Allow if user owns the resource or is admin
-      if (req.userId === resourceUserId || req.userRole === 'ADMIN') {
+      if (req.user?.id === resourceUserId || req.user?.role === 'ADMIN') {
         return next();
       }
 
-      log.security('Unauthorized resource access attempt', req.userId, req.get('User-Agent'), {
+      log.security('Unauthorized resource access attempt', req.user?.id, req.get('User-Agent'), {
         resourceUserId,
-        requestedBy: req.userId,
+        requestedBy: req.user?.id,
         ip: req.ip
       });
 
@@ -174,7 +179,7 @@ export const rateLimitByUser = (maxRequests: number, windowMs: number) => {
 
   return (req: AuthRequest, res: Response, next: NextFunction): void => {
     try {
-      const userId = req.userId;
+      const userId = req.user?.id;
       
       if (!userId) {
         return next(); // Skip rate limiting for unauthenticated requests
@@ -239,7 +244,7 @@ export const requireEmailVerification = (req: AuthRequest, res: Response, next: 
   }
 
   // TODO: Implement email verification check
-  // const user = await getUserById(req.userId);
+  // const user = await getUserById(req.user?.id);
   // if (!user.isEmailVerified) {
   //   throw new ForbiddenError('Email verification required');
   // }
