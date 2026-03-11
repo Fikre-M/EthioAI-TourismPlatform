@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { Button } from '@components/common/Button/Button'
 import ReviewCard from '../components/ReviewCard'
 import WriteReview from '../components/WriteReview'

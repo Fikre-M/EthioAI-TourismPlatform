@@ -1,6 +1,6 @@
 import React from 'react'
 import { Review } from '../pages/ReviewsPage'
-import { FaStar, FaImage, FaVideo, FaCheckCircle } from 'react-icons/fa'
+import { FaStar, FaImage, FaCheckCircle } from 'react-icons/fa'
 
 interface ReviewStatsProps {
   reviews: Review[]

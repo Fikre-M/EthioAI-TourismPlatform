@@ -1,6 +1,6 @@
 import React from 'react'
 import { Review } from '../pages/ReviewsPage'
-import { FaStar, FaThumbsUp, FaThumbsDown, FaReply, FaShare, FaFlag, FaCheckCircle, FaMapMarkerAlt, FaCalendar } from 'react-icons/fa'
+import { FaStar, FaThumbsUp, FaReply, FaShare, FaFlag, FaCheckCircle, FaMapMarkerAlt, FaCalendar } from 'react-icons/fa'
 
 interface ReviewCardProps {
   review: Review

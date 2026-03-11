@@ -6,9 +6,8 @@ import { Product } from './MarketplacePage'
 import {
   FaStar, FaMapMarkerAlt, FaCalendar, FaShoppingBag, FaHeart,
   FaShare, FaPhone, FaEnvelope, FaGlobe, FaInstagram, FaFacebook,
-  FaTwitter, FaCheckCircle, FaAward, FaUsers, FaTruck, FaUndo,
-  FaFilter, FaSort, FaTh, FaList, FaSearch, FaFlag,
-  FaChartLine, FaThumbsUp, FaComment, FaEye, FaPlus
+  FaTwitter, FaCheckCircle, FaTruck, FaTh, FaList, FaSearch,
+  FaThumbsUp, FaEye, FaUndo
 } from 'react-icons/fa'
 
 interface Vendor {

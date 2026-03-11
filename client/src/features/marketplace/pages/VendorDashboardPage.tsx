@@ -3,10 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/common/Button/Button'
 import {
   FaPlus, FaEdit, FaTrash, FaEye, FaChartLine, FaShoppingBag,
-  FaDollarSign, FaUsers, FaStar, FaEnvelope, FaBox, FaTruck,
-  FaCalendar, FaFilter, FaSearch, FaDownload, FaUpload,
-  FaImage, FaTimes, FaCheckCircle, FaExclamationTriangle,
-  FaClock, FaArrowUp, FaArrowDown, FaPercent, FaHeart
+  FaDollarSign, FaBox, FaTimes, FaStar, FaEnvelope, FaArrowUp,
+  FaUpload
 } from 'react-icons/fa'
 
 interface DashboardStats {

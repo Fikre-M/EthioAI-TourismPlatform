@@ -4,8 +4,8 @@ import { Button } from '@/components/common/Button/Button'
 import { Product } from '../pages/MarketplacePage'
 import {
   FaShoppingCart, FaTrash, FaPlus, FaMinus, FaTimes,
-  FaShippingFast, FaTag, FaCalculator, FaCreditCard,
-  FaLock, FaCheckCircle, FaExclamationTriangle
+  FaShippingFast, FaTag, FaCreditCard,
+  FaLock, FaCheckCircle
 } from 'react-icons/fa'
 
 interface CartItem extends Product {

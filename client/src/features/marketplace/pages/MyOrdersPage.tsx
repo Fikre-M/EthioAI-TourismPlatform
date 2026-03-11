@@ -3,9 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/common/Button/Button'
 import {
   FaBox, FaShippingFast, FaCheckCircle, FaTimes, FaEye,
-  FaDownload, FaUndo, FaSearch, FaFilter, FaCalendar,
-  FaTruck, FaMapMarkerAlt, FaClock, FaExclamationTriangle,
-  FaStar, FaComment, FaPhone, FaEnvelope
+  FaSearch, FaTruck, FaMapMarkerAlt, FaClock
 } from 'react-icons/fa'
 
 interface OrderItem {
