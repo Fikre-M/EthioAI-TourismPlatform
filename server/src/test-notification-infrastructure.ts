@@ -5,7 +5,7 @@ import {
   DeliveryChannel,
   NotificationPriority
 } from './types/notification.types'
-import logger from './utils/logger'
+import { logger } from './utils/logger'
 
 async function testNotificationInfrastructure() {
   const prisma = new PrismaClient()
