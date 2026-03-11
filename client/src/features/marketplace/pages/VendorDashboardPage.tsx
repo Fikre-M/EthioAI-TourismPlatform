@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button } from '@components/common/Button/Button'
+import { Button } from '@/components/common/Button/Button'
 import {
   FaPlus, FaEdit, FaTrash, FaEye, FaChartLine, FaShoppingBag,
   FaDollarSign, FaUsers, FaStar, FaEnvelope, FaBox, FaTruck,

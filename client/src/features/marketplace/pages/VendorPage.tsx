@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Button } from '@components/common/Button/Button'
+import { Button } from '@/components/common/Button/Button'
 import ProductCard from '../components/ProductCard'
 import { Product } from './MarketplacePage'
 import {
