@@ -1,4 +1,4 @@
-import { Tour } from '@/types/tour'
+import { Tour } from '@/services/tour.service'
 import { MapView } from './MapView'
 import { RouteTimeline } from './RouteOverlay'
 import { useMap, calculateRouteDistance, formatDistance } from '@/hooks/useMap'

@@ -93,33 +93,28 @@ export const ToursPage = () => {
     }
 
     // Price range
-    if (filters.priceRange) {
-      result = result.filter(tour =>
-        tour.price >= filters.priceRange![0] && tour.price <= filters.priceRange![1]
-      )
+    if (filters.minPrice !== undefined || filters.maxPrice !== undefined) {
+      result = result.filter(tour => {
+        const price = tour.price;
+        return (filters.minPrice === undefined || price >= filters.minPrice) &&
+               (filters.maxPrice === undefined || price <= filters.maxPrice);
+      })
     }
 
     // Duration
-    if (filters.duration) {
-      result = result.filter(tour =>
-        tour.durationDays >= filters.duration![0] && tour.durationDays <= filters.duration![1]
-      )
+    if (filters.minDuration !== undefined || filters.maxDuration !== undefined) {
+      result = result.filter(tour => {
+        const duration = tour.duration;
+        return (filters.minDuration === undefined || duration >= filters.minDuration) &&
+               (filters.maxDuration === undefined || duration <= filters.maxDuration);
+      })
     }
 
-    // Difficulty
+    // Rating - use guide rating
     if (filters.difficulty && filters.difficulty.length > 0) {
       result = result.filter(tour => filters.difficulty!.includes(tour.difficulty))
     }
-
-    // Rating
-    if (filters.rating) {
-      result = result.filter(tour => tour.rating >= filters.rating!)
-    }
-
-    // Region
-    if (filters.region && filters.region.length > 0) {
-      result = result.filter(tour => filters.region!.includes(tour.region))
-    }
+    // Note: Service TourFilters doesn't have rating filter, so removing this
 
     // Sort
     result.sort((a, b) => {
@@ -129,13 +124,11 @@ export const ToursPage = () => {
         case 'price-desc':
           return b.price - a.price
         case 'rating':
-          return b.rating - a.rating
+          return (b.guide?.rating || 0) - (a.guide?.rating || 0)
         case 'duration':
-          return a.durationDays - b.durationDays
-        case 'popularity':
-          return b.reviewCount - a.reviewCount
+          return a.duration - b.duration
         case 'newest':
-          return b.createdAt.getTime() - a.createdAt.getTime()
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         default:
           return 0
       }

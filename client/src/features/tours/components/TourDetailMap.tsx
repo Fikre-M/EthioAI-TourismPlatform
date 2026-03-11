@@ -139,19 +139,19 @@ export const TourDetailMap = ({ tour, className = '' }: TourDetailMapProps) => {
       {/* Tab Content */}
       <div className="min-h-[400px]">
         {/* Meeting Point Tab */}
-        {activeTab === 'meeting' && tour.meetingPoint && (
+        {activeTab === 'meeting' && tour.startLocation && (
           <div className="space-y-6">
             <div className="relative">
               <MapView
-                center={tour.meetingPoint.coordinates}
+                center={{ lat: tour.startLocation.coordinates[0], lng: tour.startLocation.coordinates[1] }}
                 zoom={15}
                 markers={[
                   {
                     id: 'meeting-point',
-                    lat: tour.meetingPoint.coordinates.lat,
-                    lng: tour.meetingPoint.coordinates.lng,
-                    title: tour.meetingPoint.name,
-                    description: tour.meetingPoint.address,
+                    lat: tour.startLocation.coordinates[0],
+                    lng: tour.startLocation.coordinates[1],
+                    title: tour.startLocation.name,
+                    description: tour.startLocation.address || 'Meeting point',
                   },
                   ...(userLat && userLng
                     ? [
@@ -171,7 +171,7 @@ export const TourDetailMap = ({ tour, className = '' }: TourDetailMapProps) => {
               {/* Get Directions Button */}
               <div className="absolute bottom-4 right-4">
                 <a
-                  href={getDirectionsUrl(tour.meetingPoint.coordinates)}
+                  href={getDirectionsUrl({ lat: tour.startLocation.coordinates[0], lng: tour.startLocation.coordinates[1] })}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-semibold shadow-lg transition-colors"
@@ -219,10 +219,10 @@ export const TourDetailMap = ({ tour, className = '' }: TourDetailMapProps) => {
                       </svg>
                       <div>
                         <p className="font-medium text-gray-900 dark:text-white">
-                          {tour.meetingPoint.name}
+                          {tour.startLocation.name}
                         </p>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                          {tour.meetingPoint.address}
+                          {tour.startLocation.address || 'Meeting point'}
                         </p>
                       </div>
                     </div>
@@ -244,7 +244,7 @@ export const TourDetailMap = ({ tour, className = '' }: TourDetailMapProps) => {
                       <div>
                         <p className="font-medium text-gray-900 dark:text-white">Meeting Time</p>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                          {tour.meetingPoint.meetingTime}
+                          Please arrive 15 minutes early
                         </p>
                       </div>
                     </div>
