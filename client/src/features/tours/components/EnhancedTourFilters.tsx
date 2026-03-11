@@ -26,16 +26,6 @@ const difficulties: { value: string; label: string; color: string }[] = [
   { value: 'Challenging', label: 'Challenging', color: 'text-orange-600' },
 ]
 
-const regions = [
-  'Addis Ababa',
-  'Amhara',
-  'Oromia',
-  'Tigray',
-  'Southern Nations',
-  'Afar',
-  'Somali',
-]
-
 export const EnhancedTourFilters = ({ filters, onFiltersChange, onReset }: EnhancedTourFiltersProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const [dateRange, setDateRange] = useState<DateRange>({ startDate: null, endDate: null })

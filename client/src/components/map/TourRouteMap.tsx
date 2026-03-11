@@ -13,17 +13,17 @@ export const TourRouteMap = ({ tour, className = '' }: TourRouteMapProps) => {
   const { mapState, fitBounds } = useMap()
 
   // Extract route from itinerary
-  const routeCoordinates = tour.itinerary.map((_day, index) => ({
+  const routeCoordinates = tour.itinerary.map((item, index) => ({
     lat: 9.0320 + index * 0.5, // Simplified - would come from actual data
     lng: 38.7469 + index * 0.3,
   }))
 
-  const markers = tour.itinerary.map((day, index) => ({
-    id: `day-${day.day}`,
+  const markers = tour.itinerary.map((item, index) => ({
+    id: `day-${item.day}`,
     lat: routeCoordinates[index].lat,
     lng: routeCoordinates[index].lng,
-    title: `Day ${day.day}: ${day.title}`,
-    description: day.description,
+    title: `Day ${item.day}: ${item.title}`,
+    description: item.activities.join(', '),
   }))
 
   const routes = [
