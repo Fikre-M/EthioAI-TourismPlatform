@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button } from '@components/common/Button/Button'
+import { Button } from '@/components/common/Button/Button'
 import {
   FaCalendarAlt, FaMapMarkerAlt, FaUsers, FaClock, FaVideo,
   FaHeart, FaShare, FaTicketAlt, FaGlobe, FaPlay, FaPause,
@@ -406,7 +406,7 @@ export const LiveCulturalEvents: React.FC<LiveCulturalEventsProps> = ({
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id as 'live' | 'upcoming' | 'community' | 'my-events')}
                 className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors ${
                   activeTab === tab.id
                     ? 'bg-white text-red-600 shadow-sm'

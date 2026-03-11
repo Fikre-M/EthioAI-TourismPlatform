@@ -4,7 +4,7 @@ import {
   FaArrowLeft, FaArrowRight, FaDownload, FaShare, FaEye, FaHeart,
   FaBookmark, FaExternalLinkAlt, FaQuoteLeft, FaInfoCircle
 } from 'react-icons/fa'
-import { Button } from '@components/common/Button/Button'
+import { Button } from '@/components/common/Button/Button'
 
 interface MediaItem {
   id: string

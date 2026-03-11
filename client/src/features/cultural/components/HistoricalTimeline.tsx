@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button } from '@components/common/Button/Button'
+import { Button } from '@/components/common/Button/Button'
 import {
   FaCalendarAlt, FaMapMarkerAlt, FaUsers, FaCrown, FaChurch,
   FaArrowLeft, FaArrowRight, FaExpand, FaPlay, FaImage,

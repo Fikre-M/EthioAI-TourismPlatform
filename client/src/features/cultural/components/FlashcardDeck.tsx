@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button } from '@components/common/Button/Button'
+import { Button } from '@/components/common/Button/Button'
 import {
   FaArrowLeft, FaArrowRight, FaRandom, FaRedo, FaCheck,
   FaTimes, FaVolumeUp, FaEye, FaEyeSlash, FaStar,

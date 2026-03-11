@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button } from '@components/common/Button/Button'
+import { Button } from '@/components/common/Button/Button'
 import {
   FaCalendarAlt, FaPlay, FaPause, FaFastForward, FaFastBackward,
   FaExpand, FaCompress, FaFilter, FaSearch, FaInfoCircle,
@@ -345,7 +345,7 @@ export const CulturalTimeline: React.FC<CulturalTimelineProps> = ({
                 key={view}
                 variant={viewMode === view ? 'primary' : 'outline'}
                 size="sm"
-                onClick={() => setViewMode(view as any)}
+                onClick={() => setViewMode(view as 'timeline' | 'periods' | 'interactive')}
               >
                 {view.charAt(0).toUpperCase() + view.slice(1)}
               </Button>

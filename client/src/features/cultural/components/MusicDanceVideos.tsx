@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Button } from '@components/common/Button/Button'
+import { Button } from '@/components/common/Button/Button'
 import {
   FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaExpand, FaCompress,
   FaMusic, FaUsers, FaMapMarkerAlt, FaCalendarAlt, FaHeart,
