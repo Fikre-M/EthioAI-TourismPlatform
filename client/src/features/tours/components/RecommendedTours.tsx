@@ -38,37 +38,33 @@ export const RecommendedTours = ({
       title: 'Simien Mountains Trekking Adventure',
       description: 'Trek through the stunning Simien Mountains National Park, home to unique wildlife and breathtaking landscapes.',
       shortDescription: 'Trek through stunning mountain landscapes',
-      imageUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
       images: ['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800'],
       price: 4500,
-      currency: 'ETB',
-      duration: '5 days / 4 nights',
-      durationDays: 5,
-      location: 'Simien Mountains',
-      region: 'Amhara',
+      duration: 5,
       category: 'adventure',
-      difficulty: 'challenging',
-      rating: 4.9,
-      reviewCount: 89,
+      difficulty: 'Challenging',
       maxGroupSize: 8,
-      minAge: 16,
-      highlights: ['Ras Dashen peak', 'Gelada baboons', 'Dramatic escarpments'],
       included: ['Guide', 'Camping equipment', 'Meals'],
       excluded: ['Personal gear', 'Tips'],
       itinerary: [],
       guide: {
         id: '2',
-        name: 'Tadesse Alemu',
-        avatar: 'https://i.pravatar.cc/150?img=13',
+        user: {
+          name: 'Tadesse Alemu',
+          avatar: 'https://i.pravatar.cc/150?img=13',
+        },
+        experience: 120,
         languages: ['English', 'Amharic'],
+        specialties: ['Trekking', 'Wildlife'],
         rating: 4.9,
-        toursGuided: 120,
+        totalReviews: 89,
+        isVerified: true,
       },
       availability: [],
       tags: ['UNESCO', 'Trekking', 'Wildlife'],
       featured: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: '2024-01-15T00:00:00Z',
+      updatedAt: '2024-01-15T00:00:00Z',
     },
     {
       id: '3',
@@ -78,145 +74,126 @@ export const RecommendedTours = ({
       imageUrl: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800',
       images: ['https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800'],
       price: 6500,
-      currency: 'ETB',
-      duration: '4 days / 3 nights',
-      durationDays: 4,
-      location: 'Danakil Depression',
-      region: 'Afar',
+      duration: 4,
       category: 'adventure',
-      difficulty: 'extreme',
-      rating: 4.7,
-      reviewCount: 67,
+      difficulty: 'Challenging',
       maxGroupSize: 10,
-      minAge: 18,
-      highlights: ['Erta Ale volcano', 'Dallol sulfur springs', 'Salt caravans'],
       included: ['4WD transport', 'Guide', 'Camping'],
       excluded: ['Personal items', 'Insurance'],
-      itinerary: [],
       guide: {
         id: '3',
-        name: 'Ahmed Hassan',
-        avatar: 'https://i.pravatar.cc/150?img=14',
+        user: {
+          name: 'Ahmed Hassan',
+          avatar: 'https://i.pravatar.cc/150?img=14',
+        },
+        experience: 95,
         languages: ['English', 'Amharic', 'Afar'],
+        specialties: ['Volcano', 'Extreme'],
         rating: 4.8,
-        toursGuided: 95,
+        totalReviews: 67,
+        isVerified: true,
       },
       availability: [],
       tags: ['Volcano', 'Extreme', 'Photography'],
       featured: false,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: '2024-02-01T00:00:00Z',
+      updatedAt: '2024-02-01T00:00:00Z',
     },
     {
       id: '4',
       title: 'Omo Valley Cultural Journey',
       description: 'Discover the diverse tribal cultures of the Omo Valley, meeting indigenous communities and experiencing their traditions.',
       shortDescription: 'Meet indigenous tribes and cultures',
-      imageUrl: 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=800',
       images: ['https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=800'],
       price: 5500,
-      currency: 'ETB',
-      duration: '6 days / 5 nights',
-      durationDays: 6,
-      location: 'Omo Valley',
-      region: 'Southern Nations',
+      duration: 6,
       category: 'cultural',
-      difficulty: 'moderate',
-      rating: 4.6,
-      reviewCount: 78,
+      difficulty: 'Moderate',
       maxGroupSize: 12,
-      minAge: 12,
-      highlights: ['Mursi tribe', 'Hamar bull jumping', 'Traditional markets'],
       included: ['Transport', 'Guide', 'Accommodation'],
       excluded: ['Flights', 'Photo fees'],
-      itinerary: [],
       guide: {
         id: '4',
-        name: 'Bekele Worku',
-        avatar: 'https://i.pravatar.cc/150?img=15',
+        user: {
+          name: 'Bekele Worku',
+          avatar: 'https://i.pravatar.cc/150?img=15',
+        },
+        experience: 110,
         languages: ['English', 'Amharic', 'Oromo'],
+        specialties: ['Culture', 'Tribes'],
         rating: 4.7,
-        toursGuided: 110,
+        totalReviews: 78,
+        isVerified: true,
       },
       availability: [],
       tags: ['Culture', 'Tribes', 'Photography'],
       featured: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: '2024-02-15T00:00:00Z',
+      updatedAt: '2024-02-15T00:00:00Z',
     },
     {
       id: '5',
       title: 'Bale Mountains Wildlife Safari',
       description: 'Explore the unique Afro-alpine ecosystem of Bale Mountains, home to the rare Ethiopian wolf and mountain nyala.',
       shortDescription: 'Spot rare Ethiopian wildlife',
-      imageUrl: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800',
       images: ['https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800'],
       price: 4800,
-      currency: 'ETB',
-      duration: '5 days / 4 nights',
-      durationDays: 5,
-      location: 'Bale Mountains',
-      region: 'Oromia',
+      duration: 5,
       category: 'wildlife',
-      difficulty: 'moderate',
-      rating: 4.8,
-      reviewCount: 92,
+      difficulty: 'Moderate',
       maxGroupSize: 10,
-      minAge: 10,
-      highlights: ['Ethiopian wolf', 'Mountain nyala', 'Sanetti Plateau'],
       included: ['Park fees', 'Guide', 'Accommodation'],
       excluded: ['Transport to park', 'Personal expenses'],
-      itinerary: [],
       guide: {
         id: '5',
-        name: 'Girma Tesfaye',
-        avatar: 'https://i.pravatar.cc/150?img=16',
+        user: {
+          name: 'Girma Tesfaye',
+          avatar: 'https://i.pravatar.cc/150?img=16',
+        },
+        experience: 130,
         languages: ['English', 'Amharic', 'Oromo'],
+        specialties: ['Wildlife', 'Nature'],
         rating: 4.9,
-        toursGuided: 130,
+        totalReviews: 92,
+        isVerified: true,
       },
       availability: [],
       tags: ['Wildlife', 'Nature', 'Endemic Species'],
       featured: false,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: '2024-03-01T00:00:00Z',
+      updatedAt: '2024-03-01T00:00:00Z',
     },
     {
       id: '6',
       title: 'Tigray Rock Churches Exploration',
       description: 'Climb to ancient rock-hewn churches perched on cliff faces, offering stunning views and spiritual experiences.',
       shortDescription: 'Climb to cliff-top churches',
-      imageUrl: 'https://images.unsplash.com/photo-1609137144813-7d9921338f24?w=800',
       images: ['https://images.unsplash.com/photo-1609137144813-7d9921338f24?w=800'],
       price: 4200,
-      currency: 'ETB',
-      duration: '4 days / 3 nights',
-      durationDays: 4,
-      location: 'Tigray',
-      region: 'Tigray',
+      duration: 4,
       category: 'historical',
-      difficulty: 'challenging',
-      rating: 4.7,
-      reviewCount: 71,
+      difficulty: 'Challenging',
       maxGroupSize: 8,
-      minAge: 14,
-      highlights: ['Abuna Yemata Guh', 'Debre Damo', 'Ancient frescoes'],
       included: ['Guide', 'Transport', 'Entrance fees'],
       excluded: ['Accommodation', 'Meals'],
-      itinerary: [],
       guide: {
         id: '6',
-        name: 'Gebre Selassie',
-        avatar: 'https://i.pravatar.cc/150?img=17',
+        user: {
+          name: 'Gebre Selassie',
+          avatar: 'https://i.pravatar.cc/150?img=17',
+        },
+        experience: 105,
         languages: ['English', 'Tigrinya', 'Amharic'],
+        specialties: ['Churches', 'History'],
         rating: 4.8,
-        toursGuided: 105,
+        totalReviews: 71,
+        isVerified: true,
       },
       availability: [],
       tags: ['Churches', 'History', 'Adventure'],
       featured: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: '2024-03-15T00:00:00Z',
+      updatedAt: '2024-03-15T00:00:00Z',
     },
   ]
 
@@ -231,11 +208,14 @@ export const RecommendedTours = ({
           // AI-based recommendations using browsing history
           filtered = mockTours.filter((tour) => {
             const matchesCategory = mockBrowsingHistory.categories.includes(tour.category)
-            const matchesRegion = mockBrowsingHistory.regions.includes(tour.region)
+            // Note: Service Tour doesn't have region property, so using tags instead
+            const matchesTags = mockBrowsingHistory.regions.some(region => 
+              (tour.tags || []).some(tag => tag.toLowerCase().includes(region.toLowerCase()))
+            )
             const matchesPrice =
               tour.price >= mockBrowsingHistory.priceRange.min &&
               tour.price <= mockBrowsingHistory.priceRange.max
-            return matchesCategory || matchesRegion || matchesPrice
+            return matchesCategory || matchesTags || matchesPrice
           })
           break
 
@@ -245,10 +225,10 @@ export const RecommendedTours = ({
             filtered = mockTours.filter((tour) => {
               if (tour.id === currentTour.id) return false
               const sameCategory = tour.category === currentTour.category
-              const sameRegion = tour.region === currentTour.region
+              // Note: Service Tour doesn't have region property
               const similarPrice = Math.abs(tour.price - currentTour.price) < 2000
-              const similarDuration = Math.abs(tour.durationDays - currentTour.durationDays) <= 2
-              return sameCategory || sameRegion || (similarPrice && similarDuration)
+              const similarDuration = Math.abs(tour.duration - currentTour.duration) <= 2
+              return sameCategory || similarPrice || similarDuration
             })
           }
           break
@@ -256,7 +236,7 @@ export const RecommendedTours = ({
         case 'regional':
           // Popular tours in specific region
           filtered = mockTours.filter((tour) => {
-            if (region) return tour.region === region
+            if (region) return (tour.tags || []).some(tag => tag.toLowerCase().includes(region.toLowerCase()))
             if (category) return tour.category === category
             return tour.featured
           })
@@ -266,8 +246,8 @@ export const RecommendedTours = ({
           filtered = mockTours
       }
 
-      // Sort by rating and limit results
-      const sorted = filtered.sort((a, b) => b.rating - a.rating).slice(0, maxItems)
+      // Sort by guide rating and limit results
+      const sorted = filtered.sort((a, b) => (b.guide?.rating || 0) - (a.guide?.rating || 0)).slice(0, maxItems)
       setRecommendations(sorted)
       setLoading(false)
     }, 800)

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { TourFilters as TourFiltersType, TourCategory, TourDifficulty } from '@/types/tour'
+import { TourFilters as TourFiltersType } from '@/services/tour.service'
 import { PriceRangeSlider } from './PriceRangeSlider'
 import { DateRangePicker, DateRange } from './DateRangePicker'
 
@@ -9,7 +9,7 @@ export interface EnhancedTourFiltersProps {
   onReset: () => void
 }
 
-const categories: { value: TourCategory; label: string; icon: string }[] = [
+const categories: { value: string; label: string; icon: string }[] = [
   { value: 'historical', label: 'Historical', icon: '🏛️' },
   { value: 'adventure', label: 'Adventure', icon: '🏔️' },
   { value: 'cultural', label: 'Cultural', icon: '🎭' },
@@ -20,11 +20,10 @@ const categories: { value: TourCategory; label: string; icon: string }[] = [
   { value: 'city', label: 'City Tours', icon: '🏙️' },
 ]
 
-const difficulties: { value: TourDifficulty; label: string; color: string }[] = [
-  { value: 'easy', label: 'Easy', color: 'text-green-600' },
-  { value: 'moderate', label: 'Moderate', color: 'text-yellow-600' },
-  { value: 'challenging', label: 'Challenging', color: 'text-orange-600' },
-  { value: 'extreme', label: 'Extreme', color: 'text-red-600' },
+const difficulties: { value: string; label: string; color: string }[] = [
+  { value: 'Easy', label: 'Easy', color: 'text-green-600' },
+  { value: 'Moderate', label: 'Moderate', color: 'text-yellow-600' },
+  { value: 'Challenging', label: 'Challenging', color: 'text-orange-600' },
 ]
 
 const regions = [
@@ -41,36 +40,21 @@ export const EnhancedTourFilters = ({ filters, onFiltersChange, onReset }: Enhan
   const [isOpen, setIsOpen] = useState(false)
   const [dateRange, setDateRange] = useState<DateRange>({ startDate: null, endDate: null })
 
-  const handleCategoryToggle = (category: TourCategory) => {
-    const current = filters.category || []
-    const updated = current.includes(category)
-      ? current.filter(c => c !== category)
-      : [...current, category]
-    onFiltersChange({ ...filters, category: updated })
+  const handleCategoryToggle = (category: string) => {
+    onFiltersChange({ ...filters, category: filters.category === category ? undefined : category })
   }
 
-  const handleDifficultyToggle = (difficulty: TourDifficulty) => {
-    const current = filters.difficulty || []
-    const updated = current.includes(difficulty)
-      ? current.filter(d => d !== difficulty)
-      : [...current, difficulty]
-    onFiltersChange({ ...filters, difficulty: updated })
+  const handleDifficultyToggle = (difficulty: string) => {
+    onFiltersChange({ ...filters, difficulty: filters.difficulty === difficulty ? undefined : difficulty as any })
   }
 
-  const handleRegionToggle = (region: string) => {
-    const current = filters.region || []
-    const updated = current.includes(region)
-      ? current.filter(r => r !== region)
-      : [...current, region]
-    onFiltersChange({ ...filters, region: updated })
-  }
 
   const handlePriceChange = (value: [number, number]) => {
-    onFiltersChange({ ...filters, priceRange: value })
+    onFiltersChange({ ...filters, minPrice: value[0], maxPrice: value[1] })
   }
 
   const handleDurationChange = (value: [number, number]) => {
-    onFiltersChange({ ...filters, duration: value })
+    onFiltersChange({ ...filters, minDuration: value[0], maxDuration: value[1] })
   }
 
   const handleDateRangeChange = (value: DateRange) => {
@@ -79,12 +63,10 @@ export const EnhancedTourFilters = ({ filters, onFiltersChange, onReset }: Enhan
   }
 
   const activeFiltersCount = 
-    (filters.category?.length || 0) +
-    (filters.difficulty?.length || 0) +
-    (filters.region?.length || 0) +
-    (filters.priceRange ? 1 : 0) +
-    (filters.duration ? 1 : 0) +
-    (filters.rating ? 1 : 0)
+    (filters.category ? 1 : 0) +
+    (filters.difficulty ? 1 : 0) +
+    (filters.minPrice !== undefined || filters.maxPrice !== undefined ? 1 : 0) +
+    (filters.minDuration !== undefined || filters.maxDuration !== undefined ? 1 : 0)
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md">
@@ -145,7 +127,7 @@ export const EnhancedTourFilters = ({ filters, onFiltersChange, onReset }: Enhan
           <PriceRangeSlider
             min={0}
             max={50000}
-            value={filters.priceRange || [0, 50000]}
+            value={[filters.minPrice || 0, filters.maxPrice || 50000]}
             onChange={handlePriceChange}
             currency="ETB"
             step={500}
@@ -158,7 +140,7 @@ export const EnhancedTourFilters = ({ filters, onFiltersChange, onReset }: Enhan
           <PriceRangeSlider
             min={1}
             max={30}
-            value={filters.duration || [1, 30]}
+            value={[filters.minDuration || 1, filters.maxDuration || 30]}
             onChange={handleDurationChange}
             currency=""
             step={1}
@@ -174,7 +156,7 @@ export const EnhancedTourFilters = ({ filters, onFiltersChange, onReset }: Enhan
                 key={cat.value}
                 onClick={() => handleCategoryToggle(cat.value)}
                 className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors ${
-                  filters.category?.includes(cat.value)
+                  filters.category === cat.value
                     ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400'
                     : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 text-gray-700 dark:text-gray-300'
                 }`}
@@ -194,7 +176,7 @@ export const EnhancedTourFilters = ({ filters, onFiltersChange, onReset }: Enhan
               <label key={diff.value} className="flex items-center gap-2 cursor-pointer group">
                 <input
                   type="checkbox"
-                  checked={filters.difficulty?.includes(diff.value) || false}
+                  checked={filters.difficulty === diff.value || false}
                   onChange={() => handleDifficultyToggle(diff.value)}
                   className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
                 />
@@ -206,45 +188,6 @@ export const EnhancedTourFilters = ({ filters, onFiltersChange, onReset }: Enhan
           </div>
         </div>
 
-        {/* Region */}
-        <div>
-          <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Region</h4>
-          <div className="space-y-2 max-h-48 overflow-y-auto">
-            {regions.map((region) => (
-              <label key={region} className="flex items-center gap-2 cursor-pointer group">
-                <input
-                  type="checkbox"
-                  checked={filters.region?.includes(region) || false}
-                  onChange={() => handleRegionToggle(region)}
-                  className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-300 group-hover:text-orange-600">
-                  {region}
-                </span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        {/* Rating */}
-        <div>
-          <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Minimum Rating</h4>
-          <div className="flex gap-2">
-            {[1, 2, 3, 4, 5].map((rating) => (
-              <button
-                key={rating}
-                onClick={() => onFiltersChange({ ...filters, rating })}
-                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  filters.rating === rating
-                    ? 'bg-orange-600 text-white'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
-                }`}
-              >
-                {rating}★
-              </button>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   )
