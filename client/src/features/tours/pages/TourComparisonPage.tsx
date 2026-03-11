@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom'
 import { useTours } from '@/hooks/useTours'
-import { Tour } from '@/types/tour'
+import { Tour } from '@/services/tour.service'
 
 // Helper function to find best value in comparison
-const findBestValue = (tours: Tour[], key: keyof Tour, type: 'lowest' | 'highest' = 'lowest') => {
+const findBestValue = (tours: Tour[], key: string, type: 'lowest' | 'highest' = 'lowest') => {
   if (tours.length === 0) return null
   
   const values = tours.map(tour => {
-    const value = tour[key]
+    const value = key.includes('.') ? key.split('.').reduce((obj, k) => obj?.[k], tour as any) : tour[key as keyof Tour]
     return typeof value === 'number' ? value : 0
   })
   
@@ -25,8 +25,8 @@ export const TourComparisonPage = () => {
   
   // Calculate best values for highlighting
   const bestPrice = findBestValue(comparisonTours, 'price', 'lowest')
-  const bestRating = findBestValue(comparisonTours, 'rating', 'highest')
-  const bestDuration = findBestValue(comparisonTours, 'durationDays', 'lowest')
+  const bestRating = findBestValue(comparisonTours, 'guide.rating', 'highest')
+  const bestDuration = findBestValue(comparisonTours, 'duration', 'lowest')
 
   if (comparisonTours.length === 0) {
     return (
@@ -124,7 +124,7 @@ export const TourComparisonPage = () => {
                       </svg>
                     </button>
                     <img
-                      src={tour.imageUrl}
+                      src={tour.images[0] || '/placeholder-tour.jpg'}
                       alt={tour.title}
                       className="w-full h-32 object-cover rounded-lg mb-3"
                     />
@@ -158,7 +158,7 @@ export const TourComparisonPage = () => {
                   >
                     <div className="flex flex-col items-center gap-1">
                       <span className={`text-lg font-bold ${isLowest ? 'text-green-600 dark:text-green-400' : 'text-orange-600'}`}>
-                        {tour.currency} {tour.price.toLocaleString()}
+                        $ {tour.price.toLocaleString()}
                       </span>
                       {isLowest && (
                         <span className="text-xs font-medium text-green-600 dark:text-green-400 flex items-center gap-1">
@@ -322,7 +322,7 @@ export const TourComparisonPage = () => {
               </td>
               {comparisonTours.map((tour) => (
                 <td key={tour.id} className="p-4 text-center border-l border-gray-200 dark:border-gray-700">
-                  {tour.minAge}+ years
+                  All ages welcome
                 </td>
               ))}
             </tr>
@@ -341,8 +341,8 @@ export const TourComparisonPage = () => {
               {comparisonTours.map((tour) => (
                 <td key={tour.id} className="p-4 text-center border-l border-gray-200 dark:border-gray-700">
                   <div className="flex flex-col items-center gap-1">
-                    <span className="font-medium">{tour.location}</span>
-                    <span className="text-xs text-gray-500">{tour.region}</span>
+                    <span className="font-medium">{tour.startLocation.name}</span>
+                    <span className="text-xs text-gray-500">{tour.locations.length} stops</span>
                   </div>
                 </td>
               ))}
@@ -354,14 +354,14 @@ export const TourComparisonPage = () => {
               {comparisonTours.map((tour) => (
                 <td key={tour.id} className="p-4 border-l border-gray-200 dark:border-gray-700">
                   <ul className="text-sm text-left space-y-1">
-                    {tour.highlights.slice(0, 3).map((highlight, index) => (
+                    {tour.included.slice(0, 3).map((highlight: string, index: number) => (
                       <li key={index} className="flex items-start gap-2">
                         <span className="text-green-500 mt-0.5">✓</span>
                         <span>{highlight}</span>
                       </li>
                     ))}
-                    {tour.highlights.length > 3 && (
-                      <li className="text-gray-500 text-xs">+{tour.highlights.length - 3} more</li>
+                    {tour.included.length > 3 && (
+                      <li className="text-gray-500 text-xs">+{tour.included.length - 3} more</li>
                     )}
                   </ul>
                 </td>

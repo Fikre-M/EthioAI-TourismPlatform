@@ -1,4 +1,4 @@
-import { Tour } from '@/types/tour'
+import { Tour } from '@/services/tour.service'
 import { TourCard } from './TourCard'
 
 export interface TourGridProps {

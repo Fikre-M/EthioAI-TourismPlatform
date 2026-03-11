@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Tour } from '@/types/tour'
+import { Tour } from '@/services/tour.service'
 import { MapView, TourRouteMap } from '@/components/map'
 import { useGeolocation, formatDistanceFromUser, calculateDistanceFromUser } from '@/hooks/useGeolocation'
 
@@ -271,8 +271,8 @@ export const TourDetailMap = ({ tour, className = '' }: TourDetailMapProps) => {
                               calculateDistanceFromUser(
                                 userLat,
                                 userLng,
-                                tour.meetingPoint.coordinates.lat,
-                                tour.meetingPoint.coordinates.lng
+                                tour.startLocation.coordinates[0],
+                                tour.startLocation.coordinates[1]
                               )
                             )}
                           </p>
@@ -288,25 +288,17 @@ export const TourDetailMap = ({ tour, className = '' }: TourDetailMapProps) => {
                   Instructions
                 </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-                  {tour.meetingPoint.instructions}
+                  Meet at {tour.startLocation.name}. Please arrive 15 minutes early.
                 </p>
 
-                {tour.meetingPoint.landmarks && tour.meetingPoint.landmarks.length > 0 && (
+                {tour.startLocation.address && (
                   <div>
                     <h4 className="font-medium text-gray-900 dark:text-white mb-2">
-                      Nearby Landmarks
+                      Address
                     </h4>
-                    <ul className="space-y-1">
-                      {tour.meetingPoint.landmarks.map((landmark, index) => (
-                        <li
-                          key={index}
-                          className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400"
-                        >
-                          <span className="text-orange-600 mt-0.5">•</span>
-                          <span>{landmark}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {tour.startLocation.address}
+                    </p>
                   </div>
                 )}
               </div>
@@ -327,21 +319,20 @@ export const TourDetailMap = ({ tour, className = '' }: TourDetailMapProps) => {
             {/* Map with attractions */}
             <div className="relative">
               <MapView
-                center={tour.meetingPoint?.coordinates || { lat: 9.0320, lng: 38.7469 }}
+                center={tour.startLocation?.coordinates ? { 
+                  lat: tour.startLocation.coordinates[0], 
+                  lng: tour.startLocation.coordinates[1] 
+                } : { lat: 9.0320, lng: 38.7469 }}
                 zoom={13}
                 markers={[
-                  ...(tour.meetingPoint
-                    ? [
-                        {
-                          id: 'meeting-point',
-                          lat: tour.meetingPoint.coordinates.lat,
-                          lng: tour.meetingPoint.coordinates.lng,
-                          title: 'Meeting Point',
-                          description: tour.meetingPoint.name,
-                        },
-                      ]
-                    : []),
-                  ...sortedAttractions.map((attraction) => ({
+                  {
+                    id: 'start-point',
+                    lat: tour.startLocation.coordinates[0],
+                    lng: tour.startLocation.coordinates[1],
+                    title: 'Start Location',
+                    description: tour.startLocation.name,
+                  },
+                  ...sortedAttractions.map((attraction: any) => ({
                     id: attraction.id,
                     lat: attraction.coordinates.lat,
                     lng: attraction.coordinates.lng,
