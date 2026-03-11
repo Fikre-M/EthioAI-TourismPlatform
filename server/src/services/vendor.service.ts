@@ -46,6 +46,7 @@ export class VendorService {
       data: {
         ...data,
         userId,
+        businessEmail: data.businessEmail,
         isVerified: false,
         rating: null,
         totalReviews: 0,

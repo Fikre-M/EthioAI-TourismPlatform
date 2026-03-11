@@ -114,7 +114,7 @@ export class ProductService {
     pagination: PaginationMeta;
   }> {
     const {
-      page = 1,
+      page = 1 as number,
       limit = 10,
       sortBy = 'createdAt',
       sortOrder = 'desc',
@@ -138,7 +138,7 @@ export class ProductService {
     };
 
     if (categoryId) {
-      where.categoryId = categoryId;
+      where.category = categoryId;
     }
 
     if (vendorId) {
@@ -615,7 +615,7 @@ export class ProductService {
     }
 
     if (query.categoryId) {
-      where.categoryId = query.categoryId;
+      where.category = query.categoryId;
     }
 
     if (query.startDate || query.endDate) {

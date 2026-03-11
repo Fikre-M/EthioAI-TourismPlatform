@@ -9,6 +9,8 @@ export const createVendorProfileSchema = z.object({
   businessName: z.string()
     .min(3, 'Business name must be at least 3 characters')
     .max(200, 'Business name must not exceed 200 characters'),
+  businessEmail: z.string()
+    .email('Invalid email format'),
   description: z.string()
     .min(50, 'Description must be at least 50 characters')
     .max(2000, 'Description must not exceed 2000 characters'),
