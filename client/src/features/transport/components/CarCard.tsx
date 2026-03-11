@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from '@components/common/Button/Button'
 import {
   FaCar, FaUsers, FaSuitcase, FaCog, FaGasPump, FaShieldAlt,
-  FaStar, FaWifi, FaSnowflake, FaRoad, FaInfoCircle, FaArrowRight,
+  FaStar, FaSnowflake, FaRoad, FaInfoCircle, FaArrowRight,
   FaCheckCircle, FaTimesCircle
 } from 'react-icons/fa'
 

@@ -1,5 +1,5 @@
 import { API_ENDPOINTS } from '../utils/constants';
-import { apiClient } from './api';
+import api from '../api/axios';
 
 export interface UploadResult {
   url: string;
@@ -41,11 +41,11 @@ export const uploadSingle = async (
   if (options.folder) formData.append('folder', options.folder);
   if (options.tags) formData.append('tags', options.tags);
 
-  const response = await apiClient.post(API_ENDPOINTS.UPLOAD.SINGLE, formData, {
+  const response = await api.post(API_ENDPOINTS.UPLOAD.SINGLE, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
-    onUploadProgress: (progressEvent) => {
+    onUploadProgress: (progressEvent: any) => {
       if (options.onProgress && progressEvent.total) {
         const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
         options.onProgress(progress);
@@ -73,11 +73,11 @@ export const uploadMultiple = async (
   if (options.folder) formData.append('folder', options.folder);
   if (options.tags) formData.append('tags', options.tags);
 
-  const response = await apiClient.post(API_ENDPOINTS.UPLOAD.MULTIPLE, formData, {
+  const response = await api.post(API_ENDPOINTS.UPLOAD.MULTIPLE, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
-    onUploadProgress: (progressEvent) => {
+    onUploadProgress: (progressEvent: any) => {
       if (options.onProgress && progressEvent.total) {
         const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
         options.onProgress(progress);
@@ -98,11 +98,11 @@ export const uploadProfileImage = async (
   const formData = new FormData();
   formData.append('profileImage', file);
 
-  const response = await apiClient.post(API_ENDPOINTS.UPLOAD.PROFILE, formData, {
+  const response = await api.post(API_ENDPOINTS.UPLOAD.PROFILE, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
-    onUploadProgress: (progressEvent) => {
+    onUploadProgress: (progressEvent: any) => {
       if (onProgress && progressEvent.total) {
         const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
         onProgress(progress);
@@ -127,11 +127,11 @@ export const uploadProductImages = async (
     formData.append('images', file);
   });
 
-  const response = await apiClient.post(API_ENDPOINTS.UPLOAD.PRODUCT(productId), formData, {
+  const response = await api.post(API_ENDPOINTS.UPLOAD.PRODUCT(productId), formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
-    onUploadProgress: (progressEvent) => {
+    onUploadProgress: (progressEvent: any) => {
       if (onProgress && progressEvent.total) {
         const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
         onProgress(progress);
@@ -156,11 +156,11 @@ export const uploadTourImages = async (
     formData.append('images', file);
   });
 
-  const response = await apiClient.post(API_ENDPOINTS.UPLOAD.TOUR(tourId), formData, {
+  const response = await api.post(API_ENDPOINTS.UPLOAD.TOUR(tourId), formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
-    onUploadProgress: (progressEvent) => {
+    onUploadProgress: (progressEvent: any) => {
       if (onProgress && progressEvent.total) {
         const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
         onProgress(progress);
@@ -185,11 +185,11 @@ export const uploadReviewMedia = async (
     formData.append('media', file);
   });
 
-  const response = await apiClient.post(API_ENDPOINTS.UPLOAD.REVIEW(reviewId), formData, {
+  const response = await api.post(API_ENDPOINTS.UPLOAD.REVIEW(reviewId), formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
-    onUploadProgress: (progressEvent) => {
+    onUploadProgress: (progressEvent: any) => {
       if (onProgress && progressEvent.total) {
         const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
         onProgress(progress);
@@ -207,7 +207,7 @@ export const deleteFile = async (
   publicId: string,
   resourceType: 'image' | 'video' | 'raw' = 'image'
 ): Promise<void> => {
-  await apiClient.delete(API_ENDPOINTS.UPLOAD.DELETE(publicId), {
+  await api.delete(API_ENDPOINTS.UPLOAD.DELETE(publicId), {
     data: { resourceType }
   });
 };
@@ -223,7 +223,7 @@ export const generateOptimizedUrl = async (
   optimizedUrl: string;
   transformations: any[];
 }> => {
-  const response = await apiClient.get(API_ENDPOINTS.UPLOAD.OPTIMIZE(publicId), {
+  const response = await api.get(API_ENDPOINTS.UPLOAD.OPTIMIZE(publicId), {
     params: options
   });
 

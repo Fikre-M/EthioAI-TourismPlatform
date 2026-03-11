@@ -5,8 +5,6 @@ import {
   fetchTours,
   fetchTourById,
   searchTours,
-  addToWishlist,
-  removeFromWishlist,
   setFilters,
   clearFilters,
   setSearchFilter,
@@ -20,10 +18,10 @@ import {
   addToComparison,
   removeFromComparison,
   clearComparison,
-  applyLocalFilters,
   clearError,
   selectTours,
-  selectFilteredTours,
+  selectFeaturedTours,
+  selectPopularTours,
   selectSelectedTour,
   selectWishlist,
   selectComparison,
@@ -32,12 +30,9 @@ import {
   selectSorting,
   selectLoading,
   selectError,
-  selectSearchSuggestions,
-  selectIsInWishlist,
-  selectIsInComparison,
+  selectSearchResults,
   selectWishlistTours,
   selectComparisonTours,
-  selectPaginatedTours,
   TourFilters,
 } from '@/store/slices/tourSlice'
 
@@ -46,7 +41,7 @@ export const useTours = () => {
 
   // Selectors
   const tours = useSelector(selectTours)
-  const filteredTours = useSelector(selectFilteredTours)
+  const filteredTours = useSelector(selectFeaturedTours)
   const selectedTour = useSelector(selectSelectedTour)
   const wishlist = useSelector(selectWishlist)
   const comparison = useSelector(selectComparison)
@@ -55,10 +50,10 @@ export const useTours = () => {
   const sorting = useSelector(selectSorting)
   const loading = useSelector(selectLoading)
   const error = useSelector(selectError)
-  const searchSuggestions = useSelector(selectSearchSuggestions)
+  const searchSuggestions = useSelector(selectSearchResults)
   const wishlistTours = useSelector(selectWishlistTours)
   const comparisonTours = useSelector(selectComparisonTours)
-  const paginatedTours = useSelector(selectPaginatedTours)
+  const paginatedTours = useSelector(selectPopularTours)
 
   // Actions
   const loadTours = useCallback(
@@ -77,7 +72,7 @@ export const useTours = () => {
 
   const search = useCallback(
     (query: string) => {
-      return dispatch(searchTours(query))
+      return dispatch(searchTours({ query }))
     },
     [dispatch]
   )
@@ -85,28 +80,24 @@ export const useTours = () => {
   const updateFilters = useCallback(
     (newFilters: TourFilters) => {
       dispatch(setFilters(newFilters))
-      dispatch(applyLocalFilters())
     },
     [dispatch]
   )
 
   const resetFilters = useCallback(() => {
     dispatch(clearFilters())
-    dispatch(applyLocalFilters())
   }, [dispatch])
 
   const updateSearch = useCallback(
     (searchQuery: string) => {
       dispatch(setSearchFilter(searchQuery))
-      dispatch(applyLocalFilters())
     },
     [dispatch]
   )
 
   const updateSortBy = useCallback(
-    (sortBy: 'price' | 'rating' | 'duration' | 'popularity') => {
+    (sortBy: 'price' | 'rating' | 'duration' | 'title' | 'createdAt') => {
       dispatch(setSortBy(sortBy))
-      dispatch(applyLocalFilters())
     },
     [dispatch]
   )
@@ -114,14 +105,12 @@ export const useTours = () => {
   const updateSortOrder = useCallback(
     (order: 'asc' | 'desc') => {
       dispatch(setSortOrder(order))
-      dispatch(applyLocalFilters())
     },
     [dispatch]
   )
 
   const toggleSort = useCallback(() => {
     dispatch(toggleSortOrder())
-    dispatch(applyLocalFilters())
   }, [dispatch])
 
   const changePage = useCallback(
@@ -147,14 +136,14 @@ export const useTours = () => {
 
   const addTourToWishlist = useCallback(
     (tourId: string) => {
-      return dispatch(addToWishlist(tourId))
+      return dispatch(toggleWishlist(tourId))
     },
     [dispatch]
   )
 
   const removeTourFromWishlist = useCallback(
     (tourId: string) => {
-      return dispatch(removeFromWishlist(tourId))
+      return dispatch(toggleWishlist(tourId))
     },
     [dispatch]
   )
@@ -182,7 +171,7 @@ export const useTours = () => {
   }, [dispatch])
 
   const applyFilters = useCallback(() => {
-    dispatch(applyLocalFilters())
+    // Filters are applied automatically in the slice
   }, [dispatch])
 
   const dismissError = useCallback(() => {

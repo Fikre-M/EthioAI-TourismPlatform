@@ -49,7 +49,6 @@ export const useChat = () => {
       await dispatch(
         sendMessageAsync({
           content,
-          conversationId: currentConversationId || undefined,
         })
       )
       // Update conversation if exists

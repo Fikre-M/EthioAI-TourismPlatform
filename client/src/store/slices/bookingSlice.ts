@@ -75,7 +75,7 @@ export const createBooking = createAsyncThunk(
 
 export const fetchMyBookings = createAsyncThunk(
   'booking/fetchMyBookings',
-  async (params?: BookingQueryParams, { rejectWithValue }) => {
+  async ({ params, rejectWithValue }: { params?: BookingQueryParams; rejectWithValue: any }) => {
     try {
       const response = await bookingService.getMyBookings(params);
       return response.data;
@@ -135,7 +135,7 @@ export const validatePromoCodeAsync = createAsyncThunk(
 
 export const fetchUpcomingBookings = createAsyncThunk(
   'booking/fetchUpcomingBookings',
-  async (limit?: number, { rejectWithValue }) => {
+  async ({ limit, rejectWithValue }: { limit?: number; rejectWithValue: any }) => {
     try {
       const response = await bookingService.getUpcomingBookings(limit);
       return response.data.bookings;

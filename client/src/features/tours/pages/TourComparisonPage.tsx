@@ -185,7 +185,7 @@ export const TourComparisonPage = () => {
                 </div>
               </td>
               {comparisonTours.map((tour) => {
-                const isShortest = isBestValue(tour.durationDays, bestDuration, 'lowest')
+                const isShortest = isBestValue(tour.duration, bestDuration, 'lowest')
                 return (
                   <td 
                     key={tour.id} 
@@ -217,7 +217,7 @@ export const TourComparisonPage = () => {
                 </div>
               </td>
               {comparisonTours.map((tour) => {
-                const isHighest = isBestValue(tour.rating, bestRating, 'highest')
+                const isHighest = isBestValue(tour.guide?.rating || 0, bestRating, 'highest')
                 return (
                   <td 
                     key={tour.id} 
@@ -229,9 +229,9 @@ export const TourComparisonPage = () => {
                       <div className="flex items-center gap-1">
                         <span className="text-yellow-500">⭐</span>
                         <span className={`font-semibold ${isHighest ? 'text-green-600 dark:text-green-400' : ''}`}>
-                          {tour.rating}
+                          {tour.guide?.rating || 'N/A'}
                         </span>
-                        <span className="text-sm text-gray-500">({tour.reviewCount})</span>
+                        <span className="text-sm text-gray-500">({tour.guide?.totalReviews || 0})</span>
                       </div>
                       {isHighest && (
                         <span className="text-xs font-medium text-green-600 dark:text-green-400 flex items-center gap-1">

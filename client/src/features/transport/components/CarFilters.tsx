@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from '@components/common/Button/Button'
 import {
   FaFilter, FaTimes, FaCar, FaDollarSign, FaUsers,
-  FaCog, FaGasPump, FaShieldAlt, FaStar, FaSnowflake, FaRoad
+  FaCog, FaGasPump, FaStar, FaSnowflake, FaRoad
 } from 'react-icons/fa'
 
 export interface CarFilters {

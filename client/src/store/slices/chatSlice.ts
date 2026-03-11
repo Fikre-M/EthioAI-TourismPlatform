@@ -60,7 +60,7 @@ import { api } from '@api/axios.config'
 export const sendMessageAsync = createAsyncThunk(
   'chat/sendMessage',
   async (
-    { content, conversationId }: { content: string; conversationId?: string },
+    { content }: { content: string },
     { rejectWithValue }
   ) => {
     try {
