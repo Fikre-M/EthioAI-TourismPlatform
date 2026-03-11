@@ -15,7 +15,7 @@ import TravelRiskAssessment from '../components/TravelRiskAssessment'
 import AdvancedAnalyticsDashboard from '../components/AdvancedAnalyticsDashboard'
 import {
   FaCalendarAlt, FaPlus, FaMapMarkedAlt, FaSave, FaShare,
-  FaClock, FaUsers, FaRoute, FaCalculator, FaMap,
+  FaClock, FaUsers, FaRoute, FaMap,
   FaDownload, FaUserFriends, FaRobot, FaChartBar,
   FaShieldAlt, FaBrain
 } from 'react-icons/fa'
@@ -64,7 +64,7 @@ const ItineraryPage: React.FC = () => {
   const navigate = useNavigate()
   const [itinerary, setItinerary] = useState<Itinerary | null>(null)
   const [selectedDay, setSelectedDay] = useState(0)
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditing] = useState(false)
   const [showRouteOptimizer, setShowRouteOptimizer] = useState(false)
   const [showBudgetCalculator, setShowBudgetCalculator] = useState(false)
   const [showMapView, setShowMapView] = useState(false)
@@ -72,7 +72,7 @@ const ItineraryPage: React.FC = () => {
   const [showExportModal, setShowExportModal] = useState(false)
   const [showShareSettings, setShowShareSettings] = useState(false)
   const [isShared, setIsShared] = useState(false)
-  const [userRole, setUserRole] = useState<'owner' | 'editor' | 'viewer'>('owner')
+  const [userRole] = useState<'owner' | 'editor' | 'viewer'>('owner')
   const [useCollaborativeEditor, setUseCollaborativeEditor] = useState(false)
   const [showAIAssistant, setShowAIAssistant] = useState(false)
   const [showBudgetOptimizer, setShowBudgetOptimizer] = useState(false)

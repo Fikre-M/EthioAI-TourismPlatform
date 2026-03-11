@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Button } from '@components/common/Button/Button'
-import { Itinerary, DayPlanData } from '../pages/ItineraryPage'
+import { Itinerary } from '../pages/ItineraryPage'
 import {
   FaChartLine, FaDollarSign, FaLightbulb, FaExclamationTriangle,
   FaCheckCircle, FaPiggyBank, FaCalculator,
-  FaMapMarkerAlt, FaClock, FaUsers, FaArrowRight, FaArrowDown,
+  FaArrowRight, FaArrowDown,
   FaArrowUp, FaStar, FaPercent, FaBalanceScale
 } from 'react-icons/fa'
 
@@ -62,12 +62,10 @@ interface Alternative {
 const SmartBudgetOptimizer: React.FC<SmartBudgetOptimizerProps> = ({
   itinerary,
   isOpen,
-  onClose,
-  onUpdateItinerary
+  onClose
 }) => {
   const [analysis, setAnalysis] = useState<BudgetAnalysis | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [optimizationMode, setOptimizationMode] = useState<'conservative' | 'balanced' | 'aggressive'>('balanced')
   const [appliedRecommendations, setAppliedRecommendations] = useState<Set<string>>(new Set())
 
   useEffect(() => {
