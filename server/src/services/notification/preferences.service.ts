@@ -10,7 +10,7 @@ import {
   NotificationError,
   ValidationError
 } from '../../types/notification.types'
-import logger from '../../utils/logger'
+import { logger } from '../../utils/logger'
 
 export class NotificationPreferencesService {
   constructor(private prisma: PrismaClient) {}

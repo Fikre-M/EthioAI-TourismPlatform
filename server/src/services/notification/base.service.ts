@@ -15,7 +15,7 @@ import {
   NotificationPriority,
   NotificationStatus
 } from '../../types/notification.types'
-import logger from '../../utils/logger'
+import { logger } from '../../utils/logger'
 
 export class BaseNotificationService implements INotificationService {
   constructor(protected prisma: PrismaClient) {}

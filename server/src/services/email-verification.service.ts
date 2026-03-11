@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 import { EmailService } from './email.service';
 import { log } from '../utils/logger';
 import { 

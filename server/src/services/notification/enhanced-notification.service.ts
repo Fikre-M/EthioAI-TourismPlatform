@@ -11,7 +11,7 @@ import {
   NotificationError,
   ValidationError
 } from '../../types/notification.types'
-import logger from '../../utils/logger'
+import { logger } from '../../utils/logger'
 
 export class EnhancedNotificationService extends BaseNotificationService {
   private preferencesService: NotificationPreferencesService

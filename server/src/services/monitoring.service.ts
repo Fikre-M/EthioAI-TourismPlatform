@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { PrismaClient } from '@prisma/client'
 import { cacheService } from './cache.service'
-import logger from '../utils/logger'
+import { logger } from '../utils/logger'
 import os from 'os'
 import process from 'process'
 

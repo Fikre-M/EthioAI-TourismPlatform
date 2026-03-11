@@ -13,7 +13,7 @@ import {
   UserSegment,
   NotificationError
 } from '../../types/notification.types'
-import logger from '../../utils/logger'
+import { logger } from '../../utils/logger'
 
 export class NotificationProcessorService {
   private notificationService: EnhancedNotificationService

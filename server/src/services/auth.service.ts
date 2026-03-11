@@ -1,6 +1,6 @@
 import { PrismaClient, User, UserRole } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 import { generateTokenPair, verifyRefreshToken } from '../utils/jwt';
 import { config } from '../config/index';
 import { log } from '../utils/logger';

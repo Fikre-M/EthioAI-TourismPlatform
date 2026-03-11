@@ -8,7 +8,7 @@ import {
   DeliveryChannel,
   NotificationError
 } from '../../types/notification.types'
-import logger from '../../utils/logger'
+import { logger } from '../../utils/logger'
 
 export class NotificationService extends BaseNotificationService {
   private queueService: NotificationQueueService

@@ -13,7 +13,7 @@ import {
   NotificationError,
   NotificationPriority
 } from '../../types/notification.types'
-import logger from '../../utils/logger'
+import { logger } from '../../utils/logger'
 
 export interface QueueService {
   addNotificationJob(notification: NotificationJob): Promise<Job>
