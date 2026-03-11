@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Tour } from '@/types/tour'
+import { Tour } from '@/services/tour.service'
 import { TourCard } from './TourCard'
 
 export interface RecommendedToursProps {

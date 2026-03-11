@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Button } from "@/components/ui/Button";
 import { Product } from "../pages/MarketplacePage";
-import { addToCart } from "@store/slices/bookingSlice";
+import { addToCart } from "@/store/slices/bookingSlice";
 import { BookingItem } from "@/types/booking";
 import { Badge } from "@/components/ui/Badge";
 import { MapPin, Clock, Check, Gift, Truck, Flag, Flame } from "lucide-react";
@@ -25,7 +25,6 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({
   product,
-  viewMode,
   onWishlistToggle,
   onAddToCart,
   onClick,
@@ -257,7 +256,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {/* Features/Tags */}
         <div className="mb-3">
           <div className="flex flex-wrap gap-1.5">
-            {product.features.slice(0, 3).map((feature, index) => (
+            {product.features.slice(0, 3).map((feature: string, index: number) => (
               <span
                 key={index}
                 className="px-2.5 py-1 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 text-gray-700 dark:text-gray-300 text-xs font-medium rounded-full whitespace-nowrap"

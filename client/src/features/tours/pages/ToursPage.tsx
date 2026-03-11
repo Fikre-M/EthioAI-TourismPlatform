@@ -3,7 +3,7 @@ import { TourGrid } from '../components/TourGrid'
 import { EnhancedTourFilters } from '../components/EnhancedTourFilters'
 import { TourSearchBar, SearchSuggestion } from '../components/TourSearchBar'
 import { TourSortDropdown, SortOption } from '../components/TourSortDropdown'
-import { Tour, TourFilters as TourFiltersType } from '@/types/tour'
+import { Tour, TourFilters as TourFiltersType } from '@/services/tour.service'
 import { api } from '@api/axios.config'
 
 export const ToursPage = () => {
