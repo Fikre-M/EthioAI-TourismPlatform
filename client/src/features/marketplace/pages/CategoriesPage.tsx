@@ -4,7 +4,7 @@ import { Button } from '@/components/common/Button/Button'
 import {
   FaTshirt, FaCoffee, FaHammer, FaGem, FaPalette, FaHome,
   FaArrowRight, FaFlag, FaUsers, FaShoppingBag, FaStar,
-  FaFire, FaGift, FaChevronRight, FaEye, FaHeart
+  FaFire, FaChevronRight, FaEye
 } from 'react-icons/fa'
 
 interface Category {

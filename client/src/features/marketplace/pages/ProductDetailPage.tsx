@@ -7,10 +7,9 @@ import { Product } from './MarketplacePage'
 import {
   FaHeart, FaShoppingCart, FaStar, FaMapMarkerAlt, FaShieldAlt,
   FaTruck, FaArrowLeft, FaShare, FaFlag, FaCheck, FaClock,
-  FaExclamationTriangle, FaPlus, FaMinus, FaEye, FaThumbsUp,
-  FaThumbsDown, FaReply, FaImage, FaPlay, FaExpand, FaChevronLeft,
-  FaChevronRight, FaStore, FaPhone, FaEnvelope, FaGlobe, FaTimes,
-  FaRegHeart, FaFire, FaGift, FaSpinner, FaBox, FaAward, FaCertificate
+  FaExclamationTriangle, FaPlus, FaMinus, FaEye, FaExpand, FaChevronLeft,
+  FaChevronRight, FaStore, FaEnvelope, FaTimes,
+  FaRegHeart, FaFire, FaGift, FaBox, FaAward, FaCertificate
 } from 'react-icons/fa'
 
 interface ReviewPhoto {

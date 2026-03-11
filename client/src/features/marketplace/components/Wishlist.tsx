@@ -5,10 +5,9 @@ import ProductCard from './ProductCard'
 import { Product } from '../pages/MarketplacePage'
 import {
   FaHeart, FaShare, FaBell, FaTrash, FaShoppingCart, FaEye,
-  FaFilter, FaSort, FaTh, FaList, FaEnvelope, FaLink,
-  FaFacebook, FaTwitter, FaWhatsapp, FaCopy, FaDownload,
-  FaExclamationTriangle, FaCheckCircle,
-  FaSpinner, FaTimes, FaPlus, FaSearch, FaFlag, FaStar
+  FaFilter, FaTh, FaList, FaEnvelope,
+  FaFacebook, FaTwitter, FaWhatsapp, FaCopy,
+  FaSpinner, FaTimes
 } from 'react-icons/fa'
 import { FaArrowTrendUp, FaArrowTrendDown } from 'react-icons/fa6'
 
@@ -206,16 +205,6 @@ const Wishlist: React.FC<WishlistProps> = ({ isOpen, onClose }) => {
   const handleNotificationSettings = (productId: string) => {
     setSelectedItemForNotification(productId)
     setShowNotificationModal(true)
-  }
-
-  const updateNotificationSettings = (productId: string, settings: NotificationSettings) => {
-    setWishlistItems(items => 
-      items.map(item => 
-        item.id === productId 
-          ? { ...item, notifications: settings }
-          : item
-      )
-    )
   }
 
   const getFilteredAndSortedItems = () => {
