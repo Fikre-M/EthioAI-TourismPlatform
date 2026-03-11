@@ -105,7 +105,7 @@ export const Dialog = ({
             
             {showCloseButton && (
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={onClose}
                 className="ml-4 p-2"
