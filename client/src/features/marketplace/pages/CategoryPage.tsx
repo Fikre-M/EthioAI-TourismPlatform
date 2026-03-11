@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/common/Button/Button'
 import ProductCard from '../components/ProductCard'
 import ProductFilters from '../components/ProductFilters'
 import { Product } from './MarketplacePage'
 import {
   FaTshirt, FaCoffee, FaHammer, FaGem, FaPalette, FaHome,
-  FaArrowLeft, FaFilter, FaSort, FaTh, FaList, FaFlag,
-  FaUsers, FaShoppingBag, FaStar, FaSpinner, FaHeart
+  FaArrowLeft, FaFilter, FaTh, FaList, FaFlag,
+  FaUsers, FaShoppingBag, FaSpinner
 } from 'react-icons/fa'
 
 interface CategoryInfo {
@@ -24,7 +24,6 @@ interface CategoryInfo {
 
 const CategoryPage: React.FC = () => {
   const { categoryId } = useParams<{ categoryId: string }>()
-  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   
   const [category, setCategory] = useState<CategoryInfo | null>(null)
@@ -356,7 +355,7 @@ const CategoryPage: React.FC = () => {
               <ProductFilters
                 filters={{
                   categories: [category.name],
-                  priceRange: [0, 500],
+                  priceRange: [0, Math.max(...products.map(p => p.price))],
                   rating: 0,
                   availability: [],
                   shipping: [],
@@ -365,9 +364,7 @@ const CategoryPage: React.FC = () => {
                   madeInEthiopia: false
                 }}
                 onFiltersChange={() => {}}
-                categories={[category.name]}
-                vendors={Array.from(new Set(products.map(p => p.vendor.name)))}
-                priceRange={[0, Math.max(...products.map(p => p.price))]}
+                onReset={() => {}}
               />
             </div>
           )}

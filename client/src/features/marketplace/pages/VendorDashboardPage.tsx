@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/common/Button/Button'
 import {
   FaPlus, FaEdit, FaTrash, FaEye, FaChartLine, FaShoppingBag,
@@ -58,12 +57,10 @@ interface CustomerMessage {
 }
 
 const VendorDashboardPage: React.FC = () => {
-  const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'orders' | 'messages' | 'analytics'>('overview')
+    const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'orders' | 'messages' | 'analytics'>('overview')
   const [isLoading, setIsLoading] = useState(true)
   const [showAddProductModal, setShowAddProductModal] = useState(false)
-  const [editingProduct, setEditingProduct] = useState<VendorProduct | null>(null)
-  
+    
   // Dashboard data
   const [stats, setStats] = useState<DashboardStats>({
     totalRevenue: 0,
