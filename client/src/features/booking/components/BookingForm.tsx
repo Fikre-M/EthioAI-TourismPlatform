@@ -160,7 +160,7 @@ export default function BookingForm({ tour }: BookingFormProps) {
                 </div>
               ) : availability ? (
                 <>
-                  {availability.isFullyBooked ? (
+                  {availability.available === false ? (
                     <div className="flex items-center gap-2 text-red-600 text-sm bg-red-50 p-3 rounded-lg">
                       <FaExclamationTriangle />
                       <span className="font-medium">Fully booked for this date</span>
@@ -394,7 +394,7 @@ export default function BookingForm({ tour }: BookingFormProps) {
       </div>
 
       {/* Submit Button or Waitlist */}
-      {availability?.isFullyBooked ? (
+      {availability?.available === false ? (
         <div className="space-y-3">
           <Button
             type="button"
