@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { Button } from '@/components/common/Button/Button'
 import {
   FaTshirt, FaMapMarkerAlt, FaUsers, FaHeart,
-  FaShare, FaExpand, FaArrowLeft, FaArrowRight, FaFilter,
-  FaSearch, FaEye, FaDownload, FaInfoCircle, FaStar
+  FaShare, FaExpand, FaArrowLeft, FaArrowRight,
+  FaSearch, FaEye, FaDownload
 } from 'react-icons/fa'
 
 interface ClothingItem {

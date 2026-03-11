@@ -4,8 +4,8 @@ import { Button } from '@/components/common/Button/Button'
 import ProductCard from './ProductCard'
 import { Product } from '../pages/MarketplacePage'
 import {
-  FaHeart, FaShare, FaBell, FaTrash, FaShoppingCart, FaEye,
-  FaFilter, FaTh, FaList, FaEnvelope,
+  FaHeart, FaShare, FaBell, FaTrash, FaShoppingCart,
+  FaTh, FaList, FaEnvelope,
   FaFacebook, FaTwitter, FaWhatsapp, FaCopy,
   FaSpinner, FaTimes
 } from 'react-icons/fa'
