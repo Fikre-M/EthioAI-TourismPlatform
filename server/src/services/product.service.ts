@@ -76,9 +76,9 @@ export class ProductService {
         sizes: data.sizes || [],
         dimensions: data.dimensions || null,
       },
-      include: {
+      include: { reviews: true,
         vendor: {
-          include: {
+          include: { reviews: true,
             user: {
               select: {
                 name: true,
@@ -220,9 +220,9 @@ export class ProductService {
         orderBy,
         skip,
         take: limit,
-        include: {
+        include: { reviews: true,
           vendor: {
-            include: {
+            include: { reviews: true,
               user: {
                 select: {
                   name: true,
@@ -280,9 +280,9 @@ export class ProductService {
     
     const product = await prisma.product.findUnique({
       where: isUuid ? { id: identifier } : { slug: identifier },
-      include: {
+      include: { reviews: true,
         vendor: {
-          include: {
+          include: { reviews: true,
             user: {
               select: {
                 name: true,
@@ -296,7 +296,7 @@ export class ProductService {
           where: {
             status: 'APPROVED',
           },
-          include: {
+          include: { reviews: true,
             user: {
               select: {
                 name: true,
@@ -342,7 +342,7 @@ export class ProductService {
     // Check if product exists
     const existingProduct = await prisma.product.findUnique({
       where: { id },
-      include: {
+      include: { reviews: true,
         vendor: true,
       },
     });
@@ -391,9 +391,9 @@ export class ProductService {
     const product = await prisma.product.update({
       where: { id },
       data: updateData,
-      include: {
+      include: { reviews: true,
         vendor: {
-          include: {
+          include: { reviews: true,
             user: {
               select: {
                 name: true,
@@ -418,7 +418,7 @@ export class ProductService {
     // Check if product exists
     const product = await prisma.product.findUnique({
       where: { id },
-      include: {
+      include: { reviews: true,
         vendor: true,
         orderItems: true,
       },
@@ -455,7 +455,7 @@ export class ProductService {
   ): Promise<Product> {
     const product = await prisma.product.findUnique({
       where: { id },
-      include: {
+      include: { reviews: true,
         vendor: true,
       },
     });
@@ -472,7 +472,7 @@ export class ProductService {
     const updatedProduct = await prisma.product.update({
       where: { id },
       data: { status: data.status },
-      include: {
+      include: { reviews: true,
         vendor: true,
         category: true,
       },
@@ -503,9 +503,9 @@ export class ProductService {
         createdAt: 'desc',
       },
       take: limit,
-      include: {
+      include: { reviews: true,
         vendor: {
-          include: {
+          include: { reviews: true,
             user: {
               select: {
                 name: true,
@@ -545,9 +545,9 @@ export class ProductService {
         createdAt: 'desc',
       },
       take: limit,
-      include: {
+      include: { reviews: true,
         vendor: {
-          include: {
+          include: { reviews: true,
             user: {
               select: {
                 name: true,
