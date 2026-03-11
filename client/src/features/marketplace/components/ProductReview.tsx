@@ -198,7 +198,7 @@ const ProductReview: React.FC<ProductReviewProps> = ({
                     <FaStar
                       key={i}
                       className={`${
-                        i < Math.floor(parseFloat(calculateAverageRating()))
+                        i < Math.floor(parseFloat(calculateAverageRating() || '0'))
                           ? 'text-yellow-400'
                           : 'text-gray-300'
                       }`}

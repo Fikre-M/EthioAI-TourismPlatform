@@ -5,7 +5,7 @@ import {
   FaChartBar, FaChartLine, FaChartPie, FaClock, FaDollarSign,
   FaMapMarkerAlt, FaUsers, FaCalendarAlt,
   FaEye, FaDownload, FaShare, FaFilter, FaSync, FaBolt,
-  FaGlobe, FaRoute, FaHeart, FaStar, FaThumbsUp, FaComment
+  FaRoute, FaHeart
 } from 'react-icons/fa'
 import { FaArrowTrendUp, FaArrowTrendDown } from 'react-icons/fa6'
 

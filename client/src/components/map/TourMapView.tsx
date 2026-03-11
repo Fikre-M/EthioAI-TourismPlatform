@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Tour } from '@/types/tour'
+import { Tour } from '@/services/tour.service'
 import { MapView } from './MapView'
 import { useMap, calculateDistance } from '@/hooks/useMap'
 
@@ -49,7 +49,10 @@ export const TourMapView = ({
   // Create markers from tours with clustering
   const tourMarkers = tours.map((tour) => {
     // Extract coordinates from tour location or meeting point
-    const coordinates = tour.meetingPoint?.coordinates || {
+    const coordinates = tour.startLocation?.coordinates ? {
+      lat: tour.startLocation.coordinates[0],
+      lng: tour.startLocation.coordinates[1]
+    } : {
       // Default coordinates based on region (simplified)
       lat: 9.0320 + Math.random() * 0.1,
       lng: 38.7469 + Math.random() * 0.1,
