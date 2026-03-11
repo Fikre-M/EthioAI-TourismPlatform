@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button } from '@/components/common/Button/Button'
 import {
-  FaTshirt, FaMapMarkerAlt, FaUsers, FaCalendarAlt, FaHeart,
+  FaTshirt, FaMapMarkerAlt, FaUsers, FaHeart,
   FaShare, FaExpand, FaArrowLeft, FaArrowRight, FaFilter,
   FaSearch, FaEye, FaDownload, FaInfoCircle, FaStar
 } from 'react-icons/fa'

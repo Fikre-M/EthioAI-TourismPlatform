@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import {
   FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaExpand, FaCompress,
-  FaArrowLeft, FaArrowRight, FaDownload, FaShare, FaEye, FaHeart,
-  FaBookmark, FaExternalLinkAlt, FaQuoteLeft, FaInfoCircle
+  FaArrowLeft, FaArrowRight, FaDownload, FaShare, FaQuoteLeft, FaInfoCircle
 } from 'react-icons/fa'
 import { Button } from '@/components/common/Button/Button'
 
@@ -213,8 +212,8 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const [isPlaying, setIsPlaying] = useState(autoPlay)
   const [isMuted, setIsMuted] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(video.duration || 300)
+  const [currentTime] = useState(0)
+  const [duration] = useState(video.duration || 300)
 
   const togglePlay = () => {
     setIsPlaying(!isPlaying)
@@ -310,8 +309,8 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   className = '' 
 }) => {
   const [isPlaying, setIsPlaying] = useState(autoPlay)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(audio.duration || 180)
+  const [currentTime] = useState(0)
+  const [duration] = useState(audio.duration || 180)
 
   const togglePlay = () => {
     setIsPlaying(!isPlaying)

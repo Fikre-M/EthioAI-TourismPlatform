@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/common/Button/Button'
 import {
-  FaArrowLeft, FaArrowRight, FaRandom, FaRedo, FaCheck,
+  FaArrowLeft, FaArrowRight, FaRandom, FaCheck,
   FaTimes, FaVolumeUp, FaEye, FaEyeSlash, FaStar,
-  FaGraduationCap, FaChartLine, FaHeart
+  FaGraduationCap
 } from 'react-icons/fa'
 
 interface Phrase {
