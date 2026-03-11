@@ -13,28 +13,37 @@ import {
   FaRegHeart, FaFire, FaGift, FaSpinner, FaBox, FaAward, FaCertificate
 } from 'react-icons/fa'
 
+interface ReviewPhoto {
+  id: string
+  url: string
+  caption?: string
+}
+
 interface Review {
   id: string
   userId: string
   userName: string
-  userAvatar?: string
+  userAvatar: string
   rating: number
   title: string
-  content: string
-  images?: string[]
+  comment: string
+  photos: ReviewPhoto[]
   helpful: number
   notHelpful: number
   verified: boolean
-  createdAt: string
-  replies?: ReviewReply[]
+  date: string
+  replies: ReviewReply[]
+  isEdited: boolean
+  userLocation: string
 }
 
 interface ReviewReply {
   id: string
   userId: string
   userName: string
-  content: string
-  createdAt: string
+  userAvatar: string
+  comment: string
+  date: string
   isVendor: boolean
 }
 
@@ -134,48 +143,65 @@ Each component is carefully selected and sourced directly from Ethiopian artisan
       id: 'review-1',
       userId: 'user-1',
       userName: 'Sarah M.',
+      userAvatar: '/avatars/sarah.jpg',
       rating: 5,
       title: 'Absolutely Amazing Experience!',
-      content: 'This coffee set exceeded all my expectations. The quality is outstanding and the coffee ceremony has become a weekly tradition in our family. The instruction guide was very helpful for beginners.',
-      images: ['/reviews/review-1-1.jpg', '/reviews/review-1-2.jpg'],
+      comment: 'This coffee set exceeded all my expectations. The quality is outstanding and the coffee ceremony has become a weekly tradition in our family. The instruction guide was very helpful for beginners.',
+      photos: [
+        { id: 'photo-1', url: '/reviews/review-1-1.jpg' },
+        { id: 'photo-2', url: '/reviews/review-1-2.jpg' }
+      ],
       helpful: 23,
       notHelpful: 1,
       verified: true,
-      createdAt: '2024-01-20',
+      date: '2024-01-20',
       replies: [
         {
           id: 'reply-1',
           userId: 'vendor-001',
           userName: 'Addis Coffee Roasters',
-          content: 'Thank you so much for your wonderful review! We\'re thrilled that you and your family are enjoying the coffee ceremony tradition.',
-          createdAt: '2024-01-21',
+          userAvatar: '/avatars/vendor.jpg',
+          comment: 'Thank you so much for your wonderful review! We\'re thrilled that you and your family are enjoying the coffee ceremony tradition.',
+          date: '2024-01-21',
           isVendor: true
         }
-      ]
+      ],
+      isEdited: false,
+      userLocation: 'New York, USA'
     },
     {
       id: 'review-2',
       userId: 'user-2',
       userName: 'Michael K.',
+      userAvatar: '/avatars/michael.jpg',
       rating: 4,
       title: 'Great Quality, Fast Shipping',
-      content: 'The set arrived quickly and everything was well-packaged. The jebena is beautiful and the coffee tastes incredible. Only minor issue was that one of the cups had a small chip, but customer service was very responsive.',
+      comment: 'The set arrived quickly and everything was well-packaged. The jebena is beautiful and the coffee tastes incredible. Only minor issue was that one of the cups had a small chip, but customer service was very responsive.',
+      photos: [],
       helpful: 18,
       notHelpful: 0,
       verified: true,
-      createdAt: '2024-01-18'
+      date: '2024-01-18',
+      replies: [],
+      isEdited: false,
+      userLocation: 'Los Angeles, USA'
     },
     {
       id: 'review-3',
       userId: 'user-3',
       userName: 'Emma L.',
+      userAvatar: '/avatars/emma.jpg',
       rating: 5,
       title: 'Perfect Gift for Coffee Lovers',
-      content: 'Bought this as a gift for my coffee-obsessed friend and she absolutely loves it! The presentation is beautiful and the cultural significance makes it extra special.',
+      comment: 'Bought this as a gift for my coffee-obsessed friend and she absolutely loves it! The presentation is beautiful and the cultural significance makes it extra special.',
+      photos: [],
       helpful: 15,
       notHelpful: 2,
       verified: true,
-      createdAt: '2024-01-16'
+      date: '2024-01-16',
+      replies: [],
+      isEdited: false,
+      userLocation: 'Chicago, USA'
     }
   ]
 
@@ -855,17 +881,19 @@ Each component is carefully selected and sourced directly from Ethiopian artisan
                 productId={productId || ''}
                 reviews={reviews.map(review => ({
                   ...review,
-                  photos: review.images?.map((url, index) => ({ id: `photo-${index}`, url })) || []
+                  photos: review.photos || []
                 }))}
                 onAddReview={(reviewData) => {
                   const newReview: Review = {
                     ...reviewData,
                     id: `review-${Date.now()}`,
-                    images: reviewData.photos.map(photo => photo.url),
+                    photos: reviewData.photos || [],
                     helpful: 0,
                     notHelpful: 0,
-                    createdAt: new Date().toISOString(),
-                    replies: []
+                    date: new Date().toISOString(),
+                    replies: [],
+                    isEdited: false,
+                    userLocation: 'Unknown'
                   }
                   setReviews([...reviews, newReview])
                 }}
