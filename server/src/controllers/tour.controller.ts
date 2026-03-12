@@ -299,7 +299,7 @@ export class TourController {
     }
 
     // Check existing bookings for the date range
-    const existingBookings = await prisma.booking.findMany({
+    const existingBookings = await prisma.bookings.findMany({
       where: {
         tourId: id,
         status: {

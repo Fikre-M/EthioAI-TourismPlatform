@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { AuthRequest } from '../modules/auth/auth.types';
 import { z } from 'zod';
 import { 
   uploadToCloudinary, 
