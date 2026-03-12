@@ -28,7 +28,7 @@ export class OrderController {
     const result = await OrderService.validateCart(data);
     
     if (!result.valid) {
-      return ResponseUtil.badRequest(res, 'Cart validation failed', result.errors);
+      return ResponseUtil.badRequest(res, 'Cart validation failed');
     }
     
     return ResponseUtil.success(res, result, 'Cart validated successfully');
@@ -261,7 +261,7 @@ export class OrderController {
     const query: Partial<OrderQueryInput> = req.query as any;
     
     // Get vendor profile
-    const vendorProfile = await prisma.vendorProfile.findUnique({
+    const vendorProfile = await prisma.vendor_profiles.findUnique({
       where: { userId },
     });
 

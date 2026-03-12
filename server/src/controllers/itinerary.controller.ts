@@ -88,7 +88,21 @@ export class ItineraryController {
       return ResponseUtil.unauthorized(res, 'Authentication required');
     }
     
-    const itinerary = await ItineraryService.updateItinerary(id, data);
+    // Convert UpdateItineraryInput to Partial<Itinerary>
+    const updateData: Partial<Itinerary> = {
+      title: data.title,
+      description: data.description,
+      startDate: data.startDate,
+      endDate: data.endDate,
+      destinations: data.destinations ? data.destinations.map(dest => dest.name) : [],
+      budget: data.budget,
+      currency: data.currency,
+      groupSize: data.groupSize,
+      tags: data.tags,
+      isPublic: data.isPublic,
+    };
+    
+    const itinerary = await ItineraryService.updateItinerary(id, updateData);
     
     log.info('Itinerary updated via API', { itineraryId: id, userId, ip: req.ip });
 
@@ -427,7 +441,7 @@ export class ItineraryController {
           .slice(0, 8)
           .map(([name, count]) => ({ name, count }));
       }),
-      ItineraryService.getItineraryStats(),
+      ItineraryService.getItineraryStats({}),
     ]);
     
     const overview = {

@@ -184,7 +184,7 @@ export class ProductController {
     const query: ProductQueryInput = req.query as any;
     
     // Get vendor profile
-    const vendorProfile = await prisma.vendorProfile.findUnique({
+    const vendorProfile = await prisma.vendor_profiles.findUnique({
       where: { userId },
     });
 
@@ -215,40 +215,16 @@ export class ProductController {
   });
 
   /**
-   * Get popular products (most sold)
-   * GET /api/products/popular
-   */
-  static getPopularProducts = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const limit = parseInt(req.query.limit as string) || 10;
-    
-    // For now, return featured products as popular
-    // In a real implementation, you'd sort by sales count
-    const products = await ProductService.getFeaturedProducts(limit);
-    
-    return ResponseUtil.success(res, { products }, 'Popular products retrieved successfully');
-  });
-
-  /**
-   * Get product filters (for filter UI)
+   * Get product filters
    * GET /api/products/filters
    */
   static getProductFilters = asyncHandler(async (req: AuthRequest, res: Response) => {
     // Get unique values for filters
-    const [materials, colors, sizes, priceRange] = await Promise.all([
+    const [categories, priceRange] = await Promise.all([
       prisma.products.findMany({
         where: { status: 'PUBLISHED' },
-        select: { materials: true },
-        distinct: ['materials'],
-      }),
-      prisma.products.findMany({
-        where: { status: 'PUBLISHED' },
-        select: { colors: true },
-        distinct: ['colors'],
-      }),
-      prisma.products.findMany({
-        where: { status: 'PUBLISHED' },
-        select: { sizes: true },
-        distinct: ['sizes'],
+        select: { category: true },
+        distinct: ['category'],
       }),
       prisma.products.aggregate({
         where: { status: 'PUBLISHED' },
@@ -258,14 +234,10 @@ export class ProductController {
     ]);
 
     // Flatten and deduplicate arrays
-    const uniqueMaterials = [...new Set(materials.flatMap(p => p.materials as string[]))];
-    const uniqueColors = [...new Set(colors.flatMap(p => p.colors as string[]))];
-    const uniqueSizes = [...new Set(sizes.flatMap(p => p.sizes as string[]))];
+    const uniqueCategories = [...new Set(categories.map(p => p.category as string).filter(Boolean))];
 
     const filters = {
-      materials: uniqueMaterials.filter(Boolean),
-      colors: uniqueColors.filter(Boolean),
-      sizes: uniqueSizes.filter(Boolean),
+      categories: uniqueCategories.filter(Boolean),
       priceRange: {
         min: priceRange._min.price || 0,
         max: priceRange._max.price || 1000,

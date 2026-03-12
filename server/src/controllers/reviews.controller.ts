@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Review } from '../models/Review';
+import { Review } from '../services/review.service';
 import { uploadToS3 } from '../utils/fileUpload';
 
 export const createReview = async (req: Request, res: Response) => {
