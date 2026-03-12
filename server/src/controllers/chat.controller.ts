@@ -222,7 +222,7 @@ export class ChatController {
         ai: healthStatus.available ? 'connected' : 'disconnected',
       },
       features: {
-        aiResponses: modelStatus.available,
+        aiResponses: healthStatus.available,
         messageStorage: true,
         multilingual: true,
         feedback: true,

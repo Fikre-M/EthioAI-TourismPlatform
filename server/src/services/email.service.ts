@@ -34,7 +34,7 @@ export class EmailService {
         return;
       }
 
-      this.transporter = nodemailer.createTransporter({
+      this.transporter = nodemailer.createTransport({
         host: config.email.host,
         port: config.email.port,
         secure: config.email.port === 465, // true for 465, false for other ports
@@ -764,6 +764,86 @@ export class EmailService {
     `;
 
     return { subject: `[ADMIN] ${subject}`, html, text };
+  }
+
+  /**
+   * Send booking status update email
+   */
+  static async sendBookingStatusUpdate(
+    email: string, 
+    bookingDetails: {
+      bookingNumber: string;
+      tourTitle: string;
+      status: string;
+      userName: string;
+    }
+  ): Promise<void> {
+    const template = this.getBookingStatusUpdateTemplate(bookingDetails);
+    
+    await this.sendEmail({
+      to: email,
+      subject: template.subject,
+      html: template.html,
+      text: template.text
+    });
+  }
+
+  /**
+   * Get booking status update email template
+   */
+  private static getBookingStatusUpdateTemplate(details: {
+    bookingNumber: string;
+    tourTitle: string;
+    status: string;
+    userName: string;
+  }): EmailTemplate {
+    const statusMessages = {
+      'CONFIRMED': 'Your booking has been confirmed!',
+      'CANCELLED': 'Your booking has been cancelled.',
+      'PENDING': 'Your booking is pending confirmation.',
+      'COMPLETED': 'Your booking has been completed.',
+    };
+
+    const message = statusMessages[details.status as keyof typeof statusMessages] || `Your booking status has been updated to ${details.status}.`;
+
+    return {
+      subject: `Booking Status Update: ${details.bookingNumber}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #333;">Booking Status Update</h2>
+          <p>Hello ${details.userName},</p>
+          <p><strong>${message}</strong></p>
+          
+          <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="color: #333; margin-top: 0;">Booking Details:</h3>
+            <p><strong>Booking Number:</strong> ${details.bookingNumber}</p>
+            <p><strong>Tour:</strong> ${details.tourTitle}</p>
+            <p><strong>Status:</strong> <span style="color: ${details.status === 'CONFIRMED' ? '#28a745' : details.status === 'CANCELLED' ? '#dc3545' : '#ffc107'}">${details.status}</span></p>
+          </div>
+          
+          <p>If you have any questions about your booking, please don't hesitate to contact us.</p>
+          
+          <p>Best regards,<br>The EthioAI Tourism Team</p>
+        </div>
+      `,
+      text: `
+        Booking Status Update
+        
+        Hello ${details.userName},
+        
+        ${message}
+        
+        Booking Details:
+        Booking Number: ${details.bookingNumber}
+        Tour: ${details.tourTitle}
+        Status: ${details.status}
+        
+        If you have any questions about your booking, please don't hesitate to contact us.
+        
+        Best regards,
+        The EthioAI Tourism Team
+      `
+    };
   }
 
   /**
