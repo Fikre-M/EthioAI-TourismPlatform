@@ -250,7 +250,7 @@ export const uploadProductMedia = async (req: AuthRequest, res: Response) => {
       });
     }
 
-    if (product.vendor.userId !== req.user!.id && req.user!.role !== 'ADMIN') {
+    if (product.vendor?.userId !== req.user!.id && req.user!.role !== 'ADMIN') {
       return res.status(403).json({
         success: false,
         message: 'Not authorized to upload images for this product',

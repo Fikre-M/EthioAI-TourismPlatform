@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import { PrismaClient } from '@prisma/client';
 import { log } from '../utils/logger';
 import { EmailService } from '../services/email.service';
-import { BookingService } from '../services/booking.service';
+import { BookingService } from '../services/bookingId.service';
 import { PaymentService } from '../services/payment.service';
 
 // Initialize Stripe only if key is provided
@@ -245,7 +245,7 @@ export class WebhookController {
       // Update booking status if this is a booking payment
       if (payment.booking) {
         await prisma.bookings.update({
-          where: { id: payment.booking.id },
+          where: { id: payment.bookingId.id },
           data: {
             status: 'CONFIRMED',
             updatedAt: new Date()
@@ -254,15 +254,15 @@ export class WebhookController {
 
         // Send booking confirmation email
         await EmailService.sendBookingConfirmation(
-          payment.booking.user.email,
-          payment.booking.user.name || 'Customer',
+          payment.bookingId.user.email,
+          payment.bookingId.user.name || 'Customer',
           {
-            bookingNumber: payment.booking.bookingNumber,
-            tourTitle: payment.booking.tour.title,
-            startDate: payment.booking.startDate.toDateString(),
-            endDate: payment.booking.endDate.toDateString(),
-            totalPrice: Number(payment.booking.totalPrice),
-            participants: payment.booking.adults + payment.booking.children
+            bookingNumber: payment.bookingId.bookingNumber,
+            tourTitle: payment.bookingId.tour.title,
+            startDate: payment.bookingId.startDate.toDateString(),
+            endDate: payment.bookingId.endDate.toDateString(),
+            totalPrice: Number(payment.bookingId.totalPrice),
+            participants: payment.bookingId.adults + payment.bookingId.children
           }
         );
 
@@ -274,8 +274,8 @@ export class WebhookController {
             amount: Number(payment.amount),
             currency: payment.currency,
             paymentMethod: payment.method,
-            bookingNumber: payment.booking.bookingNumber,
-            tourTitle: payment.booking.tour.title
+            bookingNumber: payment.bookingId.bookingNumber,
+            tourTitle: payment.bookingId.tour.title
           }
         );
       }
@@ -328,7 +328,7 @@ export class WebhookController {
       // Update booking status if this is a booking payment
       if (payment.booking) {
         await prisma.bookings.update({
-          where: { id: payment.booking.id },
+          where: { id: payment.bookingId.id },
           data: {
             status: 'CANCELLED',
             updatedAt: new Date()
@@ -342,12 +342,12 @@ export class WebhookController {
           html: `
             <h2>Payment Failed</h2>
             <p>Hello ${payment.user.name || 'Customer'},</p>
-            <p>Unfortunately, your payment for booking ${payment.booking.bookingNumber} has failed.</p>
+            <p>Unfortunately, your payment for booking ${payment.bookingId.bookingNumber} has failed.</p>
             <p><strong>Reason:</strong> ${paymentIntent.last_payment_error?.message || 'Payment processing error'}</p>
             <p>Your booking has been cancelled. Please try booking again or contact support if you need assistance.</p>
             <p>Best regards,<br>The EthioAI Tourism Team</p>
           `,
-          text: `Payment failed for booking ${payment.booking.bookingNumber}. Reason: ${paymentIntent.last_payment_error?.message || 'Payment processing error'}`
+          text: `Payment failed for booking ${payment.bookingId.bookingNumber}. Reason: ${paymentIntent.last_payment_error?.message || 'Payment processing error'}`
         });
       }
 
@@ -395,7 +395,7 @@ export class WebhookController {
       // Update booking status if this is a booking payment
       if (payment.booking) {
         await prisma.bookings.update({
-          where: { id: payment.booking.id },
+          where: { id: payment.bookingId.id },
           data: {
             status: 'CANCELLED',
             updatedAt: new Date()
@@ -546,7 +546,7 @@ export class WebhookController {
       // Update booking status if this is a booking payment
       if (payment.booking) {
         await prisma.bookings.update({
-          where: { id: payment.booking.id },
+          where: { id: payment.bookingId.id },
           data: {
             status: 'CONFIRMED',
             updatedAt: new Date()
@@ -555,15 +555,15 @@ export class WebhookController {
 
         // Send confirmation emails (similar to Stripe success handler)
         await EmailService.sendBookingConfirmation(
-          payment.booking.user.email,
-          payment.booking.user.name || 'Customer',
+          payment.bookingId.user.email,
+          payment.bookingId.user.name || 'Customer',
           {
-            bookingNumber: payment.booking.bookingNumber,
-            tourTitle: payment.booking.tour.title,
-            startDate: payment.booking.startDate.toDateString(),
-            endDate: payment.booking.endDate.toDateString(),
-            totalPrice: Number(payment.booking.totalPrice),
-            participants: payment.booking.adults + payment.booking.children
+            bookingNumber: payment.bookingId.bookingNumber,
+            tourTitle: payment.bookingId.tour.title,
+            startDate: payment.bookingId.startDate.toDateString(),
+            endDate: payment.bookingId.endDate.toDateString(),
+            totalPrice: Number(payment.bookingId.totalPrice),
+            participants: payment.bookingId.adults + payment.bookingId.children
           }
         );
       }
@@ -621,7 +621,7 @@ export class WebhookController {
       // Update booking status if this is a booking payment
       if (payment.booking) {
         await prisma.bookings.update({
-          where: { id: payment.booking.id },
+          where: { id: payment.bookingId.id },
           data: {
             status: 'CANCELLED',
             updatedAt: new Date()
@@ -635,12 +635,12 @@ export class WebhookController {
           html: `
             <h2>Payment Failed</h2>
             <p>Hello ${payment.user.name || 'Customer'},</p>
-            <p>Unfortunately, your payment for booking ${payment.booking.bookingNumber} has failed.</p>
+            <p>Unfortunately, your payment for booking ${payment.bookingId.bookingNumber} has failed.</p>
             <p><strong>Reason:</strong> ${data.message || 'Payment processing error'}</p>
             <p>Your booking has been cancelled. Please try booking again or contact support if you need assistance.</p>
             <p>Best regards,<br>The EthioAI Tourism Team</p>
           `,
-          text: `Payment failed for booking ${payment.booking.bookingNumber}. Reason: ${data.message || 'Payment processing error'}`
+          text: `Payment failed for booking ${payment.bookingId.bookingNumber}. Reason: ${data.message || 'Payment processing error'}`
         });
       }
 
