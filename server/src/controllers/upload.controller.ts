@@ -343,7 +343,7 @@ export const uploadTourMedia = async (req: AuthRequest, res: Response) => {
       });
     }
 
-    if (!tour || tour.userId !== req.user!.id) {
+    if (!tour || !req.user?.id || req.user.role !== 'ADMIN') {
       return res.status(403).json({
         success: false,
         message: 'Not authorized to upload images for this tour',

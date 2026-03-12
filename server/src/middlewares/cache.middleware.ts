@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { log } from '../utils/logger';
 
 // Simple in-memory cache for development
-const cache = new Map<string, { data: any; expires: number }>();
+const memoryCache = new Map<string, { data: any; expires: number }>();
 
 export interface CacheOptions {
   ttl?: number; // Time to live in seconds
