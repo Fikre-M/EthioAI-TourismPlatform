@@ -208,6 +208,9 @@ export class AdminController {
     const { bookingId } = req.params;
     const { status, reason } = req.body;
     const adminId = req.user?.id;
+    if (!adminId) {
+      return ResponseUtil.unauthorized(res, 'Authentication required');
+    }
     
     const booking = await AdminService.updateBookingStatus(bookingId, status, adminId);
     

@@ -155,4 +155,82 @@ export class ItineraryService {
       throw error;
     }
   }
+
+  /**
+   * Share itinerary
+   */
+  static async shareItinerary(id: string, data: any, userId: string): Promise<{
+    shareToken: string;
+    shareUrl: string;
+    expiresAt: Date;
+  }> {
+    try {
+      const shareToken = Math.random().toString(36).substring(7);
+      const shareUrl = `https://ethioai.com/itinerary/shared/${shareToken}`;
+      const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+
+      log.info('Itinerary shared', { itineraryId: id, userId, shareToken });
+      
+      return {
+        shareToken,
+        shareUrl,
+        expiresAt,
+      };
+    } catch (error) {
+      log.error('Failed to share itinerary:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get recommendations
+   */
+  static async getRecommendations(id: string): Promise<{
+    destinations: string[];
+    activities: ItineraryActivity[];
+    estimatedCost: number;
+  }> {
+    try {
+      // Mock recommendations
+      return {
+        destinations: ['Addis Ababa', 'Lalibela', 'Gondar', 'Axum'],
+        activities: [
+          {
+            priority: 'high',
+            type: 'cultural',
+            title: 'Visit Rock Churches',
+            description: 'Explore the ancient rock-hewn churches',
+            duration: 120,
+            cost: 50,
+            location: 'Lalibela'
+          }
+        ],
+        estimatedCost: 500,
+      };
+    } catch (error) {
+      log.error('Failed to get recommendations:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Optimize itinerary
+   */
+  static async optimizeItinerary(id: string, preferences: any): Promise<{
+    optimizedActivities: ItineraryActivity[];
+    savings: number;
+    timeReduction: number;
+  }> {
+    try {
+      // Mock optimization
+      return {
+        optimizedActivities: [],
+        savings: 100,
+        timeReduction: 30,
+      };
+    } catch (error) {
+      log.error('Failed to optimize itinerary:', error);
+      throw error;
+    }
+  }
 }

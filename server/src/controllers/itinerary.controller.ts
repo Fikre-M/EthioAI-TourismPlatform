@@ -42,9 +42,9 @@ export class ItineraryController {
    */
   static getItineraries = asyncHandler(async (req: AuthRequest, res: Response) => {
     const query: ItineraryQueryInput = req.query as any;
-    const userId = req.userId;
+    const userId = req.user?.id;
     
-    const result = await ItineraryService.getItineraries(query, userId);
+    const result = await ItineraryService.getUserItineraries(userId, query.page, query.limit);
     
     return ResponseUtil.paginated(
       res, 
@@ -60,9 +60,9 @@ export class ItineraryController {
    */
   static getItineraryById = asyncHandler(async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
-    const userId = req.userId;
+    const userId = req.user?.id;
     
-    const itinerary = await ItineraryService.getItineraryById(id, userId);
+    const itinerary = await ItineraryService.getItineraryById(id);
     
     return ResponseUtil.success(res, { itinerary }, 'Itinerary retrieved successfully');
   });
