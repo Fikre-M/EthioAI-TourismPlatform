@@ -4,10 +4,10 @@ import crypto from 'crypto';
 import { PrismaClient } from '@prisma/client';
 import { log } from '../utils/logger';
 import { EmailService } from '../services/email.service';
-import { BookingService } from '../services/bookingId.service';
+import { BookingService } from '../services/booking.service';
 import { PaymentService } from '../services/payment.service';
 
-// Initialize Stripe only if key is provided
+// Initialize Stripe only if key is proed
 let stripe: Stripe | null = null;
 
 if (process.env.STRIPE_SECRET_KEY) {
@@ -15,7 +15,7 @@ if (process.env.STRIPE_SECRET_KEY) {
     apiVersion: "2026-02-25.clover",
   });
 } else {
-  console.warn('⚠️ Stripe secret key not provided - Stripe webhooks disabled');
+  console.warn('⚠️ Stripe secret key not proed - Stripe webhooks disabled');
 }
 
 const prisma = new PrismaClient();
@@ -24,7 +24,7 @@ export class WebhookController {
   /**
    * Handle Stripe webhooks with proper verification
    */
-  static async handleStripeWebhook(req: Request, res: Response): Promise<void> {
+  static async handleStripeWebhook(req: Request, res: Response): Promise<v> {
     if (!stripe) {
       log.error('Stripe not configured for webhooks');
       res.status(500).json({ error: 'Stripe not configured' });
@@ -48,7 +48,7 @@ export class WebhookController {
       
       log.info('Stripe webhook received', {
         type: event.type,
-        id: event.id,
+       : event,
         created: event.created
       });
     } catch (err: any) {
@@ -66,14 +66,14 @@ export class WebhookController {
       
       log.info('Stripe webhook processed successfully', {
         type: event.type,
-        id: event.id
+       : event
       });
       
       res.json({ received: true });
     } catch (error: any) {
       log.error('Stripe webhook processing failed', {
         type: event.type,
-        id: event.id,
+       : event,
         error: error.message
       });
       
@@ -84,7 +84,7 @@ export class WebhookController {
   /**
    * Handle Chapa webhooks with proper verification
    */
-  static async handleChapaWebhook(req: Request, res: Response): Promise<void> {
+  static async handleChapaWebhook(req: Request, res: Response): Promise<v> {
     const signature = req.headers['chapa-signature'] as string;
     const secret = process.env.CHAPA_WEBHOOK_SECRET || '';
     
@@ -106,10 +106,10 @@ export class WebhookController {
         Buffer.from(expectedSignature, 'hex')
       )) {
         log.security('Chapa webhook signature verification failed', undefined, undefined, {
-          providedSignature: signature?.substring(0, 20) + '...',
+          proedSignature: signature?.substring(0, 20) + '...',
           expectedSignature: expectedSignature.substring(0, 20) + '...'
         });
-        res.status(401).json({ error: 'Invalid signature' });
+        res.status(401).json({ error: 'Inva signature' });
         return;
       }
 
@@ -140,7 +140,7 @@ export class WebhookController {
   /**
    * Process Stripe webhook events
    */
-  private static async processStripeEvent(event: Stripe.Event): Promise<void> {
+  private static async processStripeEvent(event: Stripe.Event): Promise<v> {
     switch (event.type) {
       case "payment_intent.succeeded":
         await WebhookController.handlePaymentIntentSucceeded(event.data.object as Stripe.PaymentIntent);
@@ -184,7 +184,7 @@ export class WebhookController {
   /**
    * Process Chapa webhook events
    */
-  private static async processChapaEvent(data: any): Promise<void> {
+  private static async processChapaEvent(data: any): Promise<v> {
     switch (data.event) {
       case "charge.success":
         await WebhookController.handleChapaChargeSuccess(data);
@@ -209,32 +209,32 @@ export class WebhookController {
 
   // Stripe Event Handlers
 
-  private static async handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent): Promise<void> {
+  private static async handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent): Promise<v> {
     try {
       // Find payment record
       const payment = await prisma.payments.findUnique({
-        where: { paymentId: paymentIntent.id },
+        where: { paymen: paymentIntent },
         include: {
-          booking: {
+          bookings: {
             include: {
-              user: true,
+              users: true,
               tour: true
             }
           },
-          user: true
+          users: true
         }
       });
 
       if (!payment) {
         log.error('Payment not found for successful payment intent', {
-          paymentIntentId: paymentIntent.id
+          paymentInten: paymentIntent
         });
         return;
       }
 
       // Update payment status
       await prisma.payments.update({
-        where: { id: payment.id },
+        where: {: payment },
         data: {
           status: 'COMPLETED',
           gatewayResponse: paymentIntent as any,
@@ -245,7 +245,7 @@ export class WebhookController {
       // Update booking status if this is a booking payment
       if (payment.booking) {
         await prisma.bookings.update({
-          where: { id: payment.bookingId.id },
+          where: {: payment.useId },
           data: {
             status: 'CONFIRMED',
             updatedAt: new Date()
@@ -254,35 +254,35 @@ export class WebhookController {
 
         // Send booking confirmation email
         await EmailService.sendBookingConfirmation(
-          payment.bookingId.user.email,
-          payment.bookingId.user.name || 'Customer',
+          payment.useId.user.email,
+          payment.useId.user.name || 'Customer',
           {
-            bookingNumber: payment.bookingId.bookingNumber,
-            tourTitle: payment.bookingId.tour.title,
-            startDate: payment.bookingId.startDate.toDateString(),
-            endDate: payment.bookingId.endDate.toDateString(),
-            totalPrice: Number(payment.bookingId.totalPrice),
-            participants: payment.bookingId.adults + payment.bookingId.children
+            bookin: payment.useId.bookin,
+            tourTitle: payment.useId.tour.title,
+            startDate: payment.useId.startDate.toDateString(),
+            endDate: payment.useId.endDate.toDateString(),
+            totalPrice: Number(payment.useId.totalPrice),
+            participants: payment.useId.adults + payment.useId.children
           }
         );
 
         // Send payment confirmation email
         await EmailService.sendPaymentConfirmation(
-          payment.user.email,
-          payment.user.name || 'Customer',
+          payment.use.email,
+          payment.use.name || 'Customer',
           {
             amount: Number(payment.amount),
             currency: payment.currency,
             paymentMethod: payment.method,
-            bookingNumber: payment.bookingId.bookingNumber,
-            tourTitle: payment.bookingId.tour.title
+            bookin: payment.useId.bookin,
+            tourTitle: payment.useId.tour.title
           }
         );
       }
 
       log.info('Payment intent succeeded processed', {
-        paymentId: payment.id,
-        bookingId: payment.bookingId,
+        paymen: payment,
+        bookin: payment.useId,
         amount: payment.amount
       });
     } catch (error) {
@@ -291,32 +291,32 @@ export class WebhookController {
     }
   }
 
-  private static async handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent): Promise<void> {
+  private static async handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent): Promise<v> {
     try {
       // Find payment record
       const payment = await prisma.payments.findUnique({
-        where: { paymentId: paymentIntent.id },
+        where: { paymen: paymentIntent },
         include: {
-          booking: {
+          bookings: {
             include: {
-              user: true,
+              users: true,
               tour: true
             }
           },
-          user: true
+          users: true
         }
       });
 
       if (!payment) {
         log.error('Payment not found for failed payment intent', {
-          paymentIntentId: paymentIntent.id
+          paymentInten: paymentIntent
         });
         return;
       }
 
       // Update payment status
       await prisma.payments.update({
-        where: { id: payment.id },
+        where: {: payment },
         data: {
           status: 'FAILED',
           failureReason: paymentIntent.last_payment_error?.message || 'Payment failed',
@@ -328,7 +328,7 @@ export class WebhookController {
       // Update booking status if this is a booking payment
       if (payment.booking) {
         await prisma.bookings.update({
-          where: { id: payment.bookingId.id },
+          where: {: payment.useId },
           data: {
             status: 'CANCELLED',
             updatedAt: new Date()
@@ -337,23 +337,23 @@ export class WebhookController {
 
         // Send payment failure notification
         await EmailService.sendEmail({
-          to: payment.user.email,
+          to: payment.use.email,
           subject: 'Payment Failed - Booking Cancelled',
           html: `
             <h2>Payment Failed</h2>
-            <p>Hello ${payment.user.name || 'Customer'},</p>
-            <p>Unfortunately, your payment for booking ${payment.bookingId.bookingNumber} has failed.</p>
+            <p>Hello ${payment.use.name || 'Customer'},</p>
+            <p>Unfortunately, your payment for booking ${payment.useId.bookin} has failed.</p>
             <p><strong>Reason:</strong> ${paymentIntent.last_payment_error?.message || 'Payment processing error'}</p>
             <p>Your booking has been cancelled. Please try booking again or contact support if you need assistance.</p>
             <p>Best regards,<br>The EthioAI Tourism Team</p>
           `,
-          text: `Payment failed for booking ${payment.bookingId.bookingNumber}. Reason: ${paymentIntent.last_payment_error?.message || 'Payment processing error'}`
+          text: `Payment failed for booking ${payment.useId.bookin}. Reason: ${paymentIntent.last_payment_error?.message || 'Payment processing error'}`
         });
       }
 
       log.info('Payment intent failed processed', {
-        paymentId: payment.id,
-        bookingId: payment.bookingId,
+        paymen: payment,
+        bookin: payment.useId,
         reason: paymentIntent.last_payment_error?.message
       });
     } catch (error) {
@@ -362,15 +362,15 @@ export class WebhookController {
     }
   }
 
-  private static async handlePaymentIntentCanceled(paymentIntent: Stripe.PaymentIntent): Promise<void> {
+  private static async handlePaymentIntentCanceled(paymentIntent: Stripe.PaymentIntent): Promise<v> {
     try {
       // Find payment record
       const payment = await prisma.payments.findUnique({
-        where: { paymentId: paymentIntent.id },
+        where: { paymen: paymentIntent },
         include: {
-          booking: {
+          bookings: {
             include: {
-              user: true,
+              users: true,
               tour: true
             }
           }
@@ -383,7 +383,7 @@ export class WebhookController {
 
       // Update payment status
       await prisma.payments.update({
-        where: { id: payment.id },
+        where: {: payment },
         data: {
           status: 'FAILED',
           failureReason: 'Payment cancelled',
@@ -395,7 +395,7 @@ export class WebhookController {
       // Update booking status if this is a booking payment
       if (payment.booking) {
         await prisma.bookings.update({
-          where: { id: payment.bookingId.id },
+          where: {: payment.useId },
           data: {
             status: 'CANCELLED',
             updatedAt: new Date()
@@ -404,8 +404,8 @@ export class WebhookController {
       }
 
       log.info('Payment intent canceled processed', {
-        paymentId: payment.id,
-        bookingId: payment.bookingId
+        paymen: payment,
+        bookin: payment.useId
       });
     } catch (error) {
       log.error('Failed to process payment intent canceled', error);
@@ -413,9 +413,9 @@ export class WebhookController {
     }
   }
 
-  private static async handleChargeDispute(dispute: Stripe.Dispute): Promise<void> {
+  private static async handleChargeDispute(dispute: Stripe.Dispute): Promise<v> {
     try {
-      // Find payment record by charge ID
+      // Find payment record by charge
       const payment = await prisma.payments.findFirst({
         where: {
           gatewayResponse: {
@@ -424,20 +424,20 @@ export class WebhookController {
           }
         },
         include: {
-          booking: {
+          bookings: {
             include: {
-              user: true,
+              users: true,
               tour: true
             }
           },
-          user: true
+          users: true
         }
       });
 
       if (!payment) {
         log.error('Payment not found for dispute', {
-          chargeId: dispute.charge,
-          disputeId: dispute.id
+          charg: dispute.charge,
+          disput: dispute
         });
         return;
       }
@@ -445,22 +445,22 @@ export class WebhookController {
       // Send admin notification about dispute
       await EmailService.sendAdminNotification(
         'Payment Dispute Created',
-        `A payment dispute has been created for booking ${payment.booking?.bookingNumber || 'N/A'}`,
+        `A payment dispute has been created for booking ${payment.booking?.bookin || 'N/A'}`,
         {
-          disputeId: dispute.id,
-          chargeId: dispute.charge,
+          disput: dispute,
+          charg: dispute.charge,
           amount: dispute.amount,
           reason: dispute.reason,
           status: dispute.status,
-          paymentId: payment.id,
-          bookingId: payment.bookingId,
-          customerEmail: payment.user.email
+          paymen: payment,
+          bookin: payment.useId,
+          customerEmail: payment.use.email
         }
       );
 
       log.info('Charge dispute processed', {
-        disputeId: dispute.id,
-        paymentId: payment.id,
+        disput: dispute,
+        paymen: payment,
         amount: dispute.amount,
         reason: dispute.reason
       });
@@ -470,34 +470,34 @@ export class WebhookController {
     }
   }
 
-  private static async handleSubscriptionEvent(event: Stripe.Event): Promise<void> {
+  private static async handleSubscriptionEvent(event: Stripe.Event): Promise<v> {
     // Handle subscription events if you have subscription features
     log.info('Subscription event received', {
       type: event.type,
-      subscriptionId: (event.data.object as any).id
+      subscriptio: (event.data.object as any)
     });
   }
 
-  private static async handleInvoicePaymentSucceeded(invoice: Stripe.Invoice): Promise<void> {
+  private static async handleInvoicePaymentSucceeded(invoice: Stripe.Invoice): Promise<v> {
     // Handle successful invoice payments
     log.info('Invoice payment succeeded', {
-      invoiceId: invoice.id,
-      amount: invoice.amount_paid
+      invoic: invoice,
+      amount: invoice.amount_p
     });
   }
 
-  private static async handleInvoicePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
+  private static async handleInvoicePaymentFailed(invoice: Stripe.Invoice): Promise<v> {
     // Handle failed invoice payments
     log.info('Invoice payment failed', {
-      invoiceId: invoice.id,
+      invoic: invoice,
       amount: invoice.amount_due
     });
   }
 
-  private static async handleAccountUpdated(account: Stripe.Account): Promise<void> {
+  private static async handleAccountUpdated(account: Stripe.Account): Promise<v> {
     // Handle account updates (for marketplace features)
     log.info('Stripe account updated', {
-      accountId: account.id,
+      accoun: account,
       chargesEnabled: account.charges_enabled,
       payoutsEnabled: account.payouts_enabled
     });
@@ -505,7 +505,7 @@ export class WebhookController {
 
   // Chapa Event Handlers
 
-  private static async handleChapaChargeSuccess(data: any): Promise<void> {
+  private static async handleChapaChargeSuccess(data: any): Promise<v> {
     try {
       // Find payment record by transaction reference
       const payment = await prisma.payments.findFirst({
@@ -516,13 +516,13 @@ export class WebhookController {
           }
         },
         include: {
-          booking: {
+          bookings: {
             include: {
-              user: true,
+              users: true,
               tour: true
             }
           },
-          user: true
+          users: true
         }
       });
 
@@ -535,7 +535,7 @@ export class WebhookController {
 
       // Update payment status
       await prisma.payments.update({
-        where: { id: payment.id },
+        where: {: payment },
         data: {
           status: 'COMPLETED',
           gatewayResponse: data,
@@ -546,7 +546,7 @@ export class WebhookController {
       // Update booking status if this is a booking payment
       if (payment.booking) {
         await prisma.bookings.update({
-          where: { id: payment.bookingId.id },
+          where: {: payment.useId },
           data: {
             status: 'CONFIRMED',
             updatedAt: new Date()
@@ -555,21 +555,21 @@ export class WebhookController {
 
         // Send confirmation emails (similar to Stripe success handler)
         await EmailService.sendBookingConfirmation(
-          payment.bookingId.user.email,
-          payment.bookingId.user.name || 'Customer',
+          payment.useId.user.email,
+          payment.useId.user.name || 'Customer',
           {
-            bookingNumber: payment.bookingId.bookingNumber,
-            tourTitle: payment.bookingId.tour.title,
-            startDate: payment.bookingId.startDate.toDateString(),
-            endDate: payment.bookingId.endDate.toDateString(),
-            totalPrice: Number(payment.bookingId.totalPrice),
-            participants: payment.bookingId.adults + payment.bookingId.children
+            bookin: payment.useId.bookin,
+            tourTitle: payment.useId.tour.title,
+            startDate: payment.useId.startDate.toDateString(),
+            endDate: payment.useId.endDate.toDateString(),
+            totalPrice: Number(payment.useId.totalPrice),
+            participants: payment.useId.adults + payment.useId.children
           }
         );
       }
 
       log.info('Chapa charge success processed', {
-        paymentId: payment.id,
+        paymen: payment,
         tx_ref: data.tx_ref,
         amount: data.amount
       });
@@ -579,7 +579,7 @@ export class WebhookController {
     }
   }
 
-  private static async handleChapaChargeFailed(data: any): Promise<void> {
+  private static async handleChapaChargeFailed(data: any): Promise<v> {
     try {
       // Find payment record by transaction reference
       const payment = await prisma.payments.findFirst({
@@ -590,13 +590,13 @@ export class WebhookController {
           }
         },
         include: {
-          booking: {
+          bookings: {
             include: {
-              user: true,
+              users: true,
               tour: true
             }
           },
-          user: true
+          users: true
         }
       });
 
@@ -609,7 +609,7 @@ export class WebhookController {
 
       // Update payment status
       await prisma.payments.update({
-        where: { id: payment.id },
+        where: {: payment },
         data: {
           status: 'FAILED',
           failureReason: data.message || 'Payment failed',
@@ -621,7 +621,7 @@ export class WebhookController {
       // Update booking status if this is a booking payment
       if (payment.booking) {
         await prisma.bookings.update({
-          where: { id: payment.bookingId.id },
+          where: {: payment.useId },
           data: {
             status: 'CANCELLED',
             updatedAt: new Date()
@@ -630,22 +630,22 @@ export class WebhookController {
 
         // Send failure notification
         await EmailService.sendEmail({
-          to: payment.user.email,
+          to: payment.use.email,
           subject: 'Payment Failed - Booking Cancelled',
           html: `
             <h2>Payment Failed</h2>
-            <p>Hello ${payment.user.name || 'Customer'},</p>
-            <p>Unfortunately, your payment for booking ${payment.bookingId.bookingNumber} has failed.</p>
+            <p>Hello ${payment.use.name || 'Customer'},</p>
+            <p>Unfortunately, your payment for booking ${payment.useId.bookin} has failed.</p>
             <p><strong>Reason:</strong> ${data.message || 'Payment processing error'}</p>
             <p>Your booking has been cancelled. Please try booking again or contact support if you need assistance.</p>
             <p>Best regards,<br>The EthioAI Tourism Team</p>
           `,
-          text: `Payment failed for booking ${payment.bookingId.bookingNumber}. Reason: ${data.message || 'Payment processing error'}`
+          text: `Payment failed for booking ${payment.useId.bookin}. Reason: ${data.message || 'Payment processing error'}`
         });
       }
 
       log.info('Chapa charge failed processed', {
-        paymentId: payment.id,
+        paymen: payment,
         tx_ref: data.tx_ref,
         reason: data.message
       });
@@ -655,7 +655,7 @@ export class WebhookController {
     }
   }
 
-  private static async handleChapaTransferSuccess(data: any): Promise<void> {
+  private static async handleChapaTransferSuccess(data: any): Promise<v> {
     // Handle successful transfers (for marketplace payouts)
     log.info('Chapa transfer success', {
       tx_ref: data.tx_ref,
@@ -663,7 +663,7 @@ export class WebhookController {
     });
   }
 
-  private static async handleChapaTransferFailed(data: any): Promise<void> {
+  private static async handleChapaTransferFailed(data: any): Promise<v> {
     // Handle failed transfers
     log.info('Chapa transfer failed', {
       tx_ref: data.tx_ref,
@@ -674,7 +674,7 @@ export class WebhookController {
   /**
    * Webhook health check endpoint
    */
-  static async healthCheck(req: Request, res: Response): Promise<void> {
+  static async healthCheck(req: Request, res: Response): Promise<v> {
     res.json({
       status: 'ok',
       timestamp: new Date().toISOString(),

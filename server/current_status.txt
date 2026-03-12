@@ -1,0 +1,627 @@
+﻿src/controllers/tour.controller.ts(69,13): error TS2561: Object literal may only specify known properties, but 'user' does not exist in type 'reviewsInclude<DefaultArgs>'. Did you mean to write 'users'?
+src/controllers/upload.controller.ts(346,14): error TS2339: Property 'userId' does not exist on type '{ status: string; id: string; description: string; createdAt: Date; updatedAt: Date; title: string; images: string | null; slug: string; shortDescription: string | null; price: Decimal; ... 14 more ...; metaDescription: string | null; }'.
+src/controllers/webhook.controller.ts(7,32): error TS2307: Cannot find module '../services/bookingId.service' or its corresponding type declarations.
+src/controllers/webhook.controller.ts(218,11): error TS2561: Object literal may only specify known properties, but 'booking' does not exist in type 'paymentsInclude<DefaultArgs>'. Did you mean to write 'bookings'?
+src/controllers/webhook.controller.ts(246,19): error TS2551: Property 'booking' does not exist on type '{ status: string; id: string; userId: string; amount: Decimal; createdAt: Date; updatedAt: Date; paymentId: string; bookingId: string | null; orderId: string | null; currency: string; method: string; gatewayResponse: string | null; failureReason: string | null; }'. Did you mean 'bookingId'?
+src/controllers/webhook.controller.ts(248,24): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(248,42): error TS2339: Property 'id' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(257,11): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(257,29): error TS2339: Property 'user' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(258,11): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(258,29): error TS2339: Property 'user' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(260,28): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(260,46): error TS2339: Property 'bookingNumber' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(261,24): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(261,42): error TS2339: Property 'tour' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(262,24): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(262,42): error TS2339: Property 'startDate' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(263,22): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(263,40): error TS2339: Property 'endDate' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(264,32): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(264,50): error TS2339: Property 'totalPrice' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(265,27): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(265,45): error TS2339: Property 'adults' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(265,54): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(265,72): error TS2339: Property 'children' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(271,19): error TS2339: Property 'user' does not exist on type '{ status: string; id: string; userId: string; amount: Decimal; createdAt: Date; updatedAt: Date; paymentId: string; bookingId: string | null; orderId: string | null; currency: string; method: string; gatewayResponse: string | null; failureReason: string | null; }'.
+src/controllers/webhook.controller.ts(272,19): error TS2339: Property 'user' does not exist on type '{ status: string; id: string; userId: string; amount: Decimal; createdAt: Date; updatedAt: Date; paymentId: string; bookingId: string | null; orderId: string | null; currency: string; method: string; gatewayResponse: string | null; failureReason: string | null; }'.
+src/controllers/webhook.controller.ts(277,28): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(277,46): error TS2339: Property 'bookingNumber' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(278,24): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(278,42): error TS2339: Property 'tour' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(300,11): error TS2561: Object literal may only specify known properties, but 'booking' does not exist in type 'paymentsInclude<DefaultArgs>'. Did you mean to write 'bookings'?
+src/controllers/webhook.controller.ts(329,19): error TS2551: Property 'booking' does not exist on type '{ status: string; id: string; userId: string; amount: Decimal; createdAt: Date; updatedAt: Date; paymentId: string; bookingId: string | null; orderId: string | null; currency: string; method: string; gatewayResponse: string | null; failureReason: string | null; }'. Did you mean 'bookingId'?
+src/controllers/webhook.controller.ts(331,24): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(331,42): error TS2339: Property 'id' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(340,23): error TS2339: Property 'user' does not exist on type '{ status: string; id: string; userId: string; amount: Decimal; createdAt: Date; updatedAt: Date; paymentId: string; bookingId: string | null; orderId: string | null; currency: string; method: string; gatewayResponse: string | null; failureReason: string | null; }'.
+src/controllers/webhook.controller.ts(344,32): error TS2339: Property 'user' does not exist on type '{ status: string; id: string; userId: string; amount: Decimal; createdAt: Date; updatedAt: Date; paymentId: string; bookingId: string | null; orderId: string | null; currency: string; method: string; gatewayResponse: string | null; failureReason: string | null; }'.
+src/controllers/webhook.controller.ts(345,58): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(345,76): error TS2339: Property 'bookingNumber' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(350,47): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(350,65): error TS2339: Property 'bookingNumber' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(371,11): error TS2561: Object literal may only specify known properties, but 'booking' does not exist in type 'paymentsInclude<DefaultArgs>'. Did you mean to write 'bookings'?
+src/controllers/webhook.controller.ts(396,19): error TS2551: Property 'booking' does not exist on type '{ status: string; id: string; userId: string; amount: Decimal; createdAt: Date; updatedAt: Date; paymentId: string; bookingId: string | null; orderId: string | null; currency: string; method: string; gatewayResponse: string | null; failureReason: string | null; }'. Did you mean 'bookingId'?
+src/controllers/webhook.controller.ts(398,24): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(398,42): error TS2339: Property 'id' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(423,13): error TS2322: Type 'string | Charge' is not assignable to type 'string | FieldRef<"payments", "String"> | null | undefined'.
+  Type 'Charge' is not assignable to type 'string | FieldRef<"payments", "String"> | null | undefined'.
+src/controllers/webhook.controller.ts(427,11): error TS2561: Object literal may only specify known properties, but 'booking' does not exist in type 'paymentsInclude<DefaultArgs>'. Did you mean to write 'bookings'?
+src/controllers/webhook.controller.ts(448,67): error TS2551: Property 'booking' does not exist on type '{ status: string; id: string; userId: string; amount: Decimal; createdAt: Date; updatedAt: Date; paymentId: string; bookingId: string | null; orderId: string | null; currency: string; method: string; gatewayResponse: string | null; failureReason: string | null; }'. Did you mean 'bookingId'?
+src/controllers/webhook.controller.ts(457,34): error TS2339: Property 'user' does not exist on type '{ status: string; id: string; userId: string; amount: Decimal; createdAt: Date; updatedAt: Date; paymentId: string; bookingId: string | null; orderId: string | null; currency: string; method: string; gatewayResponse: string | null; failureReason: string | null; }'.
+src/controllers/webhook.controller.ts(514,13): error TS2353: Object literal may only specify known properties, and 'path' does not exist in type 'StringNullableFilter<"payments">'.
+src/controllers/webhook.controller.ts(519,11): error TS2561: Object literal may only specify known properties, but 'booking' does not exist in type 'paymentsInclude<DefaultArgs>'. Did you mean to write 'bookings'?
+src/controllers/webhook.controller.ts(547,19): error TS2551: Property 'booking' does not exist on type '{ status: string; id: string; userId: string; amount: Decimal; createdAt: Date; updatedAt: Date; paymentId: string; bookingId: string | null; orderId: string | null; currency: string; method: string; gatewayResponse: string | null; failureReason: string | null; }'. Did you mean 'bookingId'?
+src/controllers/webhook.controller.ts(549,24): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(549,42): error TS2339: Property 'id' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(558,11): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(558,29): error TS2339: Property 'user' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(559,11): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(559,29): error TS2339: Property 'user' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(561,28): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(561,46): error TS2339: Property 'bookingNumber' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(562,24): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(562,42): error TS2339: Property 'tour' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(563,24): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(563,42): error TS2339: Property 'startDate' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(564,22): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(564,40): error TS2339: Property 'endDate' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(565,32): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(565,50): error TS2339: Property 'totalPrice' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(566,27): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(566,45): error TS2339: Property 'adults' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(566,54): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(566,72): error TS2339: Property 'children' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(588,13): error TS2353: Object literal may only specify known properties, and 'path' does not exist in type 'StringNullableFilter<"payments">'.
+src/controllers/webhook.controller.ts(593,11): error TS2561: Object literal may only specify known properties, but 'booking' does not exist in type 'paymentsInclude<DefaultArgs>'. Did you mean to write 'bookings'?
+src/controllers/webhook.controller.ts(622,19): error TS2551: Property 'booking' does not exist on type '{ status: string; id: string; userId: string; amount: Decimal; createdAt: Date; updatedAt: Date; paymentId: string; bookingId: string | null; orderId: string | null; currency: string; method: string; gatewayResponse: string | null; failureReason: string | null; }'. Did you mean 'bookingId'?
+src/controllers/webhook.controller.ts(624,24): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(624,42): error TS2339: Property 'id' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(633,23): error TS2339: Property 'user' does not exist on type '{ status: string; id: string; userId: string; amount: Decimal; createdAt: Date; updatedAt: Date; paymentId: string; bookingId: string | null; orderId: string | null; currency: string; method: string; gatewayResponse: string | null; failureReason: string | null; }'.
+src/controllers/webhook.controller.ts(637,32): error TS2339: Property 'user' does not exist on type '{ status: string; id: string; userId: string; amount: Decimal; createdAt: Date; updatedAt: Date; paymentId: string; bookingId: string | null; orderId: string | null; currency: string; method: string; gatewayResponse: string | null; failureReason: string | null; }'.
+src/controllers/webhook.controller.ts(638,58): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(638,76): error TS2339: Property 'bookingNumber' does not exist on type 'string'.
+src/controllers/webhook.controller.ts(643,47): error TS18047: 'payment.bookingId' is possibly 'null'.
+src/controllers/webhook.controller.ts(643,65): error TS2339: Property 'bookingNumber' does not exist on type 'string'.
+src/middlewares/cache.middleware.ts(5,7): error TS2451: Cannot redeclare block-scoped variable 'cache'.
+src/middlewares/cache.middleware.ts(68,14): error TS2451: Cannot redeclare block-scoped variable 'cache'.
+src/middlewares/logging.middleware.ts(3,10): error TS2459: Module '"./auth.middleware"' declares 'AuthRequest' locally, but it is not exported.
+src/middlewares/logging.middleware.ts(15,7): error TS2339: Property 'http' does not exist on type '{ info: (message: string, meta?: any) => void; error: (message: string, error?: any, meta?: any) => void; warn: (message: string, meta?: any) => void; debug: (message: string, meta?: any) => void; auth: (message: string, userId?: string | undefined, meta?: any) => void; security: (message: string, userId?: string | ...'.
+src/middlewares/logging.middleware.ts(25,3): error TS2322: Type '(chunk?: any, encoding?: any) => void' is not assignable to type '{ (cb?: (() => void) | undefined): Response<any, Record<string, any>>; (chunk: any, cb?: (() => void) | undefined): Response<any, Record<string, any>>; (chunk: any, encoding: BufferEncoding, cb?: (() => void) | undefined): Response<...>; }'.
+  Type 'void' is not assignable to type 'Response<any, Record<string, any>>'.
+src/middlewares/logging.middleware.ts(30,9): error TS2339: Property 'api' does not exist on type '{ info: (message: string, meta?: any) => void; error: (message: string, error?: any, meta?: any) => void; warn: (message: string, meta?: any) => void; debug: (message: string, meta?: any) => void; auth: (message: string, userId?: string | undefined, meta?: any) => void; security: (message: string, userId?: string | ...'.
+src/middlewares/logging.middleware.ts(34,11): error TS2339: Property 'performance' does not exist on type '{ info: (message: string, meta?: any) => void; error: (message: string, error?: any, meta?: any) => void; warn: (message: string, meta?: any) => void; debug: (message: string, meta?: any) => void; auth: (message: string, userId?: string | undefined, meta?: any) => void; security: (message: string, userId?: string | ...'.
+src/middlewares/performance.middleware.ts(3,10): error TS2459: Module '"./auth.middleware"' declares 'AuthRequest' locally, but it is not exported.
+src/middlewares/performance.middleware.ts(4,8): error TS2613: Module '"C:/Users/fikre/EthioAI/server/src/utils/logger"' has no default export. Did you mean to use 'import { logger } from "C:/Users/fikre/EthioAI/server/src/utils/logger"' instead?
+src/middlewares/performance.middleware.ts(109,36): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/middlewares/performance.middleware.ts(115,20): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/middlewares/security.middleware.ts(43,16): error TS2339: Property 'user' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/middlewares/security.middleware.ts(67,7): error TS2339: Property 'sanitizedBody' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/middlewares/security.middleware.ts(68,16): error TS2339: Property 'sanitizedBody' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/middlewares/security.middleware.ts(89,19): error TS2339: Property 'user' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/modules/auth/auth.controller.ts(51,9): error TS2353: Object literal may only specify known properties, and 'password' does not exist in type '(Without<usersCreateInput, usersUncheckedCreateInput> & usersUncheckedCreateInput) | (Without<...> & usersCreateInput)'.
+src/modules/auth/auth.controller.ts(67,18): error TS2551: Property 'refreshToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'refresh_tokens'?
+src/modules/auth/auth.controller.ts(107,65): error TS2339: Property 'password' does not exist on type '{ name: string | null; email: string; passwordHash: string; phone: string | null; role: string; bio: string | null; location: string | null; dateOfBirth: Date | null; id: string; createdAt: Date; updatedAt: Date; isEmailVerified: boolean; avatar: string | null; }'.
+src/modules/auth/auth.controller.ts(117,18): error TS2551: Property 'refreshToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'refresh_tokens'?
+src/modules/auth/auth.controller.ts(134,13): error TS2339: Property 'password' does not exist on type '{ name: string | null; email: string; passwordHash: string; phone: string | null; role: string; bio: string | null; location: string | null; dateOfBirth: Date | null; id: string; createdAt: Date; updatedAt: Date; isEmailVerified: boolean; avatar: string | null; }'.
+src/modules/auth/auth.controller.ts(170,9): error TS2353: Object literal may only specify known properties, and 'resetToken' does not exist in type '(Without<usersUpdateInput, usersUncheckedUpdateInput> & usersUncheckedUpdateInput) | (Without<...> & usersUpdateInput)'.
+src/modules/auth/auth.controller.ts(226,36): error TS2551: Property 'refreshToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'refresh_tokens'?
+src/modules/auth/auth.controller.ts(263,20): error TS2551: Property 'refreshToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'refresh_tokens'?
+src/modules/auth/auth.schema.ts(2,10): error TS2305: Module '"@prisma/client"' has no exported member 'UserRole'.
+src/modules/booking/booking.controller.ts(5,30): error TS2307: Cannot find module '../auth/guards/jwt-auth.guard' or its corresponding type declarations.
+src/modules/booking/booking.controller.ts(6,25): error TS2307: Cannot find module '../auth/decorators/get-user.decorator' or its corresponding type declarations.
+src/modules/booking/booking.controller.ts(7,22): error TS2307: Cannot find module '../user/entities/user.entity' or its corresponding type declarations.
+src/modules/booking/booking.controller.ts(13,3): error TS1241: Unable to resolve signature of method decorator when called as an expression.
+  The runtime will invoke the decorator with 2 arguments, but the decorator expects 3.
+src/modules/booking/booking.controller.ts(13,4): error TS1270: Decorator function return type 'void | TypedPropertyDescriptor<unknown>' is not assignable to type 'void | ((tourId: string, date: string) => Promise<{ available: boolean; spotsLeft: number; totalCapacity: any; isFullyBooked: boolean; waitlistAvailable: boolean; }>)'.
+  Type 'TypedPropertyDescriptor<unknown>' is not assignable to type 'void | ((tourId: string, date: string) => Promise<{ available: boolean; spotsLeft: number; totalCapacity: any; isFullyBooked: boolean; waitlistAvailable: boolean; }>)'.
+src/modules/booking/booking.controller.ts(15,5): error TS1206: Decorators are not valid here.
+src/modules/booking/booking.controller.ts(16,5): error TS1206: Decorators are not valid here.
+src/modules/booking/booking.controller.ts(21,3): error TS1241: Unable to resolve signature of method decorator when called as an expression.
+  The runtime will invoke the decorator with 2 arguments, but the decorator expects 3.
+src/modules/booking/booking.controller.ts(21,4): error TS1270: Decorator function return type 'void | TypedPropertyDescriptor<unknown>' is not assignable to type 'void | ((createBookingDto: CreateBookingDto, user: User) => Promise<any>)'.
+  Type 'TypedPropertyDescriptor<unknown>' is not assignable to type 'void | ((createBookingDto: CreateBookingDto, user: User) => Promise<any>)'.
+src/modules/booking/booking.controller.ts(24,5): error TS1206: Decorators are not valid here.
+src/modules/booking/booking.controller.ts(25,5): error TS1206: Decorators are not valid here.
+src/modules/booking/booking.controller.ts(30,3): error TS1241: Unable to resolve signature of method decorator when called as an expression.
+  The runtime will invoke the decorator with 2 arguments, but the decorator expects 3.
+src/modules/booking/booking.controller.ts(30,4): error TS1270: Decorator function return type 'void | TypedPropertyDescriptor<unknown>' is not assignable to type 'void | ((user: User, status?: string | undefined) => Promise<any>)'.
+  Type 'TypedPropertyDescriptor<unknown>' is not assignable to type 'void | ((user: User, status?: string | undefined) => Promise<any>)'.
+src/modules/booking/booking.controller.ts(33,5): error TS1206: Decorators are not valid here.
+src/modules/booking/booking.controller.ts(34,5): error TS1206: Decorators are not valid here.
+src/modules/booking/booking.service.ts(2,31): error TS2307: Cannot find module '../../prisma/prisma.service' or its corresponding type declarations.
+src/modules/booking/dto/create-booking.dto.ts(4,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(5,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(6,3): error TS2564: Property 'name' has no initializer and is not definitely assigned in the constructor.
+src/modules/booking/dto/create-booking.dto.ts(8,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(9,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(14,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(15,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(16,3): error TS2564: Property 'tourId' has no initializer and is not definitely assigned in the constructor.
+src/modules/booking/dto/create-booking.dto.ts(18,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(19,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(20,3): error TS2564: Property 'date' has no initializer and is not definitely assigned in the constructor.
+src/modules/booking/dto/create-booking.dto.ts(22,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(23,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(24,3): error TS2564: Property 'adults' has no initializer and is not definitely assigned in the constructor.
+src/modules/booking/dto/create-booking.dto.ts(26,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(27,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(28,3): error TS2564: Property 'children' has no initializer and is not definitely assigned in the constructor.
+src/modules/booking/dto/create-booking.dto.ts(30,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(31,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(34,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(35,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(38,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(39,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(40,3): error TS2564: Property 'contactName' has no initializer and is not definitely assigned in the constructor.
+src/modules/booking/dto/create-booking.dto.ts(42,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(43,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(44,3): error TS2564: Property 'contactEmail' has no initializer and is not definitely assigned in the constructor.
+src/modules/booking/dto/create-booking.dto.ts(46,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(47,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(50,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/dto/create-booking.dto.ts(51,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+src/modules/booking/entities/booking.entity.ts(2,22): error TS2307: Cannot find module '../../tour/entities/tour.entity' or its corresponding type declarations.
+src/modules/booking/entities/booking.entity.ts(3,22): error TS2307: Cannot find module '../../user/entities/user.entity' or its corresponding type declarations.
+src/modules/booking/entities/booking.entity.ts(6,3): error TS2564: Property 'id' has no initializer and is not definitely assigned in the constructor.
+src/modules/booking/entities/booking.entity.ts(7,3): error TS2564: Property 'bookingReference' has no initializer and is not definitely assigned in the constructor.
+src/modules/booking/entities/booking.entity.ts(8,3): error TS2564: Property 'tourId' has no initializer and is not definitely assigned in the constructor.
+src/modules/booking/entities/booking.entity.ts(10,3): error TS2564: Property 'userId' has no initializer and is not definitely assigned in the constructor.
+src/modules/booking/entities/booking.entity.ts(12,3): error TS2564: Property 'date' has no initializer and is not definitely assigned in the constructor.
+src/modules/booking/entities/booking.entity.ts(13,3): error TS2564: Property 'adults' has no initializer and is not definitely assigned in the constructor.
+src/modules/booking/entities/booking.entity.ts(14,3): error TS2564: Property 'children' has no initializer and is not definitely assigned in the constructor.
+src/modules/booking/entities/booking.entity.ts(15,3): error TS2564: Property 'totalPrice' has no initializer and is not definitely assigned in the constructor.
+src/modules/booking/entities/booking.entity.ts(16,3): error TS2564: Property 'status' has no initializer and is not definitely assigned in the constructor.
+src/modules/booking/entities/booking.entity.ts(18,3): error TS2564: Property 'contactName' has no initializer and is not definitely assigned in the constructor.
+src/modules/booking/entities/booking.entity.ts(19,3): error TS2564: Property 'contactEmail' has no initializer and is not definitely assigned in the constructor.
+src/modules/booking/entities/booking.entity.ts(26,3): error TS2564: Property 'createdAt' has no initializer and is not definitely assigned in the constructor.
+src/modules/booking/entities/booking.entity.ts(27,3): error TS2564: Property 'updatedAt' has no initializer and is not definitely assigned in the constructor.
+src/modules/users/user.model.ts(1,18): error TS2724: '"@prisma/client"' has no exported member named 'User'. Did you mean 'users'?
+src/modules/users/user.model.ts(1,38): error TS2305: Module '"@prisma/client"' has no exported member 'UserRole'.
+src/modules/users/user.model.ts(5,3): error TS2564: Property 'id' has no initializer and is not definitely assigned in the constructor.
+src/modules/users/user.model.ts(6,3): error TS2564: Property 'email' has no initializer and is not definitely assigned in the constructor.
+src/modules/users/user.model.ts(7,3): error TS2564: Property 'name' has no initializer and is not definitely assigned in the constructor.
+src/modules/users/user.model.ts(9,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  No overload matches this call.
+    Overload 1 of 2, '(target: Object, propertyKey: string | symbol): void', gave the following error.
+      Argument of type 'undefined' is not assignable to parameter of type 'Object'.
+    Overload 2 of 2, '(target: Function): void | Function', gave the following error.
+      Argument of type 'undefined' is not assignable to parameter of type 'Function'.
+src/modules/users/user.model.ts(10,3): error TS2564: Property 'passwordHash' has no initializer and is not definitely assigned in the constructor.
+src/modules/users/user.model.ts(13,3): error TS2564: Property 'isEmailVerified' has no initializer and is not definitely assigned in the constructor.
+src/modules/users/user.model.ts(14,3): error TS2564: Property 'createdAt' has no initializer and is not definitely assigned in the constructor.
+src/modules/users/user.model.ts(15,3): error TS2564: Property 'updatedAt' has no initializer and is not definitely assigned in the constructor.
+src/modules/users/user.model.ts(22,38): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'UserCreateInput'. Did you mean 'usersCreateInput'?
+src/modules/users/user.model.ts(24,38): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'UserUpdateInput'. Did you mean 'usersUpdateInput'?
+src/modules/users/user.service.ts(1,24): error TS2724: '"@prisma/client"' has no exported member named 'User'. Did you mean 'users'?
+src/modules/users/user.service.ts(1,30): error TS2305: Module '"@prisma/client"' has no exported member 'UserRole'.
+src/modules/users/user.service.ts(47,7): error TS2322: Type '{ passwordHash: string; name?: string; email: string; role?: UserRole; }' is not assignable to type '(Without<usersCreateInput, usersUncheckedCreateInput> & usersUncheckedCreateInput) | (Without<...> & usersCreateInput)'.
+  Type '{ passwordHash: string; name?: string; email: string; role?: UserRole; }' is not assignable to type 'Without<usersUncheckedCreateInput, usersCreateInput> & usersCreateInput'.
+    Type '{ passwordHash: string; name?: string | undefined; email: string; role?: any; }' is missing the following properties from type 'usersCreateInput': id, updatedAt
+src/modules/users/user.service.ts(59,9): error TS2561: Object literal may only specify known properties, but 'refreshTokens' does not exist in type 'usersInclude<DefaultArgs>'. Did you mean to write 'refresh_tokens'?
+src/routes/ai.routes.ts(3,10): error TS7034: Variable 'googleAI' implicitly has type 'any' in some locations where its type cannot be determined.
+src/routes/ai.routes.ts(38,10): error TS7005: Variable 'googleAI' implicitly has an 'any' type.
+src/routes/ai.routes.ts(110,10): error TS7005: Variable 'googleAI' implicitly has an 'any' type.
+src/routes/ai.routes.ts(158,78): error TS2552: Cannot find name 'text'. Did you mean 'Text'?
+src/routes/ai.routes.ts(158,88): error TS2304: Cannot find name 'analysisType'.
+src/routes/ai.routes.ts(159,11): error TS18004: No value exists in scope for the shorthand property 'analysisType'. Either declare one or provide an initializer.
+src/routes/ai.routes.ts(181,10): error TS7005: Variable 'googleAI' implicitly has an 'any' type.
+src/routes/ai.routes.ts(194,38): error TS7006: Parameter 'model' implicitly has an 'any' type.
+src/routes/ai.routes.ts(228,22): error TS7005: Variable 'googleAI' implicitly has an 'any' type.
+src/routes/map.routes.ts(3,10): error TS7034: Variable 'osmClient' implicitly has type 'any' in some locations where its type cannot be determined.
+src/routes/map.routes.ts(37,10): error TS7005: Variable 'osmClient' implicitly has an 'any' type.
+src/routes/map.routes.ts(101,10): error TS7005: Variable 'osmClient' implicitly has an 'any' type.
+src/routes/map.routes.ts(166,10): error TS7005: Variable 'osmClient' implicitly has an 'any' type.
+src/routes/map.routes.ts(216,10): error TS7005: Variable 'osmClient' implicitly has an 'any' type.
+src/routes/map.routes.ts(298,10): error TS7005: Variable 'osmClient' implicitly has an 'any' type.
+src/routes/map.routes.ts(357,27): error TS7005: Variable 'osmClient' implicitly has an 'any' type.
+src/routes/map.routes.ts(363,32): error TS7005: Variable 'osmClient' implicitly has an 'any' type.
+src/routes/reviews.routes.ts(2,38): error TS2459: Module '"../middlewares/auth.middleware"' declares 'AuthRequest' locally, but it is not exported.
+src/routes/reviews.routes.ts(26,12): error TS2551: Property 'review' does not exist on type 'PrismaClient<{ log: ("info" | "error" | "query" | "warn")[]; }, never, DefaultArgs>'. Did you mean 'reviews'?
+src/routes/reviews.routes.ts(50,12): error TS2551: Property 'review' does not exist on type 'PrismaClient<{ log: ("info" | "error" | "query" | "warn")[]; }, never, DefaultArgs>'. Did you mean 'reviews'?
+src/routes/reviews.routes.ts(79,12): error TS2551: Property 'review' does not exist on type 'PrismaClient<{ log: ("info" | "error" | "query" | "warn")[]; }, never, DefaultArgs>'. Did you mean 'reviews'?
+src/routes/reviews.routes.ts(96,12): error TS2551: Property 'review' does not exist on type 'PrismaClient<{ log: ("info" | "error" | "query" | "warn")[]; }, never, DefaultArgs>'. Did you mean 'reviews'?
+src/routes/reviews.routes.ts(97,12): error TS2551: Property 'review' does not exist on type 'PrismaClient<{ log: ("info" | "error" | "query" | "warn")[]; }, never, DefaultArgs>'. Did you mean 'reviews'?
+src/routes/reviews.routes.ts(131,29): error TS2551: Property 'tour' does not exist on type 'PrismaClient<{ log: ("info" | "error" | "query" | "warn")[]; }, never, DefaultArgs>'. Did you mean 'tours'?
+src/routes/reviews.routes.ts(140,39): error TS2551: Property 'review' does not exist on type 'PrismaClient<{ log: ("info" | "error" | "query" | "warn")[]; }, never, DefaultArgs>'. Did you mean 'reviews'?
+src/routes/reviews.routes.ts(152,32): error TS2551: Property 'booking' does not exist on type 'PrismaClient<{ log: ("info" | "error" | "query" | "warn")[]; }, never, DefaultArgs>'. Did you mean 'bookings'?
+src/routes/reviews.routes.ts(160,31): error TS2551: Property 'review' does not exist on type 'PrismaClient<{ log: ("info" | "error" | "query" | "warn")[]; }, never, DefaultArgs>'. Did you mean 'reviews'?
+src/routes/reviews.routes.ts(203,39): error TS2551: Property 'review' does not exist on type 'PrismaClient<{ log: ("info" | "error" | "query" | "warn")[]; }, never, DefaultArgs>'. Did you mean 'reviews'?
+src/routes/reviews.routes.ts(215,31): error TS2551: Property 'review' does not exist on type 'PrismaClient<{ log: ("info" | "error" | "query" | "warn")[]; }, never, DefaultArgs>'. Did you mean 'reviews'?
+src/routes/reviews.routes.ts(254,39): error TS2551: Property 'review' does not exist on type 'PrismaClient<{ log: ("info" | "error" | "query" | "warn")[]; }, never, DefaultArgs>'. Did you mean 'reviews'?
+src/routes/reviews.routes.ts(266,16): error TS2551: Property 'review' does not exist on type 'PrismaClient<{ log: ("info" | "error" | "query" | "warn")[]; }, never, DefaultArgs>'. Did you mean 'reviews'?
+src/server.ts(9,5): error TS7034: Variable 'googleAI' implicitly has type 'any' in some locations where its type cannot be determined.
+src/server.ts(10,5): error TS7034: Variable 'osmClient' implicitly has type 'any' in some locations where its type cannot be determined.
+src/server.ts(34,19): error TS7006: Parameter 'query' implicitly has an 'any' type.
+src/server.ts(38,24): error TS2339: Property 'limit' does not exist on type '{}'.
+src/server.ts(43,19): error TS2339: Property 'country' does not exist on type '{}'.
+src/server.ts(44,16): error TS2339: Property 'countrycodes' does not exist on type '{ q: any; format: string; limit: any; addressdetails: number; }'.
+src/server.ts(44,39): error TS2339: Property 'country' does not exist on type '{}'.
+src/server.ts(56,26): error TS7006: Parameter 'lat' implicitly has an 'any' type.
+src/server.ts(56,31): error TS7006: Parameter 'lon' implicitly has an 'any' type.
+src/server.ts(73,25): error TS7006: Parameter 'start' implicitly has an 'any' type.
+src/server.ts(73,32): error TS7006: Parameter 'end' implicitly has an 'any' type.
+src/server.ts(87,52): error TS18046: 'error' is of type 'unknown'.
+src/server.ts(135,7): error TS7005: Variable 'googleAI' implicitly has an 'any' type.
+src/server.ts(136,7): error TS7005: Variable 'osmClient' implicitly has an 'any' type.
+src/server.ts(158,60): error TS2554: Expected 1-3 arguments, but got 4.
+src/services/admin.service.ts(212,13): error TS2561: Object literal may only specify known properties, but 'user' does not exist in type 'bookingsInclude<DefaultArgs>'. Did you mean to write 'users'?
+src/services/admin.service.ts(225,13): error TS2561: Object literal may only specify known properties, but 'user' does not exist in type 'reviewsInclude<DefaultArgs>'. Did you mean to write 'users'?
+src/services/admin.service.ts(236,51): error TS2339: Property 'tour' does not exist on type '{ status: string; id: string; userId: string; bookingNumber: string; tourId: string; startDate: Date; endDate: Date; adults: number; children: number; totalPrice: Decimal; ... 6 more ...; updatedAt: Date; }'.
+src/services/admin.service.ts(237,25): error TS2339: Property 'user' does not exist on type '{ status: string; id: string; userId: string; bookingNumber: string; tourId: string; startDate: Date; endDate: Date; adults: number; children: number; totalPrice: Decimal; ... 6 more ...; updatedAt: Date; }'.
+src/services/admin.service.ts(260,49): error TS2339: Property 'tour' does not exist on type '{ status: string; id: string; userId: string; rating: number; tourId: string | null; createdAt: Date; updatedAt: Date; title: string | null; comment: string; images: string | null; isVerified: boolean; productId: string | null; }'.
+src/services/admin.service.ts(261,24): error TS2339: Property 'user' does not exist on type '{ status: string; id: string; userId: string; rating: number; tourId: string | null; createdAt: Date; updatedAt: Date; title: string | null; comment: string; images: string | null; isVerified: boolean; productId: string | null; }'.
+src/services/admin.service.ts(446,15): error TS2561: Object literal may only specify known properties, but 'tour' does not exist in type 'bookingsInclude<DefaultArgs>'. Did you mean to write 'tours'?
+src/services/admin.service.ts(453,15): error TS2561: Object literal may only specify known properties, but 'tour' does not exist in type 'reviewsInclude<DefaultArgs>'. Did you mean to write 'tours'?
+src/services/admin.service.ts(580,13): error TS2353: Object literal may only specify known properties, and 'guide' does not exist in type 'toursInclude<DefaultArgs>'.
+src/services/admin.service.ts(620,11): error TS2353: Object literal may only specify known properties, and 'guide' does not exist in type 'toursInclude<DefaultArgs>'.
+src/services/admin.service.ts(629,16): error TS2339: Property 'guide' does not exist on type '{ status: string; id: string; description: string; createdAt: Date; updatedAt: Date; title: string; images: string | null; slug: string; shortDescription: string | null; price: Decimal; ... 14 more ...; metaDescription: string | null; }'.
+src/services/admin.service.ts(631,20): error TS2339: Property 'guide' does not exist on type '{ status: string; id: string; description: string; createdAt: Date; updatedAt: Date; title: string; images: string | null; slug: string; shortDescription: string | null; price: Decimal; ... 14 more ...; metaDescription: string | null; }'.
+src/services/admin.service.ts(635,29): error TS2339: Property 'guide' does not exist on type '{ status: string; id: string; description: string; createdAt: Date; updatedAt: Date; title: string; images: string | null; slug: string; shortDescription: string | null; price: Decimal; ... 14 more ...; metaDescription: string | null; }'.
+src/services/admin.service.ts(673,11): error TS2561: Object literal may only specify known properties, but 'user' does not exist in type 'bookingsInclude<DefaultArgs>'. Did you mean to write 'users'?
+src/services/admin.service.ts(689,11): error TS2561: Object literal may only specify known properties, but 'user' does not exist in type 'bookingsInclude<DefaultArgs>'. Did you mean to write 'users'?
+src/services/admin.service.ts(696,60): error TS2339: Property 'user' does not exist on type '{ status: string; id: string; userId: string; bookingNumber: string; tourId: string; startDate: Date; endDate: Date; adults: number; children: number; totalPrice: Decimal; ... 6 more ...; updatedAt: Date; }'.
+src/services/admin.service.ts(698,30): error TS2339: Property 'tour' does not exist on type '{ status: string; id: string; userId: string; bookingNumber: string; tourId: string; startDate: Date; endDate: Date; adults: number; children: number; totalPrice: Decimal; ... 6 more ...; updatedAt: Date; }'.
+src/services/admin.service.ts(700,29): error TS2339: Property 'user' does not exist on type '{ status: string; id: string; userId: string; bookingNumber: string; tourId: string; startDate: Date; endDate: Date; adults: number; children: number; totalPrice: Decimal; ... 6 more ...; updatedAt: Date; }'.
+src/services/admin.service.ts(741,13): error TS2561: Object literal may only specify known properties, but 'user' does not exist in type 'bookingsInclude<DefaultArgs>'. Did you mean to write 'users'?
+src/services/ai.service.ts(83,74): error TS18046: 'error' is of type 'unknown'.
+src/services/ai.service.ts(91,69): error TS18046: 'fallbackError' is of type 'unknown'.
+src/services/ai.service.ts(237,18): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ 'gpt-4o': { input: number; output: number; }; 'gpt-4o-mini': { input: number; output: number; }; 'gpt-4-turbo': { input: number; output: number; }; 'gpt-3.5-turbo': { input: number; output: number; }; }'.
+  No index signature with a parameter of type 'string' was found on type '{ 'gpt-4o': { input: number; output: number; }; 'gpt-4o-mini': { input: number; output: number; }; 'gpt-4-turbo': { input: number; output: number; }; 'gpt-3.5-turbo': { input: number; output: number; }; }'.
+src/services/ai.service.ts(323,9): error TS7053: Element implicitly has an 'any' type because expression of type '"openai"' can't be used to index type '{}'.
+  Property 'openai' does not exist on type '{}'.
+src/services/ai.service.ts(325,9): error TS7053: Element implicitly has an 'any' type because expression of type '"openai"' can't be used to index type '{}'.
+  Property 'openai' does not exist on type '{}'.
+src/services/ai.service.ts(328,7): error TS7053: Element implicitly has an 'any' type because expression of type '"openai"' can't be used to index type '{}'.
+  Property 'openai' does not exist on type '{}'.
+src/services/ai.service.ts(328,56): error TS18046: 'error' is of type 'unknown'.
+src/services/ai.service.ts(334,9): error TS7053: Element implicitly has an 'any' type because expression of type '"anthropic"' can't be used to index type '{}'.
+  Property 'anthropic' does not exist on type '{}'.
+src/services/ai.service.ts(336,9): error TS7053: Element implicitly has an 'any' type because expression of type '"anthropic"' can't be used to index type '{}'.
+  Property 'anthropic' does not exist on type '{}'.
+src/services/ai.service.ts(339,7): error TS7053: Element implicitly has an 'any' type because expression of type '"anthropic"' can't be used to index type '{}'.
+  Property 'anthropic' does not exist on type '{}'.
+src/services/ai.service.ts(339,59): error TS18046: 'error' is of type 'unknown'.
+src/services/ai.service.ts(345,9): error TS7053: Element implicitly has an 'any' type because expression of type '"google"' can't be used to index type '{}'.
+  Property 'google' does not exist on type '{}'.
+src/services/ai.service.ts(347,9): error TS7053: Element implicitly has an 'any' type because expression of type '"google"' can't be used to index type '{}'.
+  Property 'google' does not exist on type '{}'.
+src/services/ai.service.ts(350,7): error TS7053: Element implicitly has an 'any' type because expression of type '"google"' can't be used to index type '{}'.
+  Property 'google' does not exist on type '{}'.
+src/services/ai.service.ts(350,56): error TS18046: 'error' is of type 'unknown'.
+src/services/auth.service.ts(1,24): error TS2724: '"@prisma/client"' has no exported member named 'User'. Did you mean 'users'?
+src/services/auth.service.ts(1,30): error TS2305: Module '"@prisma/client"' has no exported member 'UserRole'.
+src/services/auth.service.ts(36,39): error TS2551: Property 'user' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'users'?
+src/services/auth.service.ts(48,31): error TS2551: Property 'user' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'users'?
+src/services/auth.service.ts(62,18): error TS2551: Property 'refreshToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'refresh_tokens'?
+src/services/auth.service.ts(92,31): error TS2551: Property 'user' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'users'?
+src/services/auth.service.ts(111,20): error TS2551: Property 'refreshToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'refresh_tokens'?
+src/services/auth.service.ts(116,18): error TS2551: Property 'refreshToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'refresh_tokens'?
+src/services/auth.service.ts(137,20): error TS2551: Property 'refreshToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'refresh_tokens'?
+src/services/auth.service.ts(145,20): error TS2551: Property 'refreshToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'refresh_tokens'?
+src/services/auth.service.ts(169,38): error TS2551: Property 'refreshToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'refresh_tokens'?
+src/services/auth.service.ts(182,18): error TS2551: Property 'refreshToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'refresh_tokens'?
+src/services/auth.service.ts(199,31): error TS2551: Property 'user' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'users'?
+src/services/auth.service.ts(225,31): error TS2551: Property 'user' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'users'?
+src/services/auth.service.ts(241,31): error TS2551: Property 'user' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'users'?
+src/services/auth.service.ts(259,18): error TS2551: Property 'user' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'users'?
+src/services/auth.service.ts(265,18): error TS2551: Property 'refreshToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'refresh_tokens'?
+src/services/booking.service.ts(1,24): error TS2724: '"@prisma/client"' has no exported member named 'Booking'. Did you mean 'bookings'?
+src/services/booking.service.ts(1,33): error TS2305: Module '"@prisma/client"' has no exported member 'BookingStatus'.
+src/services/booking.service.ts(49,31): error TS2551: Property 'tour' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'tours'?
+src/services/booking.service.ts(113,7): error TS2322: Type '{ bookingNumber: string; userId: string; tourId: string; startDate: Date; endDate: Date; adults: number; children: number; totalPrice: number; discountAmount: number; promoCode: string | undefined; participants: any; notes: string | undefined; specialRequests: string | undefined; status: string; }' is not assignable to type '(Without<bookingsCreateInput, bookingsUncheckedCreateInput> & bookingsUncheckedCreateInput) | (Without<...> & bookingsCreateInput)'.
+  Type '{ bookingNumber: string; userId: string; tourId: string; startDate: Date; endDate: Date; adults: number; children: number; totalPrice: number; discountAmount: number; promoCode: string | undefined; participants: any; notes: string | undefined; specialRequests: string | undefined; status: string; }' is not assignable to type 'Without<bookingsCreateInput, bookingsUncheckedCreateInput> & bookingsUncheckedCreateInput'.
+    Type '{ bookingNumber: string; userId: string; tourId: string; startDate: Date; endDate: Date; adults: number; children: number; totalPrice: number; discountAmount: number; promoCode: string | undefined; participants: any; notes: string | undefined; specialRequests: string | undefined; status: string; }' is missing the following properties from type 'bookingsUncheckedCreateInput': id, updatedAt
+src/services/booking.service.ts(130,9): error TS2561: Object literal may only specify known properties, but 'tour' does not exist in type 'bookingsInclude<DefaultArgs>'. Did you mean to write 'tours'?
+src/services/booking.service.ts(181,25): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'BookingWhereInput'. Did you mean 'bookingsWhereInput'?
+src/services/booking.service.ts(227,27): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'BookingOrderByWithRelationInput'. Did you mean 'bookingsOrderByWithRelationInput'?
+src/services/booking.service.ts(246,11): error TS2561: Object literal may only specify known properties, but 'tour' does not exist in type 'bookingsInclude<DefaultArgs>'. Did you mean to write 'tours'?
+src/services/booking.service.ts(292,9): error TS2561: Object literal may only specify known properties, but 'tour' does not exist in type 'bookingsInclude<DefaultArgs>'. Did you mean to write 'tours'?
+src/services/booking.service.ts(391,7): error TS2322: Type '{ startDate: Date | undefined; endDate: Date | undefined; adults?: number | undefined; children?: number | undefined; notes?: string | undefined; specialRequests?: string | undefined; participants?: { ...; }[] | undefined; }' is not assignable to type '(Without<bookingsUpdateInput, bookingsUncheckedUpdateInput> & bookingsUncheckedUpdateInput) | (Without<...> & bookingsUpdateInput)'.
+  Type '{ startDate: Date | undefined; endDate: Date | undefined; adults?: number | undefined; children?: number | undefined; notes?: string | undefined; specialRequests?: string | undefined; participants?: { ...; }[] | undefined; }' is not assignable to type 'Without<bookingsUncheckedUpdateInput, bookingsUpdateInput> & bookingsUpdateInput'.
+    Types of property 'participants' are incompatible.
+      Type '{ firstName: string; lastName: string; email?: string | undefined; phone?: string | undefined; age?: number | undefined; passportNumber?: string | undefined; nationality?: string | undefined; dietaryRequirements?: string | undefined; medicalConditions?: string | undefined; }[] | undefined' is not assignable to type 'string | NullableStringFieldUpdateOperationsInput | null | undefined'.
+        Type '{ firstName: string; lastName: string; email?: string | undefined; phone?: string | undefined; age?: number | undefined; passportNumber?: string | undefined; nationality?: string | undefined; dietaryRequirements?: string | undefined; medicalConditions?: string | undefined; }[]' is not assignable to type 'string | NullableStringFieldUpdateOperationsInput | null | undefined'.
+src/services/booking.service.ts(397,9): error TS2561: Object literal may only specify known properties, but 'tour' does not exist in type 'bookingsInclude<DefaultArgs>'. Did you mean to write 'tours'?
+src/services/booking.service.ts(443,9): error TS2561: Object literal may only specify known properties, but 'tour' does not exist in type 'bookingsInclude<DefaultArgs>'. Did you mean to write 'tours'?
+src/services/booking.service.ts(487,9): error TS2561: Object literal may only specify known properties, but 'tour' does not exist in type 'bookingsInclude<DefaultArgs>'. Did you mean to write 'tours'?
+src/services/booking.service.ts(520,36): error TS2339: Property 'promoCode' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/booking.service.ts(617,25): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'BookingWhereInput'. Did you mean 'bookingsWhereInput'?
+src/services/chat.service.ts(1,24): error TS2724: '"@prisma/client"' has no exported member named 'ChatMessage'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(55,38): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(66,37): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(114,25): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'ChatMessageWhereInput'. Did you mean 'chat_messagesWhereInput'?
+src/services/chat.service.ts(147,27): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'ChatMessageOrderByWithRelationInput'. Did you mean 'chat_messagesOrderByWithRelationInput'?
+src/services/chat.service.ts(152,14): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(167,14): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(185,19): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(199,25): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'ChatMessageWhereInput'. Did you mean 'chat_messagesWhereInput'?
+src/services/chat.service.ts(205,34): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(238,34): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(246,41): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(263,34): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(276,18): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(287,39): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(305,34): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(328,18): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(346,25): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'ChatMessageWhereInput'. Did you mean 'chat_messagesWhereInput'?
+src/services/chat.service.ts(373,14): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(374,14): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(380,14): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(385,14): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(390,14): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(402,54): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+src/services/chat.service.ts(402,59): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/services/chat.service.ts(406,46): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+src/services/chat.service.ts(406,51): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/services/chat.service.ts(461,35): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(481,25): error TS7006: Parameter 'message' implicitly has an 'any' type.
+src/services/chat.service.ts(481,34): error TS7006: Parameter 'index' implicitly has an 'any' type.
+src/services/chat.service.ts(502,30): error TS7006: Parameter 'msg' implicitly has an 'any' type.
+src/services/chat.service.ts(523,35): error TS2551: Property 'chatMessage' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'chat_messages'?
+src/services/chat.service.ts(533,22): error TS7006: Parameter 'msg' implicitly has an 'any' type.
+src/services/chat.service.ts(538,17): error TS7006: Parameter 'word' implicitly has an 'any' type.
+src/services/chat.service.ts(540,21): error TS7006: Parameter 'word' implicitly has an 'any' type.
+src/services/cultural.service.ts(1,24): error TS2724: '"@prisma/client"' has no exported member named 'CulturalContent'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(1,41): error TS2305: Module '"@prisma/client"' has no exported member 'ContentStatus'.
+src/services/cultural.service.ts(47,42): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(56,34): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(103,25): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'CulturalContentWhereInput'. Did you mean 'cultural_contentWhereInput'?
+src/services/cultural.service.ts(158,27): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'CulturalContentOrderByWithRelationInput'. Did you mean 'cultural_contentOrderByWithRelationInput'?
+src/services/cultural.service.ts(163,14): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(169,14): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(187,34): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(207,42): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(226,47): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(240,34): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(259,34): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(272,18): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(291,34): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(304,41): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(324,19): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(343,19): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(362,19): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(381,11): error TS2322: Type '{ limit: number; page?: number | undefined; sortBy?: "type" | "createdAt" | "updatedAt" | "title" | "category" | undefined; sortOrder?: "asc" | "desc" | undefined; featured?: boolean | undefined; ... 8 more ...; authorName?: string | undefined; }' is not assignable to type '{ page: number; limit: number; sortBy: "type" | "createdAt" | "updatedAt" | "title" | "category"; sortOrder: "asc" | "desc"; featured: boolean; type?: "language" | "article" | "recipe" | ... 7 more ... | undefined; ... 7 more ...; authorName?: string | undefined; }'.
+  Types of property 'page' are incompatible.
+    Type 'number | undefined' is not assignable to type 'number'.
+      Type 'undefined' is not assignable to type 'number'.
+src/services/cultural.service.ts(399,23): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'CulturalContentWhereInput'. Did you mean 'cultural_contentWhereInput'?
+src/services/cultural.service.ts(425,19): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(462,25): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'CulturalContentWhereInput'. Did you mean 'cultural_contentWhereInput'?
+src/services/cultural.service.ts(495,14): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(496,14): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(497,14): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(498,14): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(499,14): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(500,14): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(505,14): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(518,44): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+src/services/cultural.service.ts(518,49): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/services/cultural.service.ts(522,52): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+src/services/cultural.service.ts(522,57): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/services/cultural.service.ts(542,19): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(557,37): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(568,27): error TS7006: Parameter 'cat' implicitly has an 'any' type.
+src/services/cultural.service.ts(580,34): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(587,21): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/services/cultural.service.ts(614,38): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(634,26): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(640,26): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(646,26): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(651,26): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/cultural.service.ts(657,26): error TS2551: Property 'culturalContent' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'cultural_content'?
+src/services/email-verification.service.ts(30,33): error TS2551: Property 'user' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'users'?
+src/services/email-verification.service.ts(48,43): error TS2551: Property 'user' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'users'?
+src/services/email-verification.service.ts(147,31): error TS2551: Property 'user' does not exist on type 'Omit<PrismaClient<PrismaClientOptions, never, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">'. Did you mean 'users'?
+src/services/email-verification.service.ts(256,31): error TS2551: Property 'user' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'users'?
+src/services/modern-ai.service.ts(45,62): error TS18046: 'error' is of type 'unknown'.
+src/services/modern-ai.service.ts(60,35): error TS2339: Property 'chat' does not exist on type 'void'.
+src/services/modern-ai.service.ts(75,55): error TS18046: 'error' is of type 'unknown'.
+src/services/monitoring.service.ts(137,55): error TS2345: Argument of type '{ ttl: number; }' is not assignable to parameter of type 'number'.
+src/services/monitoring.service.ts(242,31): error TS7052: Element implicitly has an 'any' type because type 'CacheService' has no index signature. Did you mean to call 'cacheService.get'?
+src/services/monitoring.service.ts(243,38): error TS7006: Parameter 'key' implicitly has an 'any' type.
+src/services/monitoring.service.ts(246,22): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/services/monitoring.service.ts(246,45): error TS2558: Expected 0 type arguments, but got 1.
+src/services/monitoring.service.ts(266,31): error TS7052: Element implicitly has an 'any' type because type 'CacheService' has no index signature. Did you mean to call 'cacheService.get'?
+src/services/monitoring.service.ts(271,46): error TS2558: Expected 0 type arguments, but got 1.
+src/services/monitoring.service.ts(344,47): error TS2345: Argument of type '{ ttl: number; }' is not assignable to parameter of type 'number'.
+src/services/notification/base.service.ts(33,46): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/base.service.ts(70,47): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/base.service.ts(86,46): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/base.service.ts(94,25): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/base.service.ts(112,25): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/base.service.ts(132,46): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/base.service.ts(140,25): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/base.service.ts(157,47): error TS2551: Property 'notificationPreferences' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notification_preferences'?
+src/services/notification/base.service.ts(161,46): error TS2551: Property 'notificationPreferences' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notification_preferences'?
+src/services/notification/base.service.ts(190,43): error TS2551: Property 'notificationPreferences' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notification_preferences'?
+src/services/notification/base.service.ts(196,41): error TS2551: Property 'notificationPreferences' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notification_preferences'?
+src/services/notification/base.service.ts(231,25): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/base.service.ts(332,39): error TS2551: Property 'user' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'users'?
+src/services/notification/base.service.ts(335,24): error TS7006: Parameter 'user' implicitly has an 'any' type.
+src/services/notification/base.service.ts(350,37): error TS2551: Property 'user' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'users'?
+src/services/notification/base.service.ts(355,22): error TS7006: Parameter 'user' implicitly has an 'any' type.
+src/services/notification/enhanced-notification.service.ts(56,46): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/enhanced-notification.service.ts(167,52): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/enhanced-notification.service.ts(285,39): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/enhanced-notification.service.ts(288,45): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/enhanced-notification.service.ts(312,47): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/enhanced-notification.service.ts(333,40): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/enhanced-notification.service.ts(355,40): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/enhanced-notification.service.ts(373,40): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/enhanced-notification.service.ts(398,47): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/enhanced-notification.service.ts(410,38): error TS7006: Parameter 'n' implicitly has an 'any' type.
+src/services/notification/enhanced-notification.service.ts(417,29): error TS7006: Parameter 'n' implicitly has an 'any' type.
+src/services/notification/enhanced-notification.service.ts(422,29): error TS7006: Parameter 'n' implicitly has an 'any' type.
+src/services/notification/enhanced-notification.service.ts(427,29): error TS7006: Parameter 'n' implicitly has an 'any' type.
+src/services/notification/notification.service.ts(150,39): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/notification.service.ts(166,25): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/notification.service.ts(184,25): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/preferences.service.ts(21,43): error TS2551: Property 'notificationPreferences' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notification_preferences'?
+src/services/notification/preferences.service.ts(63,52): error TS2551: Property 'notificationPreferences' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notification_preferences'?
+src/services/notification/preferences.service.ts(230,25): error TS2551: Property 'notificationPreferences' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notification_preferences'?
+src/services/notification/preferences.service.ts(247,45): error TS2551: Property 'notificationPreferences' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notification_preferences'?
+src/services/notification/preferences.service.ts(254,27): error TS7006: Parameter 'pref' implicitly has an 'any' type.
+src/services/notification/preferences.service.ts(278,30): error TS2551: Property 'notificationPreferences' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notification_preferences'?
+src/services/notification/processor.service.ts(294,62): error TS2551: Property 'user' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'users'?
+src/services/notification/processor.service.ts(297,24): error TS7006: Parameter 'user' implicitly has an 'any' type.
+src/services/notification/processor.service.ts(304,68): error TS2551: Property 'user' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'users'?
+src/services/notification/processor.service.ts(310,39): error TS7006: Parameter 'user' implicitly has an 'any' type.
+src/services/notification/processor.service.ts(315,72): error TS2551: Property 'user' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'users'?
+src/services/notification/processor.service.ts(321,43): error TS7006: Parameter 'user' implicitly has an 'any' type.
+src/services/notification/processor.service.ts(370,77): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/processor.service.ts(395,52): error TS2551: Property 'notification' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'notifications'?
+src/services/notification/queue.service.ts(37,11): error TS18047: 'queue' is possibly 'null'.
+src/services/notification/queue.service.ts(72,35): error TS18047: 'queue' is possibly 'null'.
+src/services/notification/queue.service.ts(120,27): error TS18047: 'queue' is possibly 'null'.
+src/services/notification/queue.service.ts(265,32): error TS18047: 'queue' is possibly 'null'.
+src/services/order.service.ts(64,36): error TS2551: Property 'product' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'products'?
+src/services/order.service.ts(110,38): error TS2339: Property 'promoCode' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/order.service.ts(165,33): error TS2551: Property 'order' does not exist on type 'Omit<PrismaClient<PrismaClientOptions, never, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">'. Did you mean 'orders'?
+src/services/order.service.ts(183,18): error TS2551: Property 'orderItem' does not exist on type 'Omit<PrismaClient<PrismaClientOptions, never, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">'. Did you mean 'order_items'?
+src/services/order.service.ts(195,18): error TS2551: Property 'product' does not exist on type 'Omit<PrismaClient<PrismaClientOptions, never, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">'. Did you mean 'products'?
+src/services/order.service.ts(212,9): error TS2353: Object literal may only specify known properties, and 'items' does not exist in type 'ordersInclude<DefaultArgs>'.
+src/services/order.service.ts(264,25): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'OrderWhereInput'. Did you mean 'ordersWhereInput'?
+src/services/order.service.ts(305,27): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'OrderOrderByWithRelationInput'. Did you mean 'ordersOrderByWithRelationInput'?
+src/services/order.service.ts(322,11): error TS2353: Object literal may only specify known properties, and 'items' does not exist in type 'ordersInclude<DefaultArgs>'.
+src/services/order.service.ts(363,9): error TS2353: Object literal may only specify known properties, and 'items' does not exist in type 'ordersInclude<DefaultArgs>'.
+src/services/order.service.ts(433,7): error TS2322: Type '{ notes?: string | undefined; shippingAddress?: { firstName: string; lastName: string; country: string; city: string; address1: string; state: string; postalCode: string; phone?: string | undefined; company?: string | undefined; address2?: string | undefined; } | undefined; billingAddress?: { ...; } | undefined; tra...' is not assignable to type '(Without<ordersUpdateInput, ordersUncheckedUpdateInput> & ordersUncheckedUpdateInput) | (Without<...> & ordersUpdateInput)'.
+  Type '{ notes?: string | undefined; shippingAddress?: { firstName: string; lastName: string; country: string; city: string; address1: string; state: string; postalCode: string; phone?: string | undefined; company?: string | undefined; address2?: string | undefined; } | undefined; billingAddress?: { ...; } | undefined; tra...' is not assignable to type 'Without<ordersUncheckedUpdateInput, ordersUpdateInput> & ordersUpdateInput'.
+    Types of property 'shippingAddress' are incompatible.
+      Type '{ firstName: string; lastName: string; country: string; city: string; address1: string; state: string; postalCode: string; phone?: string | undefined; company?: string | undefined; address2?: string | undefined; } | undefined' is not assignable to type 'string | StringFieldUpdateOperationsInput | undefined'.
+        Type '{ firstName: string; lastName: string; country: string; city: string; address1: string; state: string; postalCode: string; phone?: string | undefined; company?: string | undefined; address2?: string | undefined; }' is not assignable to type 'string | StringFieldUpdateOperationsInput | undefined'.
+src/services/order.service.ts(435,9): error TS2353: Object literal may only specify known properties, and 'items' does not exist in type 'ordersInclude<DefaultArgs>'.
+src/services/order.service.ts(456,9): error TS2353: Object literal may only specify known properties, and 'items' does not exist in type 'ordersInclude<DefaultArgs>'.
+src/services/order.service.ts(481,39): error TS2551: Property 'order' does not exist on type 'Omit<PrismaClient<PrismaClientOptions, never, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">'. Did you mean 'orders'?
+src/services/order.service.ts(498,32): error TS2339: Property 'items' does not exist on type '{ status: string; id: string; userId: string; notes: string | null; createdAt: Date; updatedAt: Date; total: Decimal; shipping: Decimal; shippingAddress: string; ... 5 more ...; discount: Decimal; }'.
+src/services/order.service.ts(499,18): error TS2551: Property 'product' does not exist on type 'Omit<PrismaClient<PrismaClientOptions, never, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">'. Did you mean 'products'?
+src/services/order.service.ts(551,9): error TS2353: Object literal may only specify known properties, and 'items' does not exist in type 'ordersInclude<DefaultArgs>'.
+src/services/order.service.ts(593,25): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'OrderWhereInput'. Did you mean 'ordersWhereInput'?
+src/services/password-reset.service.ts(31,33): error TS2551: Property 'user' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'users'?
+src/services/payment.service.ts(36,5): error TS2322: Type '"2024-11-20.acacia"' is not assignable to type '"2026-02-25.clover"'.
+src/services/payment.service.ts(55,36): error TS2551: Property 'booking' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'bookings'?
+src/services/payment.service.ts(81,34): error TS2551: Property 'order' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'orders'?
+src/services/payment.service.ts(112,9): error TS2322: Type '{ paymentId: string; userId: string; bookingId: string | undefined; orderId: string | undefined; amount: number; currency: string; method: string; status: string; gatewayResponse: any; }' is not assignable to type '(Without<paymentsCreateInput, paymentsUncheckedCreateInput> & paymentsUncheckedCreateInput) | (Without<...> & paymentsCreateInput)'.
+  Type '{ paymentId: string; userId: string; bookingId: string | undefined; orderId: string | undefined; amount: number; currency: string; method: string; status: string; gatewayResponse: any; }' is not assignable to type 'Without<paymentsCreateInput, paymentsUncheckedCreateInput> & paymentsUncheckedCreateInput'.
+    Type '{ paymentId: string; userId: string; bookingId: string | undefined; orderId: string | undefined; amount: number; currency: string; method: string; status: string; gatewayResponse: any; }' is missing the following properties from type 'paymentsUncheckedCreateInput': id, updatedAt
+src/services/payment.service.ts(152,36): error TS2551: Property 'booking' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'bookings'?
+src/services/payment.service.ts(166,34): error TS2551: Property 'order' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'orders'?
+src/services/payment.service.ts(212,9): error TS2322: Type '{ paymentId: string; userId: string; bookingId: string | undefined; orderId: string | undefined; amount: number; currency: string; method: string; status: string; gatewayResponse: any; }' is not assignable to type '(Without<paymentsCreateInput, paymentsUncheckedCreateInput> & paymentsUncheckedCreateInput) | (Without<...> & paymentsCreateInput)'.
+  Type '{ paymentId: string; userId: string; bookingId: string | undefined; orderId: string | undefined; amount: number; currency: string; method: string; status: string; gatewayResponse: any; }' is not assignable to type 'Without<paymentsCreateInput, paymentsUncheckedCreateInput> & paymentsUncheckedCreateInput'.
+    Type '{ paymentId: string; userId: string; bookingId: string | undefined; orderId: string | undefined; amount: number; currency: string; method: string; status: string; gatewayResponse: any; }' is missing the following properties from type 'paymentsUncheckedCreateInput': id, updatedAt
+src/services/payment.service.ts(271,19): error TS2304: Cannot find name 'PaymentStatus'.
+src/services/payment.service.ts(290,22): error TS2551: Property 'booking' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'bookings'?
+src/services/payment.service.ts(338,19): error TS2304: Cannot find name 'PaymentStatus'.
+src/services/payment.service.ts(355,22): error TS2551: Property 'booking' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'bookings'?
+src/services/payment.service.ts(398,25): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'PaymentWhereInput'. Did you mean 'paymentsWhereInput'?
+src/services/payment.service.ts(438,27): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'PaymentOrderByWithRelationInput'. Did you mean 'paymentsOrderByWithRelationInput'?
+src/services/payment.service.ts(455,11): error TS2561: Object literal may only specify known properties, but 'user' does not exist in type 'paymentsInclude<DefaultArgs>'. Did you mean to write 'users'?
+src/services/payment.service.ts(496,9): error TS2561: Object literal may only specify known properties, but 'user' does not exist in type 'paymentsInclude<DefaultArgs>'. Did you mean to write 'users'?
+src/services/payment.service.ts(561,30): error TS18047: 'stripe' is possibly 'null'.
+src/services/payment.service.ts(577,32): error TS2698: Spread types may only be created from object types.
+src/services/payment.service.ts(583,24): error TS2551: Property 'booking' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'bookings'?
+src/services/payment.service.ts(607,24): error TS2551: Property 'booking' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'bookings'?
+src/services/payment.service.ts(633,25): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'PaymentWhereInput'. Did you mean 'paymentsWhereInput'?
+src/services/product.service.ts(36,40): error TS2551: Property 'vendorProfile' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'vendor_profiles'?
+src/services/product.service.ts(45,35): error TS2339: Property 'category' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/product.service.ts(75,9): error TS2353: Object literal may only specify known properties, and 'materials' does not exist in type '(Without<productsCreateInput, productsUncheckedCreateInput> & productsUncheckedCreateInput) | (Without<...> & productsCreateInput)'.
+src/services/product.service.ts(83,13): error TS2561: Object literal may only specify known properties, but 'user' does not exist in type 'vendor_profilesInclude<DefaultArgs>'. Did you mean to write 'users'?
+src/services/product.service.ts(135,25): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'ProductWhereInput'. Did you mean 'productsWhereInput'?
+src/services/product.service.ts(201,27): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'ProductOrderByWithRelationInput'. Did you mean 'productsOrderByWithRelationInput'?
+src/services/product.service.ts(226,15): error TS2561: Object literal may only specify known properties, but 'user' does not exist in type 'vendor_profilesInclude<DefaultArgs>'. Did you mean to write 'users'?
+src/services/product.service.ts(251,30): error TS2339: Property 'reviews' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'.
+src/services/product.service.ts(251,49): error TS2339: Property 'reviews' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'.
+src/services/product.service.ts(252,19): error TS2339: Property 'reviews' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'.
+src/services/product.service.ts(252,35): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+src/services/product.service.ts(252,40): error TS7006: Parameter 'review' implicitly has an 'any' type.
+src/services/product.service.ts(252,85): error TS2339: Property 'reviews' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'.
+src/services/product.service.ts(255,27): error TS2339: Property 'orderItems' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'.
+src/services/product.service.ts(255,47): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+src/services/product.service.ts(255,52): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/services/product.service.ts(285,13): error TS2561: Object literal may only specify known properties, but 'user' does not exist in type 'vendor_profilesInclude<DefaultArgs>'. Did you mean to write 'users'?
+src/services/product.service.ts(298,13): error TS2561: Object literal may only specify known properties, but 'user' does not exist in type 'reviewsInclude<DefaultArgs>'. Did you mean to write 'users'?
+src/services/product.service.ts(322,35): error TS2339: Property 'reviews' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'.
+src/services/product.service.ts(323,17): error TS2339: Property 'reviews' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'.
+src/services/product.service.ts(323,96): error TS2339: Property 'reviews' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'.
+src/services/product.service.ts(326,32): error TS2339: Property 'orderItems' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'.
+src/services/product.service.ts(331,28): error TS2339: Property 'reviews' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'.
+src/services/product.service.ts(353,9): error TS18047: 'existingProduct.vendor' is possibly 'null'.
+src/services/product.service.ts(380,37): error TS2339: Property 'category' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/product.service.ts(395,13): error TS2561: Object literal may only specify known properties, but 'user' does not exist in type 'vendor_profilesInclude<DefaultArgs>'. Did you mean to write 'users'?
+src/services/product.service.ts(421,9): error TS2561: Object literal may only specify known properties, but 'orderItems' does not exist in type 'productsInclude<DefaultArgs>'. Did you mean to write 'order_items'?
+src/services/product.service.ts(430,17): error TS2551: Property 'vendor' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'. Did you mean 'vendorId'?
+src/services/product.service.ts(435,17): error TS2339: Property 'orderItems' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'.
+src/services/product.service.ts(466,9): error TS18047: 'product.vendor' is possibly 'null'.
+src/services/product.service.ts(475,9): error TS2353: Object literal may only specify known properties, and 'category' does not exist in type 'productsInclude<DefaultArgs>'.
+src/services/product.service.ts(507,13): error TS2561: Object literal may only specify known properties, but 'user' does not exist in type 'vendor_profilesInclude<DefaultArgs>'. Did you mean to write 'users'?
+src/services/product.service.ts(525,30): error TS2339: Property 'reviews' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'.
+src/services/product.service.ts(525,49): error TS2339: Property 'reviews' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'.
+src/services/product.service.ts(526,19): error TS2339: Property 'reviews' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'.
+src/services/product.service.ts(526,35): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+src/services/product.service.ts(526,40): error TS7006: Parameter 'review' implicitly has an 'any' type.
+src/services/product.service.ts(526,85): error TS2339: Property 'reviews' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'.
+src/services/product.service.ts(538,9): error TS2561: Object literal may only specify known properties, but 'categoryId' does not exist in type 'productsWhereInput'. Did you mean to write 'category'?
+src/services/product.service.ts(548,13): error TS2561: Object literal may only specify known properties, but 'user' does not exist in type 'vendor_profilesInclude<DefaultArgs>'. Did you mean to write 'users'?
+src/services/product.service.ts(565,30): error TS2339: Property 'reviews' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'.
+src/services/product.service.ts(565,49): error TS2339: Property 'reviews' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'.
+src/services/product.service.ts(566,19): error TS2339: Property 'reviews' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'.
+src/services/product.service.ts(566,35): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+src/services/product.service.ts(566,40): error TS7006: Parameter 'review' implicitly has an 'any' type.
+src/services/product.service.ts(566,85): error TS2339: Property 'reviews' does not exist on type '{ name: string; status: string; id: string; sortOrder: number; description: string; createdAt: Date; updatedAt: Date; images: string | null; slug: string; shortDescription: string | null; ... 10 more ...; attributes: string | null; }'.
+src/services/product.service.ts(612,25): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'ProductWhereInput'. Did you mean 'productsWhereInput'?
+src/services/vendor.service.ts(1,24): error TS2724: '"@prisma/client"' has no exported member named 'VendorProfile'. Did you mean 'vendor_profiles'?
+src/services/vendor.service.ts(1,39): error TS2305: Module '"@prisma/client"' has no exported member 'Category'.
+src/services/vendor.service.ts(28,42): error TS2551: Property 'vendorProfile' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'vendor_profiles'?
+src/services/vendor.service.ts(37,43): error TS2551: Property 'vendorProfile' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'vendor_profiles'?
+src/services/vendor.service.ts(45,40): error TS2551: Property 'vendorProfile' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'vendor_profiles'?
+src/services/vendor.service.ts(91,25): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'VendorProfileWhereInput'. Did you mean 'vendor_profilesWhereInput'?
+src/services/vendor.service.ts(111,27): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'VendorProfileOrderByWithRelationInput'. Did you mean 'vendor_profilesOrderByWithRelationInput'?
+src/services/vendor.service.ts(124,14): error TS2551: Property 'vendorProfile' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'vendor_profiles'?
+src/services/vendor.service.ts(147,14): error TS2551: Property 'vendorProfile' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'vendor_profiles'?
+src/services/vendor.service.ts(151,42): error TS7006: Parameter 'vendor' implicitly has an 'any' type.
+src/services/vendor.service.ts(168,40): error TS2551: Property 'vendorProfile' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'vendor_profiles'?
+src/services/vendor.service.ts(209,40): error TS2551: Property 'vendorProfile' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'vendor_profiles'?
+src/services/vendor.service.ts(239,42): error TS2551: Property 'vendorProfile' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'vendor_profiles'?
+src/services/vendor.service.ts(254,45): error TS2551: Property 'vendorProfile' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'vendor_profiles'?
+src/services/vendor.service.ts(266,40): error TS2551: Property 'vendorProfile' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'vendor_profiles'?
+src/services/vendor.service.ts(293,40): error TS2551: Property 'vendorProfile' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'vendor_profiles'?
+src/services/vendor.service.ts(301,41): error TS2551: Property 'vendorProfile' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'vendor_profiles'?
+src/services/vendor.service.ts(330,25): error TS2724: '"C:/Users/fikre/EthioAI/server/node_modules/.prisma/client/index".Prisma' has no exported member named 'VendorProfileWhereInput'. Did you mean 'vendor_profilesWhereInput'?
+src/services/vendor.service.ts(348,14): error TS2551: Property 'vendorProfile' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'vendor_profiles'?
+src/services/vendor.service.ts(349,14): error TS2551: Property 'vendorProfile' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'vendor_profiles'?
+src/services/vendor.service.ts(350,14): error TS2551: Property 'vendorProfile' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'vendor_profiles'?
+src/services/vendor.service.ts(351,14): error TS2551: Property 'vendorProfile' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'vendor_profiles'?
+src/services/vendor.service.ts(404,7): error TS2322: Type '{ slug: string; name: string; description?: string | undefined; image?: string | undefined; parentId?: string | undefined; }' is not assignable to type '(Without<categoriesCreateInput, categoriesUncheckedCreateInput> & categoriesUncheckedCreateInput) | (Without<...> & categoriesCreateInput)'.
+  Type '{ slug: string; name: string; description?: string | undefined; image?: string | undefined; parentId?: string | undefined; }' is not assignable to type 'Without<categoriesUncheckedCreateInput, categoriesCreateInput> & categoriesCreateInput'.
+    Type '{ slug: string; name: string; description?: string | undefined; image?: string | undefined; parentId?: string | undefined; }' is not assignable to type 'Without<categoriesUncheckedCreateInput, categoriesCreateInput>'.
+      Types of property 'parentId' are incompatible.
+        Type 'string | undefined' is not assignable to type 'undefined'.
+          Type 'string' is not assignable to type 'undefined'.
+src/test-notification-infrastructure.ts(24,9): error TS2322: Type '{ email: string; passwordHash: string; name: string; role: string; }' is not assignable to type '(Without<usersCreateInput, usersUncheckedCreateInput> & usersUncheckedCreateInput) | (Without<...> & usersCreateInput)'.
+  Type '{ email: string; passwordHash: string; name: string; role: string; }' is not assignable to type 'Without<usersUncheckedCreateInput, usersCreateInput> & usersCreateInput'.
+    Type '{ email: string; passwordHash: string; name: string; role: string; }' is missing the following properties from type 'usersCreateInput': id, updatedAt
