@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { AuthRequest } from '../middlewares/auth.middleware';
+import { AuthRequest } from '../modules/auth/auth.types';
 import { AdminService } from '../services/admin.service';
 import { ResponseUtil } from '../utils/response';
 import { log } from '../utils/logger';

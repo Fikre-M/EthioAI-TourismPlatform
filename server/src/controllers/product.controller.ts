@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { AuthRequest } from '../middlewares/auth.middleware';
+import { AuthRequest } from '../modules/auth/auth.types';
 import { ProductService } from '../services/product.service';
 import { ResponseUtil } from '../utils/response';
 import { log } from '../utils/logger';

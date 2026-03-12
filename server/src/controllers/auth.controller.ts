@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { AuthRequest } from '../middlewares/auth.middleware';
+import { AuthRequest } from '../modules/auth/auth.types';
 import { AuthService } from '../services/auth.service';
 import { ResponseUtil } from '../utils/response';
 import { log } from '../utils/logger';
@@ -70,7 +70,7 @@ export class AuthController {
    */
   static logout = asyncHandler(async (req: AuthRequest, res: Response) => {
     const { refreshToken } = req.body;
-    const userId = req.userId!;
+    const userId = req.user?.id!;
     
     await AuthService.logout(userId, refreshToken);
     
@@ -97,7 +97,7 @@ export class AuthController {
    * Get current user
    */
   static getCurrentUser = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const userId = req.userId!;
+    const userId = req.user?.id!;
     
     const user = await AuthService.getCurrentUser(userId);
     
@@ -108,7 +108,7 @@ export class AuthController {
    * Update user profile
    */
   static updateProfile = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const userId = req.userId!;
+    const userId = req.user?.id!;
     const data: UpdateProfileInput = req.body;
     
     const user = await AuthService.updateProfile(userId, data);
@@ -124,7 +124,7 @@ export class AuthController {
    * Change password
    */
   static changePassword = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const userId = req.userId!;
+    const userId = req.user?.id!;
     const data: ChangePasswordInput = req.body;
     
     await AuthService.changePassword(userId, data);
@@ -169,7 +169,7 @@ export class AuthController {
    * Verify email
    */
   static verifyEmail = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const userId = req.userId!;
+    const userId = req.user?.id!;
     const { token } = req.body;
     
     await AuthService.verifyEmail(userId, token);

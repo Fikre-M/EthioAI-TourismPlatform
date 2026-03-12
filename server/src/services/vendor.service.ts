@@ -180,7 +180,7 @@ export class VendorService {
             status: 'PUBLISHED',
           },
           include: {
-            category: true,
+            categoryModel: true,
             reviews: {
               select: {
                 rating: true,
@@ -626,3 +626,4 @@ export class VendorService {
     log.info('Category deleted', { categoryId: id, name: category.name });
   }
 }
+
