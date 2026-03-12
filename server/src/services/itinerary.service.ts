@@ -293,4 +293,30 @@ export class ItineraryService {
       throw error;
     }
   }
+
+  /**
+   * Get itinerary statistics
+   */
+  static async getItineraryStats(query: any): Promise<any> {
+    try {
+      // Mock stats
+      return {
+        totalItineraries: 0,
+        publicItineraries: 0,
+        privateItineraries: 0,
+        popularDestinations: [],
+        averageBudget: 0,
+      };
+    } catch (error) {
+      log.error('Failed to get itinerary stats:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get statistics (alias for getItineraryStats)
+   */
+  static async getStats(query: any): Promise<any> {
+    return this.getItineraryStats(query);
+  }
 }
