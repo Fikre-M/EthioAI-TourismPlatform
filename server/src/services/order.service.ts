@@ -1,4 +1,5 @@
-import { PrismaClient, Order, OrderStatus, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
+import type { orders as Order } from '@prisma/client';
 import { 
   CreateOrderInput, 
   UpdateOrderInput, 

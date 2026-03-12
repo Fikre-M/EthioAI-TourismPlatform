@@ -1,4 +1,5 @@
-import { PrismaClient, Payment, PaymentStatus, PaymentMethod, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
+import type { payments as Payment } from '@prisma/client';
 import Stripe from 'stripe';
 import axios from 'axios';
 import { 
@@ -32,7 +33,7 @@ let stripe: Stripe | null = null;
 
 if (config.payment.stripe.secretKey) {
   stripe = new Stripe(config.payment.stripe.secretKey, {
-    apiVersion: '2023-10-16',
+    apiVersion: '2024-11-20.acacia',
   });
 } else {
   console.warn('⚠️ Stripe secret key not provided - Stripe payments disabled');

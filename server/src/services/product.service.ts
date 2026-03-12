@@ -1,4 +1,5 @@
-import { PrismaClient, Product, ContentStatus, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
+import type { products as Product } from '@prisma/client';
 import { 
   CreateProductInput, 
   UpdateProductInput, 
