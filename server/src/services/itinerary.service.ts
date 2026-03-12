@@ -1,4 +1,5 @@
 import { log } from '../utils/logger';
+import { CreateItineraryInput } from '../schemas/itinerary.schemas';
 
 export interface Itinerary {
   id: string;
@@ -43,17 +44,31 @@ export class ItineraryService {
   /**
    * Create a new itinerary
    */
-  static async createItinerary(data: Partial<Itinerary>, userId: string): Promise<Itinerary> {
+  static async createItinerary(data: CreateItineraryInput, userId: string): Promise<Itinerary> {
     try {
-      // For now, return a mock itinerary
+      // Convert complex destinations to simple string array
+      const destinationNames = data.destinations.map(dest => dest.name);
+      
+      // Convert complex activities to ItineraryActivity format
+      const activities: ItineraryActivity[] = (data.activities || []).map(activity => ({
+        priority: 'medium' as const,
+        type: activity.type,
+        title: activity.title,
+        description: activity.description || '',
+        duration: activity.duration || 60,
+        cost: activity.cost || activity.estimatedCost,
+        location: activity.location?.name,
+        bookingReference: activity.bookingReference,
+      }));
+
       const itinerary: Itinerary = {
         id: Math.random().toString(36).substring(7),
-        title: data.title || 'Untitled Itinerary',
+        title: data.title,
         description: data.description || '',
-        startDate: data.startDate || new Date().toISOString().split('T')[0],
-        endDate: data.endDate || new Date().toISOString().split('T')[0],
-        destinations: data.destinations || [],
-        activities: data.activities || [],
+        startDate: data.startDate,
+        endDate: data.endDate,
+        destinations: destinationNames,
+        activities,
         budget: data.budget || 0,
         currency: data.currency || 'USD',
         groupSize: data.groupSize || 1,
@@ -230,6 +245,51 @@ export class ItineraryService {
       };
     } catch (error) {
       log.error('Failed to optimize itinerary:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Export itinerary
+   */
+  static async exportItinerary(id: string, format: string, userId?: string): Promise<{
+    data: any;
+    filename: string;
+    mimeType: string;
+  }> {
+    try {
+      // Mock export
+      return {
+        data: {},
+        filename: `itinerary-${id}.${format}`,
+        mimeType: format === 'pdf' ? 'application/pdf' : 'application/json',
+      };
+    } catch (error) {
+      log.error('Failed to export itinerary:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get itineraries with filters
+   */
+  static async getItineraries(query: any, userId?: string): Promise<{
+    itineraries: any[];
+    pagination: any;
+  }> {
+    try {
+      // Mock result
+      return {
+        itineraries: [],
+        pagination: {
+          page: 1,
+          limit: 10,
+          total: 0,
+          pages: 0,
+        },
+      };
+    } catch (error) {
+      log.error('Failed to get itineraries:', error);
       throw error;
     }
   }

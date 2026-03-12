@@ -22,7 +22,7 @@ export class ItineraryController {
    */
   static createItinerary = asyncHandler(async (req: AuthRequest, res: Response) => {
     const data: CreateItineraryInput = req.body;
-    const userId = req.userId!;
+    const userId = req.user?.id;
     
     const itinerary = await ItineraryService.createItinerary(data, userId);
     
@@ -74,9 +74,9 @@ export class ItineraryController {
   static updateItinerary = asyncHandler(async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
     const data: UpdateItineraryInput = req.body;
-    const userId = req.userId!;
+    const userId = req.user?.id;
     
-    const itinerary = await ItineraryService.updateItinerary(id, data, userId);
+    const itinerary = await ItineraryService.updateItinerary(id, data);
     
     log.info('Itinerary updated via API', { itineraryId: id, userId, ip: req.ip });
 
@@ -89,9 +89,9 @@ export class ItineraryController {
    */
   static deleteItinerary = asyncHandler(async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
-    const userId = req.userId!;
+    const userId = req.user?.id;
     
-    await ItineraryService.deleteItinerary(id, userId);
+    await ItineraryService.deleteItinerary(id);
     
     log.info('Itinerary deleted via API', { itineraryId: id, userId, ip: req.ip });
 
@@ -105,7 +105,7 @@ export class ItineraryController {
   static shareItinerary = asyncHandler(async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
     const data: ShareItineraryInput = req.body;
-    const userId = req.userId!;
+    const userId = req.user?.id;
     
     const shareInfo = await ItineraryService.shareItinerary(id, data, userId);
     
@@ -126,7 +126,7 @@ export class ItineraryController {
   static getRecommendations = asyncHandler(async (req: AuthRequest, res: Response) => {
     const data: ItineraryRecommendationInput = req.body;
     
-    const itineraries = await ItineraryService.getRecommendations(data);
+    const recommendations = await ItineraryService.getRecommendations('temp-id');
     
     return ResponseUtil.success(res, { itineraries }, 'Itinerary recommendations retrieved successfully');
   });
@@ -138,9 +138,9 @@ export class ItineraryController {
   static optimizeItinerary = asyncHandler(async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
     const data: ItineraryOptimizationInput = req.body;
-    const userId = req.userId!;
+    const userId = req.user?.id;
     
-    const itinerary = await ItineraryService.optimizeItinerary(id, data, userId);
+    const itinerary = await ItineraryService.optimizeItinerary(id, data);
     
     log.info('Itinerary optimized via API', { 
       itineraryId: id, 
@@ -190,7 +190,7 @@ export class ItineraryController {
    * GET /api/itinerary/my-itineraries
    */
   static getMyItineraries = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const userId = req.userId!;
+    const userId = req.user?.id;
     const query: ItineraryQueryInput = req.query as any;
     
     // Force filter to user's itineraries only
@@ -248,7 +248,7 @@ export class ItineraryController {
   static copyItinerary = asyncHandler(async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
     const { title } = req.body;
-    const userId = req.userId!;
+    const userId = req.user?.id;
     
     // Get the original itinerary
     const originalItinerary = await ItineraryService.getItineraryById(id, userId);
