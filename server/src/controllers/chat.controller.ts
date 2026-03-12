@@ -260,7 +260,7 @@ export class ChatController {
     } catch (error: any) {
       log.error('AI response test failed', { error: error.message, message });
       
-      return ResponseUtil.error(res, 'Failed to generate AI response', 500, {
+      return ResponseUtil.error(res, 500, 'AI_RESPONSE_ERROR', 'Failed to generate AI response', {
         error: error.message,
         message,
       });

@@ -207,9 +207,9 @@ export class AdminController {
   static updateBookingStatus = asyncHandler(async (req: AuthRequest, res: Response) => {
     const { bookingId } = req.params;
     const { status, reason } = req.body;
-    const adminId = req.userId!;
+    const adminId = req.user?.id;
     
-    const booking = await AdminService.updateBookingStatus(bookingId, status, reason, adminId);
+    const booking = await AdminService.updateBookingStatus(bookingId, status, adminId);
     
     log.admin(`Booking status updated to ${status}`, adminId, { 
       bookingId, 
