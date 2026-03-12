@@ -83,6 +83,13 @@ export class ResponseUtil {
   }
 
   /**
+   * Send bad request response
+   */
+  static badRequest(res: Response, message: string = 'Bad request'): Response {
+    return ResponseUtil.error(res, 400, 'BAD_REQUEST', message);
+  }
+
+  /**
    * Send validation error response
    */
   static validationError(res: Response, details: any): Response {

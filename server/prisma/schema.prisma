@@ -124,23 +124,23 @@ model email_verification_tokens {
 }
 
 model notifications {
-  id          String   @id
+  id          String    @id
   userId      String
   type        String
   title       String
-  message     String   @db.Text
-  data        String?  @db.Text
-  status      String   @default("UNREAD")
-  priority    String   @default("NORMAL")
+  message     String    @db.Text
+  data        String?   @db.Text
+  status      String    @default("UNREAD")
+  priority    String    @default("NORMAL")
   category    String?
   actionUrl   String?
   imageUrl    String?
   expiresAt   DateTime?
   readAt      DateTime?
   deliveredAt DateTime?
-  createdAt   DateTime @default(now())
+  createdAt   DateTime  @default(now())
   updatedAt   DateTime
-  users       users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  users       users     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([status])
@@ -197,8 +197,8 @@ model orders {
   trackingNumber  String?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime
-  users           users         @relation(fields: [userId], references: [id])
   order_items     order_items[]
+  users           users         @relation(fields: [userId], references: [id])
   payments        payments[]
 
   @@index([status])
@@ -246,30 +246,30 @@ model payments {
 }
 
 model products {
-  id               String            @id
+  id               String           @id
   name             String
-  slug             String            @unique
-  description      String            @db.Text
+  slug             String           @unique
+  description      String           @db.Text
   shortDescription String?
-  images           String?           @db.Text
+  images           String?          @db.Text
   price            Decimal
   discountPrice    Decimal?
-  sku              String?           @unique
-  stock            Int               @default(0)
-  trackInventory   Boolean           @default(true)
+  sku              String?          @unique
+  stock            Int              @default(0)
+  trackInventory   Boolean          @default(true)
   category         String
-  categoryModel    categories?       @relation(fields: [category], references: [name])
-  attributes       String?           @db.Text
+  attributes       String?          @db.Text
   vendorId         String?
-  vendor           vendor_profiles?  @relation(fields: [vendorId], references: [id])
-  status           String            @default("DRAFT")
-  featured         Boolean           @default(false)
-  sortOrder        Int               @default(0)
+  status           String           @default("DRAFT")
+  featured         Boolean          @default(false)
+  sortOrder        Int              @default(0)
   metaTitle        String?
-  metaDescription  String?           @db.Text
-  createdAt        DateTime          @default(now())
+  metaDescription  String?          @db.Text
+  createdAt        DateTime         @default(now())
   updatedAt        DateTime
   order_items      order_items[]
+  categoryModel    categories       @relation(fields: [category], references: [name])
+  vendor           vendor_profiles? @relation(fields: [vendorId], references: [id])
   reviews          reviews[]
 
   @@index([status, featured])
@@ -295,7 +295,6 @@ model reviews {
   id         String    @id
   userId     String
   tourId     String?
-  productId  String?
   rating     Int
   title      String?
   comment    String    @db.Text
@@ -304,6 +303,7 @@ model reviews {
   isVerified Boolean   @default(false)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime
+  productId  String?
   products   products? @relation(fields: [productId], references: [id])
   tours      tours?    @relation(fields: [tourId], references: [id])
   users      users     @relation(fields: [userId], references: [id])
@@ -349,30 +349,30 @@ model tours {
 }
 
 model users {
-  id                          String                       @id
-  name                        String?
-  email                       String                       @unique
-  passwordHash                String
-  role                        String                       @default("USER")
-  isEmailVerified             Boolean                      @default(false)
-  createdAt                   DateTime                     @default(now())
-  updatedAt                   DateTime
-  avatar                      String?
-  bio                         String?
-  dateOfBirth                 DateTime?
-  location                    String?
-  phone                       String?
-  bookings                    bookings[]
-  chat_messages               chat_messages[]
-  email_verification_tokens   email_verification_tokens[]
-  notifications               notifications[]
-  notification_preferences    notification_preferences?
-  orders                      orders[]
-  password_reset_tokens       password_reset_tokens[]
-  payments                    payments[]
-  refresh_tokens              refresh_tokens[]
-  reviews                     reviews[]
-  vendor_profile              vendor_profiles?
+  id                        String                      @id
+  name                      String?
+  email                     String                      @unique
+  passwordHash              String
+  role                      String                      @default("USER")
+  isEmailVerified           Boolean                     @default(false)
+  createdAt                 DateTime                    @default(now())
+  updatedAt                 DateTime
+  avatar                    String?
+  bio                       String?
+  dateOfBirth               DateTime?
+  location                  String?
+  phone                     String?
+  bookings                  bookings[]
+  chat_messages             chat_messages[]
+  email_verification_tokens email_verification_tokens[]
+  notification_preferences  notification_preferences?
+  notifications             notifications[]
+  orders                    orders[]
+  password_reset_tokens     password_reset_tokens[]
+  payments                  payments[]
+  refresh_tokens            refresh_tokens[]
+  reviews                   reviews[]
+  vendor_profile            vendor_profiles?
 }
 
 model vendor_profiles {
@@ -395,8 +395,8 @@ model vendor_profiles {
   status                String     @default("PENDING")
   createdAt             DateTime   @default(now())
   updatedAt             DateTime
-  users                 users      @relation(fields: [userId], references: [id], onDelete: Cascade)
   products              products[]
+  users                 users      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([status])

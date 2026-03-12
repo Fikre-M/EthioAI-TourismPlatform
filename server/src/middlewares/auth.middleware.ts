@@ -26,6 +26,7 @@ export const authenticate = (req: AuthRequest, res: Response, next: NextFunction
         email: decoded.email,
         role: decoded.role as UserRole
       };
+      req.userId = decoded.userId; // Set convenience property
       
       next();
     } catch (jwtError: any) {
@@ -62,6 +63,7 @@ export const optionalAuth = (req: AuthRequest, res: Response, next: NextFunction
         email: decoded.email,
         role: decoded.role as UserRole
       };
+      req.userId = decoded.userId; // Set convenience property
     } catch (jwtError) {
       // Ignore JWT errors for optional auth
       log.warn('Optional auth failed:', jwtError);

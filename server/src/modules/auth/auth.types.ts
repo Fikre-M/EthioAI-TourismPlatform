@@ -35,4 +35,5 @@ export interface AuthRequest extends Request {
     email: string;
     role: UserRole;
   };
+  userId?: string; // Convenience property for user.id
 }

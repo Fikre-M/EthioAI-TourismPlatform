@@ -1,4 +1,4 @@
-import { PrismaClient, UserRole, BookingStatus, PaymentStatus, ReviewStatus, ContentStatus } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { log } from '../utils/logger';
 import { EmailService } from './email.service';
 import { 
@@ -82,16 +82,16 @@ export class AdminService {
 
       // Users stats
       const [totalUsers, newUsers, activeUsers, suspendedUsers] = await Promise.all([
-        prisma.user.count(),
-        prisma.user.count({
+        prisma.users.count(),
+        prisma.users.count({
           where: { createdAt: { gte: startOfMonth } }
         }),
-        prisma.user.count({
+        prisma.users.count({
           where: { 
             updatedAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) }
           }
         }),
-        prisma.user.count({
+        prisma.users.count({
           where: { 
             // Assuming you have a suspended field or status
             // For now, we'll use a placeholder
@@ -101,37 +101,37 @@ export class AdminService {
 
       // Tours stats
       const [totalTours, publishedTours, pendingTours, draftTours] = await Promise.all([
-        prisma.tour.count(),
-        prisma.tour.count({ where: { status: 'PUBLISHED' } }),
-        prisma.tour.count({ where: { status: 'DRAFT' } }), // Assuming pending is draft
-        prisma.tour.count({ where: { status: 'DRAFT' } })
+        prisma.tours.count(),
+        prisma.tours.count({ where: { status: 'PUBLISHED' } }),
+        prisma.tours.count({ where: { status: 'DRAFT' } }), // Assuming pending is draft
+        prisma.tours.count({ where: { status: 'DRAFT' } })
       ]);
 
       // Bookings stats
       const [totalBookings, confirmedBookings, pendingBookings, cancelledBookings, thisMonthBookings] = await Promise.all([
-        prisma.booking.count(),
-        prisma.booking.count({ where: { status: 'CONFIRMED' } }),
-        prisma.booking.count({ where: { status: 'PENDING' } }),
-        prisma.booking.count({ where: { status: 'CANCELLED' } }),
-        prisma.booking.count({
+        prisma.bookings.count(),
+        prisma.bookings.count({ where: { status: 'CONFIRMED' } }),
+        prisma.bookings.count({ where: { status: 'PENDING' } }),
+        prisma.bookings.count({ where: { status: 'CANCELLED' } }),
+        prisma.bookings.count({
           where: { createdAt: { gte: startOfMonth } }
         })
       ]);
 
       // Revenue stats
       const [totalRevenue, thisMonthRevenue, lastMonthRevenue] = await Promise.all([
-        prisma.payment.aggregate({
+        prisma.payments.aggregate({
           where: { status: 'COMPLETED' },
           _sum: { amount: true }
         }),
-        prisma.payment.aggregate({
+        prisma.payments.aggregate({
           where: { 
             status: 'COMPLETED',
             createdAt: { gte: startOfMonth }
           },
           _sum: { amount: true }
         }),
-        prisma.payment.aggregate({
+        prisma.payments.aggregate({
           where: { 
             status: 'COMPLETED',
             createdAt: { 
@@ -149,10 +149,10 @@ export class AdminService {
 
       // Reviews stats
       const [totalReviews, pendingReviews, approvedReviews, avgRating] = await Promise.all([
-        prisma.review.count(),
-        prisma.review.count({ where: { status: 'PENDING' } }),
-        prisma.review.count({ where: { status: 'APPROVED' } }),
-        prisma.review.aggregate({
+        prisma.reviews.count(),
+        prisma.reviews.count({ where: { status: 'PENDING' } }),
+        prisma.reviews.count({ where: { status: 'APPROVED' } }),
+        prisma.reviews.aggregate({
           where: { status: 'APPROVED' },
           _avg: { rating: true }
         })
@@ -205,7 +205,7 @@ export class AdminService {
       // This would typically come from an activity log table
       // For now, we'll aggregate from various tables
       const [recentBookings, recentUsers, recentReviews] = await Promise.all([
-        prisma.booking.findMany({
+        prisma.bookings.findMany({
           take: Math.floor(limit / 3),
           orderBy: { createdAt: 'desc' },
           include: {
@@ -213,12 +213,12 @@ export class AdminService {
             tour: { select: { title: true } }
           }
         }),
-        prisma.user.findMany({
+        prisma.users.findMany({
           take: Math.floor(limit / 3),
           orderBy: { createdAt: 'desc' },
           select: { id: true, name: true, email: true, createdAt: true, role: true }
         }),
-        prisma.review.findMany({
+        prisma.reviews.findMany({
           take: Math.floor(limit / 3),
           orderBy: { createdAt: 'desc' },
           include: {
@@ -395,7 +395,7 @@ export class AdminService {
       }
 
       const [users, total] = await Promise.all([
-        prisma.user.findMany({
+        prisma.users.findMany({
           where,
           skip,
           take: limit,
@@ -416,7 +416,7 @@ export class AdminService {
             }
           }
         }),
-        prisma.user.count({ where })
+        prisma.users.count({ where })
       ]);
 
       return {
@@ -436,7 +436,7 @@ export class AdminService {
 
   static async getUserDetails(userId: string) {
     try {
-      const user = await prisma.user.findUnique({
+      const user = await prisma.users.findUnique({
         where: { id: userId },
         include: {
           bookings: {
@@ -482,7 +482,7 @@ export class AdminService {
 
   static async updateUser(userId: string, data: any, adminId: string) {
     try {
-      const user = await prisma.user.update({
+      const user = await prisma.users.update({
         where: { id: userId },
         data: {
           ...data,
@@ -510,7 +510,7 @@ export class AdminService {
     try {
       // This would update a suspended field if you have one
       // For now, we'll just log the action
-      const user = await prisma.user.findUnique({
+      const user = await prisma.users.findUnique({
         where: { id: userId },
         select: {
           id: true,
@@ -571,7 +571,7 @@ export class AdminService {
       }
 
       const [tours, total] = await Promise.all([
-        prisma.tour.findMany({
+        prisma.tours.findMany({
           where,
           skip,
           take: limit,
@@ -590,7 +590,7 @@ export class AdminService {
             }
           }
         }),
-        prisma.tour.count({ where })
+        prisma.tours.count({ where })
       ]);
 
       return {
@@ -610,7 +610,7 @@ export class AdminService {
 
   static async updateTourStatus(tourId: string, status: string, reason: string, adminId: string) {
     try {
-      const tour = await prisma.tour.update({
+      const tour = await prisma.tours.update({
         where: { id: tourId },
         data: {
           status: status as any,
@@ -650,7 +650,7 @@ export class AdminService {
 
   static async toggleTourFeatured(tourId: string, featured: boolean, adminId: string) {
     try {
-      const tour = await prisma.tour.update({
+      const tour = await prisma.tours.update({
         where: { id: tourId },
         data: {
           featured,
@@ -665,8 +665,52 @@ export class AdminService {
     }
   }
 
-  // Additional methods for bookings, payments, reviews, etc. would follow similar patterns
-  // For brevity, I'll include a few key ones:
+  static async updateBookingStatus(bookingId: string, status: string, adminId: string) {
+    try {
+      const booking = await prisma.bookings.findUnique({
+        where: { id: bookingId },
+        include: {
+          user: { select: { name: true, email: true } },
+          tour: { select: { title: true } }
+        }
+      });
+
+      if (!booking) {
+        throw new NotFoundError('Booking not found');
+      }
+
+      const updatedBooking = await prisma.bookings.update({
+        where: { id: bookingId },
+        data: { 
+          status,
+          updatedAt: new Date()
+        },
+        include: {
+          user: { select: { name: true, email: true } },
+          tour: { select: { title: true } }
+        }
+      });
+
+      // Send notification email
+      try {
+        await EmailService.sendBookingStatusUpdate(booking.user.email, {
+          bookingNumber: booking.bookingNumber,
+          tourTitle: booking.tour.title,
+          status,
+          userName: booking.user.name
+        });
+      } catch (emailError) {
+        log.warn('Failed to send booking status update email:', emailError);
+      }
+
+      log.info(`Booking ${bookingId} status updated to ${status} by admin ${adminId}`);
+      
+      return updatedBooking;
+    } catch (error) {
+      log.error('Failed to update booking status:', error);
+      throw error;
+    }
+  }
 
   static async getBookings(page: number, limit: number, filters: any) {
     try {
@@ -688,7 +732,7 @@ export class AdminService {
       }
 
       const [bookings, total] = await Promise.all([
-        prisma.booking.findMany({
+        prisma.bookings.findMany({
           where,
           skip,
           take: limit,
@@ -699,7 +743,7 @@ export class AdminService {
             payments: { select: { status: true, amount: true } }
           }
         }),
-        prisma.booking.count({ where })
+        prisma.bookings.count({ where })
       ]);
 
       return {
