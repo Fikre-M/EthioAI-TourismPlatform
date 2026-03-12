@@ -1,0 +1,18 @@
+﻿src/controllers/webhook.controller.ts(51,8): error TS1136: Property assignment expected.
+src/controllers/webhook.controller.ts(69,8): error TS1136: Property assignment expected.
+src/controllers/webhook.controller.ts(76,8): error TS1136: Property assignment expected.
+src/controllers/webhook.controller.ts(237,17): error TS1136: Property assignment expected.
+src/controllers/webhook.controller.ts(248,19): error TS1136: Property assignment expected.
+src/controllers/webhook.controller.ts(248,28): error TS1005: ',' expected.
+src/controllers/webhook.controller.ts(319,17): error TS1136: Property assignment expected.
+src/controllers/webhook.controller.ts(331,19): error TS1136: Property assignment expected.
+src/controllers/webhook.controller.ts(331,28): error TS1005: ',' expected.
+src/controllers/webhook.controller.ts(386,17): error TS1136: Property assignment expected.
+src/controllers/webhook.controller.ts(398,19): error TS1136: Property assignment expected.
+src/controllers/webhook.controller.ts(398,28): error TS1005: ',' expected.
+src/controllers/webhook.controller.ts(538,17): error TS1136: Property assignment expected.
+src/controllers/webhook.controller.ts(549,19): error TS1136: Property assignment expected.
+src/controllers/webhook.controller.ts(549,28): error TS1005: ',' expected.
+src/controllers/webhook.controller.ts(612,17): error TS1136: Property assignment expected.
+src/controllers/webhook.controller.ts(624,19): error TS1136: Property assignment expected.
+src/controllers/webhook.controller.ts(624,28): error TS1005: ',' expected.

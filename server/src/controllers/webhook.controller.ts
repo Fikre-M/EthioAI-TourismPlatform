@@ -48,7 +48,7 @@ export class WebhookController {
       
       log.info('Stripe webhook received', {
         type: event.type,
-       : event,
+       event: event,
         created: event.created
       });
     } catch (err: any) {
@@ -66,14 +66,14 @@ export class WebhookController {
       
       log.info('Stripe webhook processed successfully', {
         type: event.type,
-       : event
+       event: event
       });
       
       res.json({ received: true });
     } catch (error: any) {
       log.error('Stripe webhook processing failed', {
         type: event.type,
-       : event,
+       event: event,
         error: error.message
       });
       
@@ -234,7 +234,7 @@ export class WebhookController {
 
       // Update payment status
       await prisma.payments.update({
-        where: {: payment },
+        where: { id: payment },
         data: {
           status: 'COMPLETED',
           gatewayResponse: paymentIntent as any,
@@ -245,7 +245,7 @@ export class WebhookController {
       // Update booking status if this is a booking payment
       if (payment.booking) {
         await prisma.bookings.update({
-          where: {: payment.useId },
+          where: { id: payment.bookingId },
           data: {
             status: 'CONFIRMED',
             updatedAt: new Date()
@@ -316,7 +316,7 @@ export class WebhookController {
 
       // Update payment status
       await prisma.payments.update({
-        where: {: payment },
+        where: { id: payment },
         data: {
           status: 'FAILED',
           failureReason: paymentIntent.last_payment_error?.message || 'Payment failed',
@@ -328,7 +328,7 @@ export class WebhookController {
       // Update booking status if this is a booking payment
       if (payment.booking) {
         await prisma.bookings.update({
-          where: {: payment.useId },
+          where: { id: payment.bookingId },
           data: {
             status: 'CANCELLED',
             updatedAt: new Date()
@@ -383,7 +383,7 @@ export class WebhookController {
 
       // Update payment status
       await prisma.payments.update({
-        where: {: payment },
+        where: { id: payment },
         data: {
           status: 'FAILED',
           failureReason: 'Payment cancelled',
@@ -395,7 +395,7 @@ export class WebhookController {
       // Update booking status if this is a booking payment
       if (payment.booking) {
         await prisma.bookings.update({
-          where: {: payment.useId },
+          where: { id: payment.bookingId },
           data: {
             status: 'CANCELLED',
             updatedAt: new Date()
@@ -535,7 +535,7 @@ export class WebhookController {
 
       // Update payment status
       await prisma.payments.update({
-        where: {: payment },
+        where: { id: payment },
         data: {
           status: 'COMPLETED',
           gatewayResponse: data,
@@ -546,7 +546,7 @@ export class WebhookController {
       // Update booking status if this is a booking payment
       if (payment.booking) {
         await prisma.bookings.update({
-          where: {: payment.useId },
+          where: { id: payment.bookingId },
           data: {
             status: 'CONFIRMED',
             updatedAt: new Date()
@@ -609,7 +609,7 @@ export class WebhookController {
 
       // Update payment status
       await prisma.payments.update({
-        where: {: payment },
+        where: { id: payment },
         data: {
           status: 'FAILED',
           failureReason: data.message || 'Payment failed',
@@ -621,7 +621,7 @@ export class WebhookController {
       // Update booking status if this is a booking payment
       if (payment.booking) {
         await prisma.bookings.update({
-          where: {: payment.useId },
+          where: { id: payment.bookingId },
           data: {
             status: 'CANCELLED',
             updatedAt: new Date()
