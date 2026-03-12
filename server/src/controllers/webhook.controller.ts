@@ -48,7 +48,7 @@ export class WebhookController {
       
       log.info('Stripe webhook received', {
         type: event.type,
-       event: event,
+        event: event,
         created: event.created
       });
     } catch (err: any) {
@@ -66,14 +66,14 @@ export class WebhookController {
       
       log.info('Stripe webhook processed successfully', {
         type: event.type,
-       event: event
+        event: event
       });
       
       res.json({ received: true });
     } catch (error: any) {
       log.error('Stripe webhook processing failed', {
         type: event.type,
-       event: event,
+        event: event,
         error: error.message
       });
       
@@ -234,7 +234,7 @@ export class WebhookController {
 
       // Update payment status
       await prisma.payments.update({
-        where: { id: payment },
+        where: { id: payment.id },
         data: {
           status: 'COMPLETED',
           gatewayResponse: paymentIntent as any,
