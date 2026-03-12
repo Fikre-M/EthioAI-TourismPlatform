@@ -212,7 +212,7 @@ export class WebhookController {
   private static async handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent): Promise<void> {
     try {
       // Find payment record
-      const payment = await prisma.payment.findUnique({
+      const payment = await prisma.payments.findUnique({
         where: { paymentId: paymentIntent.id },
         include: {
           booking: {
@@ -233,7 +233,7 @@ export class WebhookController {
       }
 
       // Update payment status
-      await prisma.payment.update({
+      await prisma.payments.update({
         where: { id: payment.id },
         data: {
           status: 'COMPLETED',
@@ -244,7 +244,7 @@ export class WebhookController {
 
       // Update booking status if this is a booking payment
       if (payment.booking) {
-        await prisma.booking.update({
+        await prisma.bookings.update({
           where: { id: payment.booking.id },
           data: {
             status: 'CONFIRMED',
@@ -294,7 +294,7 @@ export class WebhookController {
   private static async handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent): Promise<void> {
     try {
       // Find payment record
-      const payment = await prisma.payment.findUnique({
+      const payment = await prisma.payments.findUnique({
         where: { paymentId: paymentIntent.id },
         include: {
           booking: {
@@ -315,7 +315,7 @@ export class WebhookController {
       }
 
       // Update payment status
-      await prisma.payment.update({
+      await prisma.payments.update({
         where: { id: payment.id },
         data: {
           status: 'FAILED',
@@ -327,7 +327,7 @@ export class WebhookController {
 
       // Update booking status if this is a booking payment
       if (payment.booking) {
-        await prisma.booking.update({
+        await prisma.bookings.update({
           where: { id: payment.booking.id },
           data: {
             status: 'CANCELLED',
@@ -365,7 +365,7 @@ export class WebhookController {
   private static async handlePaymentIntentCanceled(paymentIntent: Stripe.PaymentIntent): Promise<void> {
     try {
       // Find payment record
-      const payment = await prisma.payment.findUnique({
+      const payment = await prisma.payments.findUnique({
         where: { paymentId: paymentIntent.id },
         include: {
           booking: {
@@ -382,7 +382,7 @@ export class WebhookController {
       }
 
       // Update payment status
-      await prisma.payment.update({
+      await prisma.payments.update({
         where: { id: payment.id },
         data: {
           status: 'FAILED',
@@ -394,7 +394,7 @@ export class WebhookController {
 
       // Update booking status if this is a booking payment
       if (payment.booking) {
-        await prisma.booking.update({
+        await prisma.bookings.update({
           where: { id: payment.booking.id },
           data: {
             status: 'CANCELLED',
@@ -416,7 +416,7 @@ export class WebhookController {
   private static async handleChargeDispute(dispute: Stripe.Dispute): Promise<void> {
     try {
       // Find payment record by charge ID
-      const payment = await prisma.payment.findFirst({
+      const payment = await prisma.payments.findFirst({
         where: {
           gatewayResponse: {
             path: ['latest_charge'],
@@ -508,7 +508,7 @@ export class WebhookController {
   private static async handleChapaChargeSuccess(data: any): Promise<void> {
     try {
       // Find payment record by transaction reference
-      const payment = await prisma.payment.findFirst({
+      const payment = await prisma.payments.findFirst({
         where: {
           gatewayResponse: {
             path: ['tx_ref'],
@@ -534,7 +534,7 @@ export class WebhookController {
       }
 
       // Update payment status
-      await prisma.payment.update({
+      await prisma.payments.update({
         where: { id: payment.id },
         data: {
           status: 'COMPLETED',
@@ -545,7 +545,7 @@ export class WebhookController {
 
       // Update booking status if this is a booking payment
       if (payment.booking) {
-        await prisma.booking.update({
+        await prisma.bookings.update({
           where: { id: payment.booking.id },
           data: {
             status: 'CONFIRMED',
@@ -582,7 +582,7 @@ export class WebhookController {
   private static async handleChapaChargeFailed(data: any): Promise<void> {
     try {
       // Find payment record by transaction reference
-      const payment = await prisma.payment.findFirst({
+      const payment = await prisma.payments.findFirst({
         where: {
           gatewayResponse: {
             path: ['tx_ref'],
@@ -608,7 +608,7 @@ export class WebhookController {
       }
 
       // Update payment status
-      await prisma.payment.update({
+      await prisma.payments.update({
         where: { id: payment.id },
         data: {
           status: 'FAILED',
@@ -620,7 +620,7 @@ export class WebhookController {
 
       // Update booking status if this is a booking payment
       if (payment.booking) {
-        await prisma.booking.update({
+        await prisma.bookings.update({
           where: { id: payment.booking.id },
           data: {
             status: 'CANCELLED',

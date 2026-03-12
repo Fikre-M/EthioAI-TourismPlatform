@@ -1,4 +1,4 @@
-import { AuthRequest, Response } from 'express';
+import { Response } from 'express';
 import { AuthRequest } from '../modules/auth/auth.types';
 import { z } from 'zod';
 import { 
@@ -184,8 +184,7 @@ export const uploadUserProfile = async (req: AuthRequest, res: Response) => {
     await prisma.users.update({
       where: { id: userId },
       data: { 
-        profileImage: result.url,
-        profileImagePublicId: result.publicId
+        avatar: result.url
       }
     });
 
@@ -279,7 +278,7 @@ export const uploadProductMedia = async (req: AuthRequest, res: Response) => {
 
     await prisma.products.update({
       where: { id: productId },
-      data: { images: updatedImages }
+      data: { images: JSON.stringify(updatedImages) }
     });
 
     log.info('Product images uploaded successfully', {
@@ -344,7 +343,7 @@ export const uploadTourMedia = async (req: AuthRequest, res: Response) => {
       });
     }
 
-    if (tour.createdBy !== req.user!.id && req.user!.role !== 'ADMIN') {
+    if (tour.userId !== req.user!.id && req.user!.role !== 'ADMIN') {
       return res.status(403).json({
         success: false,
         message: 'Not authorized to upload images for this tour',
@@ -372,7 +371,7 @@ export const uploadTourMedia = async (req: AuthRequest, res: Response) => {
 
     await prisma.tours.update({
       where: { id: tourId },
-      data: { images: updatedImages }
+      data: { images: JSON.stringify(updatedImages) }
     });
 
     log.info('Tour images uploaded successfully', {
