@@ -211,7 +211,7 @@ export class TransportController {
       sortBy: 'createdAt',
       sortOrder: 'asc',
       status: 'confirmed',
-      startDate: new Date().toISOString().split('T')[0], // Today onwards
+      startDate: new Date(),
     };
     
     const result = await TransportService.getBookings(query, userId);
@@ -297,7 +297,7 @@ export class TransportController {
       
     } catch (error: any) {
       log.error('Transport search error', { error: error.message, type, searchData });
-      return ResponseUtil.error(res, 'Transport search failed', 500);
+      return ResponseUtil.error(res, 500, 'TRANSPORT_SEARCH_FAILED', 'Transport search failed');
     }
   });
 
@@ -356,7 +356,7 @@ export class TransportController {
       
     } catch (error: any) {
       log.error('Route options error', { error: error.message, origin, destination });
-      return ResponseUtil.error(res, 'Failed to get route options', 500);
+      return ResponseUtil.error(res, 500, 'ROUTE_OPTIONS_FAILED', 'Failed to get route options');
     }
   });
 }

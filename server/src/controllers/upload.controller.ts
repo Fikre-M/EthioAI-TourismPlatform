@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { AuthRequest, Response } from 'express';
 import { AuthRequest } from '../modules/auth/auth.types';
 import { z } from 'zod';
 import { 
@@ -22,7 +22,7 @@ const uploadTypeSchema = z.enum(['profile', 'product', 'tour', 'review', 'docume
 /**
  * Upload single file
  */
-export const uploadSingle = async (req: Request, res: Response) => {
+export const uploadSingle = async (req: AuthRequest, res: Response) => {
   try {
     const file = req.file;
     if (!file) {
@@ -89,7 +89,7 @@ export const uploadSingle = async (req: Request, res: Response) => {
 /**
  * Upload multiple files
  */
-export const uploadMultiple = async (req: Request, res: Response) => {
+export const uploadMultiple = async (req: AuthRequest, res: Response) => {
   try {
     const files = req.files as Express.Multer.File[];
     if (!files || files.length === 0) {
@@ -158,7 +158,7 @@ export const uploadMultiple = async (req: Request, res: Response) => {
 /**
  * Upload profile image
  */
-export const uploadUserProfile = async (req: Request, res: Response) => {
+export const uploadUserProfile = async (req: AuthRequest, res: Response) => {
   try {
     const file = req.file;
     if (!file) {
@@ -181,7 +181,7 @@ export const uploadUserProfile = async (req: Request, res: Response) => {
     const result = await uploadProfileImage(file, userId);
 
     // Update user profile with new image URL
-    await prisma.user.update({
+    await prisma.users.update({
       where: { id: userId },
       data: { 
         profileImage: result.url,
@@ -217,7 +217,7 @@ export const uploadUserProfile = async (req: Request, res: Response) => {
 /**
  * Upload product images
  */
-export const uploadProductMedia = async (req: Request, res: Response) => {
+export const uploadProductMedia = async (req: AuthRequest, res: Response) => {
   try {
     const files = req.files as Express.Multer.File[];
     if (!files || files.length === 0) {
@@ -238,7 +238,7 @@ export const uploadProductMedia = async (req: Request, res: Response) => {
     }
 
     // Verify product exists and user has permission
-    const product = await prisma.product.findUnique({
+    const product = await prisma.products.findUnique({
       where: { id: productId },
       include: { vendor: true }
     });
@@ -277,7 +277,7 @@ export const uploadProductMedia = async (req: Request, res: Response) => {
     const existingImages = product.images || [];
     const updatedImages = [...existingImages, ...imageUrls];
 
-    await prisma.product.update({
+    await prisma.products.update({
       where: { id: productId },
       data: { images: updatedImages }
     });
@@ -311,7 +311,7 @@ export const uploadProductMedia = async (req: Request, res: Response) => {
 /**
  * Upload tour images
  */
-export const uploadTourMedia = async (req: Request, res: Response) => {
+export const uploadTourMedia = async (req: AuthRequest, res: Response) => {
   try {
     const files = req.files as Express.Multer.File[];
     if (!files || files.length === 0) {
@@ -332,7 +332,7 @@ export const uploadTourMedia = async (req: Request, res: Response) => {
     }
 
     // Verify tour exists and user has permission
-    const tour = await prisma.tour.findUnique({
+    const tour = await prisma.tours.findUnique({
       where: { id: tourId }
     });
 
@@ -370,7 +370,7 @@ export const uploadTourMedia = async (req: Request, res: Response) => {
     const existingImages = tour.images || [];
     const updatedImages = [...existingImages, ...imageUrls];
 
-    await prisma.tour.update({
+    await prisma.tours.update({
       where: { id: tourId },
       data: { images: updatedImages }
     });
@@ -404,7 +404,7 @@ export const uploadTourMedia = async (req: Request, res: Response) => {
 /**
  * Delete uploaded file
  */
-export const deleteFile = async (req: Request, res: Response) => {
+export const deleteFile = async (req: AuthRequest, res: Response) => {
   try {
     const { publicId } = req.params;
     const { resourceType = 'image' } = req.body;
@@ -443,7 +443,7 @@ export const deleteFile = async (req: Request, res: Response) => {
 /**
  * Generate optimized URL for existing image
  */
-export const generateOptimizedImageUrl = async (req: Request, res: Response) => {
+export const generateOptimizedImageUrl = async (req: AuthRequest, res: Response) => {
   try {
     const { publicId } = req.params;
     const { width, height, quality = 'auto:good', format = 'auto' } = req.query;
