@@ -50,7 +50,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     };
 
     if (validationErrors) {
-      errorResponse["errors"] = validationErrors;
+      errorResponse.error = validationErrors;
     }
 
     response.status(status).json(errorResponse);

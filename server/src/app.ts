@@ -39,7 +39,7 @@ async function initializeServices() {
       await EmailService.initialize();
       console.log('✅ Email service initialized');
     } catch (emailError) {
-      console.warn('⚠️ Email service initialization skipped:', emailError.message);
+      console.warn('⚠️ Email service initialization skipped:', (emailError as Error).message);
     }
     
     // Try to initialize database-dependent services
@@ -53,7 +53,7 @@ async function initializeServices() {
       console.log('✅ Database services initialized successfully');
       await prisma.$disconnect();
     } catch (dbError) {
-      console.warn('⚠️ Database services initialization failed (server will continue without database features):', dbError.message);
+      console.warn('⚠️ Database services initialization failed (server will continue without database features):', (dbError as Error).message);
       console.warn('💡 To enable database features:');
       console.warn('   1. Start MySQL server');
       console.warn('   2. Create database: CREATE DATABASE ethioai_tourism;');
@@ -61,7 +61,7 @@ async function initializeServices() {
     }
     
   } catch (error) {
-    console.warn('⚠️ Service initialization failed (continuing anyway):', error.message);
+    console.warn('⚠️ Service initialization failed (continuing anyway):', (error as Error).message);
   }
 }
 

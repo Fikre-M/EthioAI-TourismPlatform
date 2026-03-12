@@ -545,4 +545,4 @@ process.on('SIGTERM', async () => {
   }
 })
 
-export default redisClient
+export { redisClient };
