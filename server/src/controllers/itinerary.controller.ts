@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { AuthRequest } from '../modules/auth/auth.types';
-import { ItineraryService } from '../services/itinerary.service';
+import { ItineraryService, Itinerary } from '../services/itinerary.service';
 import { ResponseUtil } from '../utils/response';
 import { log } from '../utils/logger';
 import { asyncHandler } from '../middlewares/error.middleware';

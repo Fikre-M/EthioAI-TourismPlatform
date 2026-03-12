@@ -56,7 +56,7 @@ export class ItineraryService {
         title: activity.title,
         description: activity.description || '',
         duration: activity.duration || 60,
-        cost: activity.cost || activity.estimatedCost,
+        cost: activity.cost,
         location: activity.location?.name,
         bookingReference: activity.bookingReference,
       }));
