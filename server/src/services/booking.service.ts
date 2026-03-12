@@ -29,7 +29,7 @@ export class BookingService {
     const bookingNumber = `${prefix}${timestamp}${random}`;
     
     // Check if booking number already exists
-    const existing = await prisma.booking.findUnique({
+    const existing = await prisma.bookings.findUnique({
       where: { bookingNumber },
     });
     
@@ -62,7 +62,7 @@ export class BookingService {
     const startDate = new Date(data.startDate);
     const endDate = new Date(data.endDate);
 
-    const conflictingBookings = await prisma.booking.findMany({
+    const conflictingBookings = await prisma.bookings.findMany({
       where: {
         tourId: data.tourId,
         status: { in: ['CONFIRMED', 'PENDING'] },
@@ -109,7 +109,7 @@ export class BookingService {
     const bookingNumber = await this.generateBookingNumber();
 
     // Create booking
-    const booking = await prisma.booking.create({
+    const booking = await prisma.bookings.create({
       data: {
         bookingNumber,
         userId,
@@ -237,7 +237,7 @@ export class BookingService {
 
     // Execute queries
     const [bookings, total] = await Promise.all([
-      prisma.booking.findMany({
+      prisma.bookings.findMany({
         where,
         orderBy,
         skip,
@@ -271,7 +271,7 @@ export class BookingService {
           },
         },
       }),
-      prisma.booking.count({ where }),
+      prisma.bookings.count({ where }),
     ]);
 
     const pagination = calculatePagination(page, limit, total);
@@ -286,7 +286,7 @@ export class BookingService {
    * Get booking by ID
    */
   static async getBookingById(id: string, userId?: string): Promise<Booking> {
-    const booking = await prisma.booking.findUnique({
+    const booking = await prisma.bookings.findUnique({
       where: { id },
       include: {
         tour: {
@@ -342,7 +342,7 @@ export class BookingService {
     userId: string
   ): Promise<Booking> {
     // Check if booking exists
-    const existingBooking = await prisma.booking.findUnique({
+    const existingBooking = await prisma.bookings.findUnique({
       where: { id },
     });
 
@@ -367,7 +367,7 @@ export class BookingService {
       const startDate = data.startDate ? new Date(data.startDate) : existingBooking.startDate;
       const endDate = data.endDate ? new Date(data.endDate) : existingBooking.endDate;
 
-      const conflictingBookings = await prisma.booking.findMany({
+      const conflictingBookings = await prisma.bookings.findMany({
         where: {
           tourId: existingBooking.tourId,
           id: { not: id }, // Exclude current booking
@@ -386,7 +386,7 @@ export class BookingService {
       }
     }
 
-    const booking = await prisma.booking.update({
+    const booking = await prisma.bookings.update({
       where: { id },
       data: {
         ...data,
@@ -412,7 +412,7 @@ export class BookingService {
     data: CancelBookingInput, 
     userId: string
   ): Promise<Booking> {
-    const booking = await prisma.booking.findUnique({
+    const booking = await prisma.bookings.findUnique({
       where: { id },
     });
 
@@ -433,7 +433,7 @@ export class BookingService {
     }
 
     // Update booking status
-    const updatedBooking = await prisma.booking.update({
+    const updatedBooking = await prisma.bookings.update({
       where: { id },
       data: {
         status: 'CANCELLED',
@@ -469,7 +469,7 @@ export class BookingService {
     data: UpdateBookingStatusInput, 
     userId: string
   ): Promise<Booking> {
-    const booking = await prisma.booking.findUnique({
+    const booking = await prisma.bookings.findUnique({
       where: { id },
     });
 
@@ -477,7 +477,7 @@ export class BookingService {
       throw new NotFoundError('Booking not found');
     }
 
-    const updatedBooking = await prisma.booking.update({
+    const updatedBooking = await prisma.bookings.update({
       where: { id },
       data: {
         status: data.status,
@@ -638,12 +638,12 @@ export class BookingService {
       completedBookings,
       totalRevenue,
     ] = await Promise.all([
-      prisma.booking.count({ where }),
-      prisma.booking.count({ where: { ...where, status: 'PENDING' } }),
-      prisma.booking.count({ where: { ...where, status: 'CONFIRMED' } }),
-      prisma.booking.count({ where: { ...where, status: 'CANCELLED' } }),
-      prisma.booking.count({ where: { ...where, status: 'COMPLETED' } }),
-      prisma.booking.aggregate({
+      prisma.bookings.count({ where }),
+      prisma.bookings.count({ where: { ...where, status: 'PENDING' } }),
+      prisma.bookings.count({ where: { ...where, status: 'CONFIRMED' } }),
+      prisma.bookings.count({ where: { ...where, status: 'CANCELLED' } }),
+      prisma.bookings.count({ where: { ...where, status: 'COMPLETED' } }),
+      prisma.bookings.aggregate({
         where: { ...where, status: { in: ['CONFIRMED', 'COMPLETED'] } },
         _sum: { totalPrice: true },
       }),

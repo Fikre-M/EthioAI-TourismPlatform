@@ -15,12 +15,12 @@ async function testNotificationInfrastructure() {
     console.log('🚀 Testing Notification Infrastructure...')
 
     // Test 1: Create a test user (if not exists)
-    let testUser = await prisma.user.findFirst({
+    let testUser = await prisma.users.findFirst({
       where: { email: 'test@example.com' }
     })
 
     if (!testUser) {
-      testUser = await prisma.user.create({
+      testUser = await prisma.users.create({
         data: {
           email: 'test@example.com',
           passwordHash: 'test-hash',

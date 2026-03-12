@@ -65,7 +65,7 @@ export class PaymentService {
       }
 
       // Check if booking already has a completed payment
-      const existingPayment = await prisma.payment.findFirst({
+      const existingPayment = await prisma.payments.findFirst({
         where: {
           bookingId: data.bookingId,
           status: 'COMPLETED',
@@ -108,7 +108,7 @@ export class PaymentService {
       });
 
       // Create payment record in database
-      const payment = await prisma.payment.create({
+      const payment = await prisma.payments.create({
         data: {
           paymentId: paymentIntent.id,
           userId,
@@ -208,7 +208,7 @@ export class PaymentService {
       }
 
       // Create payment record in database
-      const payment = await prisma.payment.create({
+      const payment = await prisma.payments.create({
         data: {
           paymentId: txRef,
           userId,
@@ -255,7 +255,7 @@ export class PaymentService {
       const paymentIntent = await stripe.paymentIntents.retrieve(data.paymentIntentId);
 
       // Find payment in database
-      const payment = await prisma.payment.findUnique({
+      const payment = await prisma.payments.findUnique({
         where: { paymentId: data.paymentIntentId },
       });
 
@@ -277,7 +277,7 @@ export class PaymentService {
         status = 'FAILED';
       }
 
-      const updatedPayment = await prisma.payment.update({
+      const updatedPayment = await prisma.payments.update({
         where: { id: payment.id },
         data: {
           status,
@@ -322,7 +322,7 @@ export class PaymentService {
       );
 
       // Find payment in database
-      const payment = await prisma.payment.findUnique({
+      const payment = await prisma.payments.findUnique({
         where: { paymentId: txRef },
       });
 
@@ -342,7 +342,7 @@ export class PaymentService {
         status = 'FAILED';
       }
 
-      const updatedPayment = await prisma.payment.update({
+      const updatedPayment = await prisma.payments.update({
         where: { id: payment.id },
         data: {
           status,
@@ -446,7 +446,7 @@ export class PaymentService {
 
     // Execute queries
     const [payments, total] = await Promise.all([
-      prisma.payment.findMany({
+      prisma.payments.findMany({
         where,
         orderBy,
         skip,
@@ -475,7 +475,7 @@ export class PaymentService {
           },
         },
       }),
-      prisma.payment.count({ where }),
+      prisma.payments.count({ where }),
     ]);
 
     const pagination = calculatePagination(page, limit, total);
@@ -490,7 +490,7 @@ export class PaymentService {
    * Get payment by ID
    */
   static async getPaymentById(id: string, userId?: string): Promise<Payment> {
-    const payment = await prisma.payment.findUnique({
+    const payment = await prisma.payments.findUnique({
       where: { id },
       include: {
         user: {
@@ -541,7 +541,7 @@ export class PaymentService {
    * Refund payment
    */
   static async refundPayment(data: RefundPaymentInput, userId: string): Promise<Payment> {
-    const payment = await prisma.payment.findUnique({
+    const payment = await prisma.payments.findUnique({
       where: { id: data.paymentId },
     });
 
@@ -569,7 +569,7 @@ export class PaymentService {
         });
 
         // Update payment status
-        const updatedPayment = await prisma.payment.update({
+        const updatedPayment = await prisma.payments.update({
           where: { id: payment.id },
           data: {
             status: 'REFUNDED',
@@ -595,7 +595,7 @@ export class PaymentService {
         return updatedPayment;
       } else if (payment.method === 'CHAPA') {
         // Chapa doesn't have direct refund API, mark as refunded
-        const updatedPayment = await prisma.payment.update({
+        const updatedPayment = await prisma.payments.update({
           where: { id: payment.id },
           data: {
             status: 'REFUNDED',
@@ -655,19 +655,19 @@ export class PaymentService {
       stripeRevenue,
       chapaRevenue,
     ] = await Promise.all([
-      prisma.payment.count({ where }),
-      prisma.payment.count({ where: { ...where, status: 'COMPLETED' } }),
-      prisma.payment.count({ where: { ...where, status: 'FAILED' } }),
-      prisma.payment.count({ where: { ...where, status: 'REFUNDED' } }),
-      prisma.payment.aggregate({
+      prisma.payments.count({ where }),
+      prisma.payments.count({ where: { ...where, status: 'COMPLETED' } }),
+      prisma.payments.count({ where: { ...where, status: 'FAILED' } }),
+      prisma.payments.count({ where: { ...where, status: 'REFUNDED' } }),
+      prisma.payments.aggregate({
         where: { ...where, status: 'COMPLETED' },
         _sum: { amount: true },
       }),
-      prisma.payment.aggregate({
+      prisma.payments.aggregate({
         where: { ...where, status: 'COMPLETED', method: 'STRIPE' },
         _sum: { amount: true },
       }),
-      prisma.payment.aggregate({
+      prisma.payments.aggregate({
         where: { ...where, status: 'COMPLETED', method: 'CHAPA' },
         _sum: { amount: true },
       }),

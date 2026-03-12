@@ -35,7 +35,7 @@ export const register = async (req: Request, res: Response) => {
     const { name, email, password } = registerSchema.parse(req.body);
     
     // Check if user already exists
-    const existingUser = await prisma.user.findUnique({ where: { email } });
+    const existingUser = await prisma.users.findUnique({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ message: 'Email already in use' });
     }
@@ -44,7 +44,7 @@ export const register = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     
     // Create user
-    const user = await prisma.user.create({
+    const user = await prisma.users.create({
       data: {
         name,
         email,
@@ -98,7 +98,7 @@ export const login = async (req: Request, res: Response) => {
     const { email, password } = loginSchema.parse(req.body);
 
     // Find user
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.users.findUnique({ where: { email } });
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
@@ -150,7 +150,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
   try {
     const { email } = forgotPasswordSchema.parse(req.body);
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.users.findUnique({ where: { email } });
     if (!user) {
       // Don't reveal that the email doesn't exist
       return res.json({ message: 'If an account with that email exists, a password reset link has been sent' });
@@ -164,7 +164,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
     );
 
     // Save reset token to database
-    await prisma.user.update({
+    await prisma.users.update({
       where: { id: user.id },
       data: {
         resetToken,
@@ -190,7 +190,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
     // The user ID is attached to the request by the auth middleware
     const userId = (req as any).userId;
     
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: { id: userId },
       select: {
         id: true,
@@ -236,7 +236,7 @@ export const refreshToken = async (req: Request, res: Response) => {
     }
 
     // Get user
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: { id: payload.userId },
       select: { id: true, role: true },
     });

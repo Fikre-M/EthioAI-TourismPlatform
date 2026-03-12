@@ -381,7 +381,7 @@ export class VendorService {
       .replace(/(^-|-$)/g, '');
 
     // Check if slug already exists
-    const existingCategory = await prisma.category.findUnique({
+    const existingCategory = await prisma.categories.findUnique({
       where: { slug },
     });
 
@@ -391,7 +391,7 @@ export class VendorService {
 
     // Verify parent category if provided
     if (data.parentId) {
-      const parentCategory = await prisma.category.findUnique({
+      const parentCategory = await prisma.categories.findUnique({
         where: { id: data.parentId },
       });
 
@@ -400,7 +400,7 @@ export class VendorService {
       }
     }
 
-    const category = await prisma.category.create({
+    const category = await prisma.categories.create({
       data: {
         ...data,
         slug,
@@ -436,7 +436,7 @@ export class VendorService {
     } = query;
 
     // Build where clause
-    const where: Prisma.CategoryWhereInput = {};
+    const where: Prisma.categoriesWhereInput = {};
 
     if (parentId !== undefined) {
       where.parentId = parentId;
@@ -455,7 +455,7 @@ export class VendorService {
 
     // Execute queries
     const [categories, total] = await Promise.all([
-      prisma.category.findMany({
+      prisma.categories.findMany({
         where,
         orderBy: {
           name: 'asc',
@@ -475,7 +475,7 @@ export class VendorService {
           },
         },
       }),
-      prisma.category.count({ where }),
+      prisma.categories.count({ where }),
     ]);
 
     // Add product count
@@ -499,7 +499,7 @@ export class VendorService {
     // Check if identifier is UUID or slug
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identifier);
     
-    const category = await prisma.category.findUnique({
+    const category = await prisma.categories.findUnique({
       where: isUuid ? { id: identifier } : { slug: identifier },
       include: {
         parent: true,
@@ -532,7 +532,7 @@ export class VendorService {
    * Update category
    */
   static async updateCategory(id: string, data: UpdateCategoryInput): Promise<Category> {
-    const existingCategory = await prisma.category.findUnique({
+    const existingCategory = await prisma.categories.findUnique({
       where: { id },
     });
 
@@ -549,7 +549,7 @@ export class VendorService {
         .replace(/(^-|-$)/g, '');
 
       // Check if new slug conflicts with existing categories (excluding current category)
-      const conflictingCategory = await prisma.category.findFirst({
+      const conflictingCategory = await prisma.categories.findFirst({
         where: {
           slug,
           id: { not: id },
@@ -565,7 +565,7 @@ export class VendorService {
 
     // Verify parent category if provided
     if (data.parentId) {
-      const parentCategory = await prisma.category.findUnique({
+      const parentCategory = await prisma.categories.findUnique({
         where: { id: data.parentId },
       });
 
@@ -579,7 +579,7 @@ export class VendorService {
       }
     }
 
-    const category = await prisma.category.update({
+    const category = await prisma.categories.update({
       where: { id },
       data: updateData,
       include: {
@@ -597,7 +597,7 @@ export class VendorService {
    * Delete category
    */
   static async deleteCategory(id: string): Promise<void> {
-    const category = await prisma.category.findUnique({
+    const category = await prisma.categories.findUnique({
       where: { id },
       include: {
         children: true,
@@ -619,7 +619,7 @@ export class VendorService {
       throw new ValidationError('Cannot delete category with products');
     }
 
-    await prisma.category.delete({
+    await prisma.categories.delete({
       where: { id },
     });
 

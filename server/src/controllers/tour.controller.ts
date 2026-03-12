@@ -30,7 +30,7 @@ export class TourController {
     }
 
     const [tours, total] = await Promise.all([
-      prisma.tour.findMany({
+      prisma.tours.findMany({
         where,
         skip,
         take: limit,
@@ -39,7 +39,7 @@ export class TourController {
           { createdAt: 'desc' }
         ]
       }),
-      prisma.tour.count({ where })
+      prisma.tours.count({ where })
     ]);
 
     const pages = Math.ceil(total / limit);
@@ -61,7 +61,7 @@ export class TourController {
   static getTourById = asyncHandler(async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
     
-    const tour = await prisma.tour.findUnique({
+    const tour = await prisma.tours.findUnique({
       where: { id },
       include: {
         reviews: {
@@ -121,7 +121,7 @@ export class TourController {
     };
 
     const [tours, total] = await Promise.all([
-      prisma.tour.findMany({
+      prisma.tours.findMany({
         where,
         skip,
         take: limit,
@@ -130,7 +130,7 @@ export class TourController {
           { createdAt: 'desc' }
         ]
       }),
-      prisma.tour.count({ where })
+      prisma.tours.count({ where })
     ]);
 
     const pages = Math.ceil(total / limit);
@@ -152,7 +152,7 @@ export class TourController {
   static getFeaturedTours = asyncHandler(async (req: AuthRequest, res: Response) => {
     const limit = parseInt(req.query.limit as string) || 6;
 
-    const tours = await prisma.tour.findMany({
+    const tours = await prisma.tours.findMany({
       where: {
         status: 'PUBLISHED',
         featured: true
@@ -172,7 +172,7 @@ export class TourController {
   static getPopularTours = asyncHandler(async (req: AuthRequest, res: Response) => {
     const limit = parseInt(req.query.limit as string) || 6;
 
-    const tours = await prisma.tour.findMany({
+    const tours = await prisma.tours.findMany({
       where: {
         status: 'PUBLISHED'
       },
@@ -199,7 +199,7 @@ export class TourController {
    * Get tour categories
    */
   static getTourCategories = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const categories = await prisma.tour.groupBy({
+    const categories = await prisma.tours.groupBy({
       by: ['category'],
       where: {
         status: 'PUBLISHED'
@@ -240,7 +240,7 @@ export class TourController {
     };
 
     const [tours, total] = await Promise.all([
-      prisma.tour.findMany({
+      prisma.tours.findMany({
         where,
         skip,
         take: limit,
@@ -249,7 +249,7 @@ export class TourController {
           { createdAt: 'desc' }
         ]
       }),
-      prisma.tour.count({ where })
+      prisma.tours.count({ where })
     ]);
 
     const pages = Math.ceil(total / limit);
@@ -272,7 +272,7 @@ export class TourController {
     const { id } = req.params;
     const { startDate, endDate, adults, children } = req.body;
 
-    const tour = await prisma.tour.findUnique({
+    const tour = await prisma.tours.findUnique({
       where: { id },
       select: {
         id: true,
@@ -348,7 +348,7 @@ export class TourController {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
 
-    const tour = await prisma.tour.create({
+    const tour = await prisma.tours.create({
       data: {
         ...tourData,
         slug,
@@ -373,7 +373,7 @@ export class TourController {
     const { id } = req.params;
     const tourData = req.body;
 
-    const existingTour = await prisma.tour.findUnique({
+    const existingTour = await prisma.tours.findUnique({
       where: { id }
     });
 
@@ -390,7 +390,7 @@ export class TourController {
         .replace(/(^-|-$)/g, '');
     }
 
-    const tour = await prisma.tour.update({
+    const tour = await prisma.tours.update({
       where: { id },
       data: {
         ...tourData,
@@ -415,7 +415,7 @@ export class TourController {
   static deleteTour = asyncHandler(async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
 
-    const tour = await prisma.tour.findUnique({
+    const tour = await prisma.tours.findUnique({
       where: { id },
       include: {
         _count: {
@@ -435,7 +435,7 @@ export class TourController {
       return ResponseUtil.error(res, 400, 'BAD_REQUEST', 'Cannot delete tour with existing bookings. Archive it instead.');
     }
 
-    await prisma.tour.delete({
+    await prisma.tours.delete({
       where: { id }
     });
 
@@ -449,7 +449,7 @@ export class TourController {
     const { id } = req.params;
     const { status } = req.body;
 
-    const tour = await prisma.tour.update({
+    const tour = await prisma.tours.update({
       where: { id },
       data: { status }
     });
@@ -462,11 +462,11 @@ export class TourController {
    */
   static getTourStats = asyncHandler(async (req: AuthRequest, res: Response) => {
     const [total, published, draft, suspended, archived] = await Promise.all([
-      prisma.tour.count(),
-      prisma.tour.count({ where: { status: 'PUBLISHED' } }),
-      prisma.tour.count({ where: { status: 'DRAFT' } }),
-      prisma.tour.count({ where: { status: 'SUSPENDED' } }),
-      prisma.tour.count({ where: { status: 'ARCHIVED' } })
+      prisma.tours.count(),
+      prisma.tours.count({ where: { status: 'PUBLISHED' } }),
+      prisma.tours.count({ where: { status: 'DRAFT' } }),
+      prisma.tours.count({ where: { status: 'SUSPENDED' } }),
+      prisma.tours.count({ where: { status: 'ARCHIVED' } })
     ]);
 
     const stats = {

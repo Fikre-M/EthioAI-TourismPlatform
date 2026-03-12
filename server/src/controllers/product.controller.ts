@@ -235,22 +235,22 @@ export class ProductController {
   static getProductFilters = asyncHandler(async (req: AuthRequest, res: Response) => {
     // Get unique values for filters
     const [materials, colors, sizes, priceRange] = await Promise.all([
-      prisma.product.findMany({
+      prisma.products.findMany({
         where: { status: 'PUBLISHED' },
         select: { materials: true },
         distinct: ['materials'],
       }),
-      prisma.product.findMany({
+      prisma.products.findMany({
         where: { status: 'PUBLISHED' },
         select: { colors: true },
         distinct: ['colors'],
       }),
-      prisma.product.findMany({
+      prisma.products.findMany({
         where: { status: 'PUBLISHED' },
         select: { sizes: true },
         distinct: ['sizes'],
       }),
-      prisma.product.aggregate({
+      prisma.products.aggregate({
         where: { status: 'PUBLISHED' },
         _min: { price: true },
         _max: { price: true },

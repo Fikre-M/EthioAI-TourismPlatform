@@ -54,7 +54,7 @@ export class ProductService {
     const slug = this.generateSlug(data.name);
 
     // Check if slug already exists for this vendor
-    const existingProduct = await prisma.product.findFirst({
+    const existingProduct = await prisma.products.findFirst({
       where: {
         slug,
         vendorId: vendorProfile.id,
@@ -66,7 +66,7 @@ export class ProductService {
     }
 
     // Create product
-    const product = await prisma.product.create({
+    const product = await prisma.products.create({
       data: {
         ...data,
         slug,
@@ -215,7 +215,7 @@ export class ProductService {
 
     // Execute queries
     const [products, total] = await Promise.all([
-      prisma.product.findMany({
+      prisma.products.findMany({
         where,
         orderBy,
         skip,
@@ -242,7 +242,7 @@ export class ProductService {
           },
         },
       }),
-      prisma.product.count({ where }),
+      prisma.products.count({ where }),
     ]);
 
     // Calculate average ratings and sales
@@ -277,7 +277,7 @@ export class ProductService {
     // Check if identifier is UUID or slug
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identifier);
     
-    const product = await prisma.product.findUnique({
+    const product = await prisma.products.findUnique({
       where: isUuid ? { id: identifier } : { slug: identifier },
       include: {
         vendor: {
@@ -338,7 +338,7 @@ export class ProductService {
    */
   static async updateProduct(id: string, data: UpdateProductInput, userId: string): Promise<Product> {
     // Check if product exists
-    const existingProduct = await prisma.product.findUnique({
+    const existingProduct = await prisma.products.findUnique({
       where: { id },
       include: {
         vendor: true,
@@ -360,7 +360,7 @@ export class ProductService {
       const slug = this.generateSlug(data.name);
 
       // Check if new slug conflicts with existing products (excluding current product)
-      const conflictingProduct = await prisma.product.findFirst({
+      const conflictingProduct = await prisma.products.findFirst({
         where: {
           slug,
           vendorId: existingProduct.vendorId,
@@ -386,7 +386,7 @@ export class ProductService {
       }
     }
 
-    const product = await prisma.product.update({
+    const product = await prisma.products.update({
       where: { id },
       data: updateData,
       include: {
@@ -414,7 +414,7 @@ export class ProductService {
    */
   static async deleteProduct(id: string, userId: string): Promise<void> {
     // Check if product exists
-    const product = await prisma.product.findUnique({
+    const product = await prisma.products.findUnique({
       where: { id },
       include: {
         vendor: true,
@@ -436,7 +436,7 @@ export class ProductService {
       throw new ValidationError('Cannot delete product with existing orders');
     }
 
-    await prisma.product.delete({
+    await prisma.products.delete({
       where: { id },
     });
 
@@ -451,7 +451,7 @@ export class ProductService {
     data: UpdateProductStatusInput, 
     userId: string
   ): Promise<Product> {
-    const product = await prisma.product.findUnique({
+    const product = await prisma.products.findUnique({
       where: { id },
       include: {
         vendor: true,
@@ -467,7 +467,7 @@ export class ProductService {
       throw new ForbiddenError('You do not have permission to update this product');
     }
 
-    const updatedProduct = await prisma.product.update({
+    const updatedProduct = await prisma.products.update({
       where: { id },
       data: { status: data.status },
       include: {
@@ -491,7 +491,7 @@ export class ProductService {
    * Get featured products
    */
   static async getFeaturedProducts(limit: number = 8): Promise<Product[]> {
-    const products = await prisma.product.findMany({
+    const products = await prisma.products.findMany({
       where: {
         featured: true,
         status: 'PUBLISHED',
@@ -533,7 +533,7 @@ export class ProductService {
    * Get products by category
    */
   static async getProductsByCategory(categoryId: string, limit: number = 12): Promise<Product[]> {
-    const products = await prisma.product.findMany({
+    const products = await prisma.products.findMany({
       where: {
         categoryId,
         status: 'PUBLISHED',
@@ -633,12 +633,12 @@ export class ProductService {
       featuredProducts,
       outOfStockProducts,
     ] = await Promise.all([
-      prisma.product.count({ where }),
-      prisma.product.count({ where: { ...where, status: 'PUBLISHED' } }),
-      prisma.product.count({ where: { ...where, status: 'DRAFT' } }),
-      prisma.product.count({ where: { ...where, status: 'ARCHIVED' } }),
-      prisma.product.count({ where: { ...where, featured: true } }),
-      prisma.product.count({ where: { ...where, stock: 0 } }),
+      prisma.products.count({ where }),
+      prisma.products.count({ where: { ...where, status: 'PUBLISHED' } }),
+      prisma.products.count({ where: { ...where, status: 'DRAFT' } }),
+      prisma.products.count({ where: { ...where, status: 'ARCHIVED' } }),
+      prisma.products.count({ where: { ...where, featured: true } }),
+      prisma.products.count({ where: { ...where, stock: 0 } }),
     ]);
 
     return {

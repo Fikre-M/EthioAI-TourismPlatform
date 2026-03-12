@@ -43,7 +43,7 @@ export const userService = {
     const { password, ...rest } = data;
     const passwordHash = await hashPassword(password);
 
-    return prisma.user.create({
+    return prisma.users.create({
       data: {
         ...rest,
         passwordHash,
@@ -53,7 +53,7 @@ export const userService = {
   },
 
   async findUserByEmail(email: string, includePassword = false): Promise<User | null> {
-    return prisma.user.findUnique({
+    return prisma.users.findUnique({
       where: { email },
       include: {
         refreshTokens: false,
@@ -63,7 +63,7 @@ export const userService = {
   },
 
   async findUserById(id: string): Promise<UserResponse | null> {
-    return prisma.user.findUnique({
+    return prisma.users.findUnique({
       where: { id },
       select: userSelect,
     });
@@ -80,7 +80,7 @@ export const userService = {
       delete updateData.password;
     }
 
-    return prisma.user.update({
+    return prisma.users.update({
       where: { id },
       data: updateData,
       select: userSelect,
@@ -88,7 +88,7 @@ export const userService = {
   },
 
   async deleteUser(id: string): Promise<UserResponse> {
-    return prisma.user.delete({
+    return prisma.users.delete({
       where: { id },
       select: userSelect,
     });
@@ -99,7 +99,7 @@ export const userService = {
   },
 
   async markEmailAsVerified(email: string): Promise<UserResponse> {
-    return prisma.user.update({
+    return prisma.users.update({
       where: { email },
       data: { isEmailVerified: true },
       select: userSelect,
@@ -108,7 +108,7 @@ export const userService = {
 
   async updatePassword(id: string, newPassword: string): Promise<void> {
     const passwordHash = await hashPassword(newPassword);
-    await prisma.user.update({
+    await prisma.users.update({
       where: { id },
       data: { passwordHash },
     });
@@ -127,21 +127,21 @@ export const userService = {
     const where = role ? { role } : {};
 
     const [users, total] = await Promise.all([
-      prisma.user.findMany({
+      prisma.users.findMany({
         where,
         select: userSelect,
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
       }),
-      prisma.user.count({ where }),
+      prisma.users.count({ where }),
     ]);
 
     return { users, total };
   },
 
   async changeUserRole(id: string, role: UserRole): Promise<UserResponse> {
-    return prisma.user.update({
+    return prisma.users.update({
       where: { id },
       data: { role },
       select: userSelect,

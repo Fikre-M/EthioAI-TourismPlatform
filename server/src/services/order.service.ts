@@ -30,7 +30,7 @@ export class OrderService {
     const orderNumber = `${prefix}${timestamp}${random}`;
     
     // Check if order number already exists
-    const existing = await prisma.order.findUnique({
+    const existing = await prisma.orders.findUnique({
       where: { orderNumber },
     });
     
@@ -206,7 +206,7 @@ export class OrderService {
     });
 
     // Fetch complete order with relations
-    const completeOrder = await prisma.order.findUnique({
+    const completeOrder = await prisma.orders.findUnique({
       where: { id: order.id },
       include: {
         items: {
@@ -313,7 +313,7 @@ export class OrderService {
 
     // Execute queries
     const [orders, total] = await Promise.all([
-      prisma.order.findMany({
+      prisma.orders.findMany({
         where,
         orderBy,
         skip,
@@ -342,7 +342,7 @@ export class OrderService {
           },
         },
       }),
-      prisma.order.count({ where }),
+      prisma.orders.count({ where }),
     ]);
 
     const pagination = calculatePagination(page, limit, total);
@@ -357,7 +357,7 @@ export class OrderService {
    * Get order by ID
    */
   static async getOrderById(id: string, userId?: string): Promise<Order> {
-    const order = await prisma.order.findUnique({
+    const order = await prisma.orders.findUnique({
       where: { id },
       include: {
         items: {
@@ -410,7 +410,7 @@ export class OrderService {
    */
   static async updateOrder(id: string, data: UpdateOrderInput, userId: string): Promise<Order> {
     // Check if order exists
-    const existingOrder = await prisma.order.findUnique({
+    const existingOrder = await prisma.orders.findUnique({
       where: { id },
     });
 
@@ -428,7 +428,7 @@ export class OrderService {
       throw new ValidationError(`Cannot update order with status: ${existingOrder.status}`);
     }
 
-    const order = await prisma.order.update({
+    const order = await prisma.orders.update({
       where: { id },
       data,
       include: {
@@ -450,7 +450,7 @@ export class OrderService {
    * Cancel order
    */
   static async cancelOrder(id: string, data: CancelOrderInput, userId: string): Promise<Order> {
-    const order = await prisma.order.findUnique({
+    const order = await prisma.orders.findUnique({
       where: { id },
       include: {
         items: {
@@ -532,7 +532,7 @@ export class OrderService {
     data: UpdateOrderStatusInput, 
     userId: string
   ): Promise<Order> {
-    const order = await prisma.order.findUnique({
+    const order = await prisma.orders.findUnique({
       where: { id },
     });
 
@@ -540,7 +540,7 @@ export class OrderService {
       throw new NotFoundError('Order not found');
     }
 
-    const updatedOrder = await prisma.order.update({
+    const updatedOrder = await prisma.orders.update({
       where: { id },
       data: {
         status: data.status,
@@ -621,13 +621,13 @@ export class OrderService {
       cancelledOrders,
       totalRevenue,
     ] = await Promise.all([
-      prisma.order.count({ where }),
-      prisma.order.count({ where: { ...where, status: 'PENDING' } }),
-      prisma.order.count({ where: { ...where, status: 'PROCESSING' } }),
-      prisma.order.count({ where: { ...where, status: 'SHIPPED' } }),
-      prisma.order.count({ where: { ...where, status: 'DELIVERED' } }),
-      prisma.order.count({ where: { ...where, status: 'CANCELLED' } }),
-      prisma.order.aggregate({
+      prisma.orders.count({ where }),
+      prisma.orders.count({ where: { ...where, status: 'PENDING' } }),
+      prisma.orders.count({ where: { ...where, status: 'PROCESSING' } }),
+      prisma.orders.count({ where: { ...where, status: 'SHIPPED' } }),
+      prisma.orders.count({ where: { ...where, status: 'DELIVERED' } }),
+      prisma.orders.count({ where: { ...where, status: 'CANCELLED' } }),
+      prisma.orders.aggregate({
         where: { ...where, status: { in: ['DELIVERED', 'SHIPPED', 'PROCESSING'] } },
         _sum: { total: true },
       }),
