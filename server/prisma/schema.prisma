@@ -3,431 +3,402 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-// Core Models for Authentication
-model User {
-  id              String         @id @default(uuid())
-  name            String?
-  email           String         @unique
-  passwordHash    String
-  role            String         @default("USER") // USER, ADMIN, GUIDE, VENDOR
-  isEmailVerified Boolean        @default(false)
-  avatar          String?
-  phone           String?
-  bio             String?
-  location        String?
-  dateOfBirth     DateTime?
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  
-  // Relations
-  refreshTokens           RefreshToken[]
-  bookings                Booking[]
-  reviews                 Review[]
-  orders                  Order[]
-  chatMessages            ChatMessage[]
-  payments                Payment[]
-  passwordResetTokens     PasswordResetToken[]
-  emailVerificationTokens EmailVerificationToken[]
-  vendorProfile           VendorProfile?
-
-  @@map("users")
-}
-
-model RefreshToken {
-  id        String   @id @default(uuid())
-  token     String   @unique @db.VarChar(500)
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expiresAt DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([token])
-  @@map("refresh_tokens")
-}
-
-model PasswordResetToken {
-  id        String   @id @default(uuid())
-  token     String   @unique @db.VarChar(500)
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expiresAt DateTime
-  used      Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([token])
-  @@index([userId])
-  @@index([expiresAt])
-  @@map("password_reset_tokens")
-}
-
-model EmailVerificationToken {
-  id        String   @id @default(uuid())
-  token     String   @unique @db.VarChar(500)
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  email     String
-  expiresAt DateTime
-  used      Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([userId, email])
-  @@index([token])
-  @@index([userId])
-  @@index([email])
-  @@index([expiresAt])
-  @@map("email_verification_tokens")
-}
-
-// Simplified Tour Model
-model Tour {
-  id              String      @id @default(uuid())
-  title           String
-  slug            String      @unique
-  description     String      @db.Text
-  shortDescription String?
-  images          String?     @db.Text // JSON string of image URLs
-  price           Decimal
-  discountPrice   Decimal?
-  duration        Int         // Duration in days
-  maxGroupSize    Int
-  difficulty      String      // Easy, Moderate, Challenging
-  status          String      @default("DRAFT") // DRAFT, PUBLISHED, SUSPENDED, ARCHIVED
-  featured        Boolean     @default(false)
-  
-  // Location data as strings
-  startLocation   String?     @db.Text // JSON string
-  locations       String?     @db.Text // JSON string
-  
-  // Tour details as strings
-  included        String?     @db.Text // JSON string
-  excluded        String?     @db.Text // JSON string
-  itinerary       String?     @db.Text // JSON string
-  
-  // Metadata
-  tags            String?     @db.Text // JSON string
-  category        String
-  categoryModel    Category? @relation(fields: [category], references: [name])
-  language        String      @default("en")
-  
-  // SEO
-  metaTitle       String?
-  metaDescription String?     @db.Text
-  
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  
-  // Relations
-  bookings        Booking[]
-  reviews         Review[]
-
-  @@index([status, featured])
-  @@index([category])
-  @@index([slug])
-  @@map("tours")
-}
-
-// Simplified Booking Model
-model Booking {
-  id              String        @id @default(uuid())
-  bookingNumber   String        @unique
+model bookings {
+  id              String     @id
+  bookingNumber   String     @unique
   userId          String
-  user            User          @relation(fields: [userId], references: [id])
   tourId          String
-  tour            Tour          @relation(fields: [tourId], references: [id])
-  
-  // Booking details
   startDate       DateTime
   endDate         DateTime
-  adults          Int           @default(1)
-  children        Int           @default(0)
+  adults          Int        @default(1)
+  children        Int        @default(0)
   totalPrice      Decimal
   discountAmount  Decimal?
   promoCode       String?
-  
-  // Status and metadata
-  status          String        @default("PENDING") // PENDING, CONFIRMED, CANCELLED, COMPLETED, REFUNDED
-  notes           String?       @db.Text
-  specialRequests String?       @db.Text
-  
-  // Participant information as JSON string
-  participants    String?       @db.Text
-  
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  
-  // Relations
-  payments        Payment[]
+  status          String     @default("PENDING")
+  notes           String?    @db.Text
+  specialRequests String?    @db.Text
+  participants    String?    @db.Text
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime
+  tours           tours      @relation(fields: [tourId], references: [id])
+  users           users      @relation(fields: [userId], references: [id])
+  payments        payments[]
 
-
-  @@index([userId])
-  @@index([tourId])
-  @@index([status])
   @@index([startDate])
-  @@map("bookings")
-}
-
-// Simplified Payment Model
-model Payment {
-  id              String        @id @default(uuid())
-  paymentId       String        @unique // External payment ID (Stripe, Chapa)
-  userId          String
-  user            User          @relation(fields: [userId], references: [id])
-  bookingId       String?
-  booking         Booking?      @relation(fields: [bookingId], references: [id])
-  orderId         String?
-  order           Order?        @relation(fields: [orderId], references: [id])
-  
-  amount          Decimal
-  currency        String        @default("USD")
-  method          String        // STRIPE, CHAPA, TELEBIRR, CBE_BIRR
-  status          String        @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED, REFUNDED
-  
-  // Payment gateway data as JSON string
-  gatewayResponse String?       @db.Text
-  failureReason   String?       @db.Text
-  
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-
-  @@index([userId])
   @@index([status])
-  @@index([paymentId])
-  @@map("payments")
-}
-
-// Simplified Order Model
-model Order {
-  id              String      @id @default(uuid())
-  orderNumber     String      @unique
-  userId          String
-  user            User        @relation(fields: [userId], references: [id])
-  
-  // Order totals
-  subtotal        Decimal
-  tax             Decimal     @default(0)
-  shipping        Decimal     @default(0)
-  discount        Decimal     @default(0)
-  total           Decimal
-  
-  // Status and metadata
-  status          String      @default("PENDING") // PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED, REFUNDED
-  notes           String?     @db.Text
-  
-  // Shipping information as JSON strings
-  shippingAddress String      @db.Text // JSON string
-  billingAddress  String?     @db.Text // JSON string
-  trackingNumber  String?
-  
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  
-  // Relations
-  payments        Payment[]
-  orderItems      OrderItem[]
-
-  @@index([userId])
-  @@index([status])
-  @@map("orders")
-}
-
-// Simplified Review Model
-model Review {
-  id          String       @id @default(uuid())
-  userId      String
-  user        User         @relation(fields: [userId], references: [id])
-  
-  // Review target (tour and product)
-  tourId      String?
-  tour        Tour?        @relation(fields: [tourId], references: [id])
-  productId   String?
-  product     Product?     @relation(fields: [productId], references: [id])
-  
-  rating      Int          // 1-5 stars
-  title       String?
-  comment     String       @db.Text
-  images      String?      @db.Text // JSON string of image URLs
-  
-  status      String       @default("PENDING") // PENDING, APPROVED, REJECTED
-  isVerified  Boolean      @default(false) // Verified purchase/booking
-  
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-
   @@index([tourId])
-  @@index([productId])
   @@index([userId])
-  @@index([status])
-  @@map("reviews")
 }
 
-// Category Model for organizing tours and products
-model Category {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  slug        String   @unique
-  description String?  @db.Text
-  icon        String?
-  image       String?
-  parentId    String?
-  parent      Category? @relation("CategoryHierarchy", fields: [parentId], references: [id])
-  children    Category[] @relation("CategoryHierarchy")
-  tours        Tour[]
-  products    Product[]
-  
-  // SEO fields
+model categories {
+  id              String       @id
+  name            String       @unique
+  slug            String       @unique
+  description     String?      @db.Text
+  icon            String?
+  image           String?
+  parentId        String?
+  status          String       @default("ACTIVE")
+  sortOrder       Int          @default(0)
   metaTitle       String?
-  metaDescription String? @db.Text
-  
-  // Status and ordering
-  status    String    @default("ACTIVE") // ACTIVE, INACTIVE
-  sortOrder Int       @default(0)
-  
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  metaDescription String?      @db.Text
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime
+  parent          categories?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children        categories[] @relation("CategoryHierarchy")
+  products        products[]
 
   @@index([status])
   @@index([slug])
   @@index([parentId])
-  @@map("categories")
 }
 
-// Product Model for marketplace
-model Product {
-  id              String      @id @default(uuid())
-  name            String
-  slug            String      @unique
-  description     String      @db.Text
+model chat_messages {
+  id          String   @id
+  userId      String?
+  message     String   @db.Text
+  response    String?  @db.Text
+  language    String   @default("en")
+  messageType String   @default("text")
+  metadata    String?  @db.Text
+  createdAt   DateTime @default(now())
+  users       users?   @relation(fields: [userId], references: [id])
+
+  @@index([createdAt])
+  @@index([userId])
+}
+
+model cultural_content {
+  id               String   @id
+  title            String
+  slug             String   @unique
+  description      String   @db.Text
+  shortDescription String?  @db.Text
+  content          String   @db.LongText
+  type             String
+  category         String
+  language         String   @default("en")
+  status           String   @default("DRAFT")
+  featured         Boolean  @default(false)
+  images           String?  @db.Text
+  videos           String?  @db.Text
+  audioGuides      String?  @db.Text
+  tags             String?  @db.Text
+  location         String?  @db.Text
+  relatedContent   String?  @db.Text
+  authorId         String?
+  metaTitle        String?
+  metaDescription  String?  @db.Text
+  viewCount        Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime
+
+  @@index([status])
+  @@index([type])
+  @@index([category])
+  @@index([featured])
+  @@index([slug])
+}
+
+model email_verification_tokens {
+  id        String   @id
+  token     String   @unique @db.VarChar(500)
+  userId    String
+  email     String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  users     users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, email])
+  @@index([email])
+  @@index([expiresAt])
+  @@index([token])
+  @@index([userId])
+}
+
+model notifications {
+  id          String   @id
+  userId      String
+  type        String
+  title       String
+  message     String   @db.Text
+  data        String?  @db.Text
+  status      String   @default("UNREAD")
+  priority    String   @default("NORMAL")
+  category    String?
+  actionUrl   String?
+  imageUrl    String?
+  expiresAt   DateTime?
+  readAt      DateTime?
+  deliveredAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  users       users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model notification_preferences {
+  id              String   @id
+  userId          String   @unique
+  emailEnabled    Boolean  @default(true)
+  pushEnabled     Boolean  @default(true)
+  smsEnabled      Boolean  @default(false)
+  categories      String?  @db.Text
+  quietHoursStart String?
+  quietHoursEnd   String?
+  timezone        String   @default("UTC")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime
+  users           users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model order_items {
+  id         String   @id
+  orderId    String
+  productId  String
+  quantity   Int
+  unitPrice  Decimal
+  totalPrice Decimal
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime
+  orders     orders   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  products   products @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model orders {
+  id              String        @id
+  orderNumber     String        @unique
+  userId          String
+  subtotal        Decimal
+  tax             Decimal       @default(0.000000000000000000000000000000)
+  shipping        Decimal       @default(0.000000000000000000000000000000)
+  discount        Decimal       @default(0.000000000000000000000000000000)
+  total           Decimal
+  status          String        @default("PENDING")
+  notes           String?       @db.Text
+  shippingAddress String        @db.Text
+  billingAddress  String?       @db.Text
+  trackingNumber  String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime
+  users           users         @relation(fields: [userId], references: [id])
+  order_items     order_items[]
+  payments        payments[]
+
+  @@index([status])
+  @@index([userId])
+}
+
+model password_reset_tokens {
+  id        String   @id
+  token     String   @unique @db.VarChar(500)
+  userId    String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  users     users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([expiresAt])
+  @@index([token])
+  @@index([userId])
+}
+
+model payments {
+  id              String    @id
+  paymentId       String    @unique
+  userId          String
+  bookingId       String?
+  orderId         String?
+  amount          Decimal
+  currency        String    @default("USD")
+  method          String
+  status          String    @default("PENDING")
+  gatewayResponse String?   @db.Text
+  failureReason   String?   @db.Text
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime
+  bookings        bookings? @relation(fields: [bookingId], references: [id])
+  orders          orders?   @relation(fields: [orderId], references: [id])
+  users           users     @relation(fields: [userId], references: [id])
+
+  @@index([bookingId], map: "payments_bookingId_fkey")
+  @@index([orderId], map: "payments_orderId_fkey")
+  @@index([paymentId])
+  @@index([status])
+  @@index([userId])
+}
+
+model products {
+  id               String            @id
+  name             String
+  slug             String            @unique
+  description      String            @db.Text
   shortDescription String?
-  images          String?     @db.Text // JSON string of image URLs
-  price           Decimal
-  discountPrice   Decimal?
-  sku             String?     @unique
-  
-  // Inventory
-  stock           Int         @default(0)
-  trackInventory  Boolean     @default(true)
-  
-  // Product details
-  category        String
-  categoryModel    Category? @relation(fields: [category], references: [name])
-  attributes      String?     @db.Text // JSON string for variants
-  
-  // Vendor info
-  vendorId        String?
-  vendor          VendorProfile? @relation(fields: [vendorId], references: [id])
-  
-  // Status and ordering
-  status          String      @default("DRAFT") // DRAFT, PUBLISHED, ARCHIVED
-  featured        Boolean     @default(false)
-  sortOrder       Int         @default(0)
-  
-  // SEO
-  metaTitle       String?
-  metaDescription String?     @db.Text
-  
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  
-  // Relations
-  reviews         Review[]
-  orderItems      OrderItem[]
+  images           String?           @db.Text
+  price            Decimal
+  discountPrice    Decimal?
+  sku              String?           @unique
+  stock            Int               @default(0)
+  trackInventory   Boolean           @default(true)
+  category         String
+  categoryModel    categories?       @relation(fields: [category], references: [name])
+  attributes       String?           @db.Text
+  vendorId         String?
+  vendor           vendor_profiles?  @relation(fields: [vendorId], references: [id])
+  status           String            @default("DRAFT")
+  featured         Boolean           @default(false)
+  sortOrder        Int               @default(0)
+  metaTitle        String?
+  metaDescription  String?           @db.Text
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime
+  order_items      order_items[]
+  reviews          reviews[]
 
   @@index([status, featured])
   @@index([category])
   @@index([slug])
   @@index([vendorId])
-  @@map("products")
 }
 
-// Vendor Profile Model
-model VendorProfile {
-  id              String   @id @default(uuid())
-  userId          String   @unique
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  // Business information
-  businessName    String
-  businessEmail   String
-  businessPhone   String?
-  businessAddress String?  @db.Text
-  
-  // Verification
-  isVerified      Boolean  @default(false)
-  verificationDocuments String? @db.Text // JSON string of document URLs
-  verificationNotes    String? @db.Text
-  
-  // Business details
-  description     String?  @db.Text
-  website         String?
-  socialLinks     String?  @db.Text // JSON string
-  
-  bankAccount     String?  @db.Text // JSON string with encrypted bank details
+model refresh_tokens {
+  id        String   @id
+  token     String   @unique @db.VarChar(500)
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  users     users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-// Metrics
-  rating          Float?   // Average rating
-  totalSales      Decimal? // Total sales amount
-  totalReviews    Int?     // Total number of reviews
+  @@index([token])
+  @@index([userId], map: "refresh_tokens_userId_fkey")
+}
 
-  // Status
-  status          String   @default("PENDING") // PENDING, APPROVED, REJECTED, SUSPENDED
-  
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  
-  // Relations
-  products        Product[]
+model reviews {
+  id         String    @id
+  userId     String
+  tourId     String?
+  productId  String?
+  rating     Int
+  title      String?
+  comment    String    @db.Text
+  images     String?   @db.Text
+  status     String    @default("PENDING")
+  isVerified Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime
+  products   products? @relation(fields: [productId], references: [id])
+  tours      tours?    @relation(fields: [tourId], references: [id])
+  users      users     @relation(fields: [userId], references: [id])
+
+  @@index([productId])
+  @@index([status])
+  @@index([tourId])
+  @@index([userId])
+}
+
+model tours {
+  id               String     @id
+  title            String
+  slug             String     @unique
+  description      String     @db.Text
+  shortDescription String?
+  images           String?    @db.Text
+  price            Decimal
+  discountPrice    Decimal?
+  duration         Int
+  maxGroupSize     Int
+  difficulty       String
+  status           String     @default("DRAFT")
+  featured         Boolean    @default(false)
+  startLocation    String?    @db.Text
+  locations        String?    @db.Text
+  included         String?    @db.Text
+  excluded         String?    @db.Text
+  itinerary        String?    @db.Text
+  tags             String?    @db.Text
+  category         String
+  language         String     @default("en")
+  metaTitle        String?
+  metaDescription  String?    @db.Text
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime
+  bookings         bookings[]
+  reviews          reviews[]
+
+  @@index([category])
+  @@index([slug])
+  @@index([status, featured])
+}
+
+model users {
+  id                          String                       @id
+  name                        String?
+  email                       String                       @unique
+  passwordHash                String
+  role                        String                       @default("USER")
+  isEmailVerified             Boolean                      @default(false)
+  createdAt                   DateTime                     @default(now())
+  updatedAt                   DateTime
+  avatar                      String?
+  bio                         String?
+  dateOfBirth                 DateTime?
+  location                    String?
+  phone                       String?
+  bookings                    bookings[]
+  chat_messages               chat_messages[]
+  email_verification_tokens   email_verification_tokens[]
+  notifications               notifications[]
+  notification_preferences    notification_preferences?
+  orders                      orders[]
+  password_reset_tokens       password_reset_tokens[]
+  payments                    payments[]
+  refresh_tokens              refresh_tokens[]
+  reviews                     reviews[]
+  vendor_profile              vendor_profiles?
+}
+
+model vendor_profiles {
+  id                    String     @id
+  userId                String     @unique
+  businessName          String
+  businessEmail         String
+  businessPhone         String?
+  businessAddress       String?    @db.Text
+  isVerified            Boolean    @default(false)
+  verificationDocuments String?    @db.Text
+  verificationNotes     String?    @db.Text
+  description           String?    @db.Text
+  website               String?
+  socialLinks           String?    @db.Text
+  bankAccount           String?    @db.Text
+  rating                Float?
+  totalSales            Decimal?
+  totalReviews          Int?
+  status                String     @default("PENDING")
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime
+  users                 users      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products              products[]
 
   @@index([userId])
   @@index([status])
   @@index([isVerified])
-  @@map("vendor_profiles")
 }
-
-// Order Item Model (for product orders)
-model OrderItem {
-  id          String   @id @default(uuid())
-  orderId     String
-  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId   String
-  product     Product  @relation(fields: [productId], references: [id])
-  
-  quantity    Int
-  unitPrice   Decimal
-  totalPrice  Decimal
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@index([orderId])
-  @@index([productId])
-  @@map("order_items")
-}
-
-// Simplified Chat Model
-model ChatMessage {
-  id          String   @id @default(uuid())
-  userId      String?
-  user        User?    @relation(fields: [userId], references: [id])
-  
-  message     String       @db.Text
-  response    String?      @db.Text
-  language    String       @default("en")
-  
-  // Message metadata
-  messageType String       @default("text") // text, tour_recommendation, etc.
-  metadata    String?      @db.Text // JSON string for additional message data
-  
-  createdAt   DateTime @default(now())
-
-  @@index([userId])
-  @@index([createdAt])
-@@map("chat_messages")
-}
-

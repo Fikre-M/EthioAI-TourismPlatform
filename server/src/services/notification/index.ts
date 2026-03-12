@@ -6,6 +6,20 @@ export { NotificationQueueService } from './queue.service'
 // Re-export types
 export * from '../../types/notification.types'
 
-// Re-export configurations
-export * from '../../config/redis.config'
-export * from '../../config/queue.config'
+// Re-export queue configurations only (redis.config is already included in queue.config)
+export { 
+  notificationQueue, 
+  pushNotificationQueue, 
+  emailNotificationQueue, 
+  smsNotificationQueue,
+  QueueManager,
+  workerOptions
+} from '../../config/queue.config'
+
+export { 
+  redisClient, 
+  redisSubscriber, 
+  redisPublisher,
+  isRedisConnected,
+  safeRedisOperation
+} from '../../config/redis.config'
