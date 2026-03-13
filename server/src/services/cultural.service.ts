@@ -1,4 +1,4 @@
-import { PrismaClient, CulturalContent, ContentStatus, Prisma } from '@prisma/client';
+import { PrismaClient, cultural_content, Prisma } from '@prisma/client';
 import { 
   CreateCulturalContentInput, 
   UpdateCulturalContentInput, 
@@ -19,6 +19,9 @@ import { calculatePagination, PaginationMeta } from '../utils/response';
 import { log } from '../utils/logger';
 
 const prisma = new PrismaClient();
+
+// Type alias to match the generated Prisma type
+type CulturalContent = cultural_content;
 
 export class CulturalService {
   /**
@@ -44,7 +47,7 @@ export class CulturalService {
     const slug = this.generateSlug(data.title);
 
     // Check if slug already exists
-    const existingContent = await prisma.culturalContent.findUnique({
+    const existingContent = await prisma.cultural_content.findUnique({
       where: { slug },
     });
 
@@ -52,16 +55,25 @@ export class CulturalService {
       throw new ValidationError('Content with similar title already exists');
     }
 
-    // Create content
-    const content = await prisma.culturalContent.create({
-      data: {
-        ...data,
-        slug,
-        images: data.images || [],
-        tags: data.tags || [],
-        status: 'DRAFT',
-        authorId: userId,
-      },
+    // Create content with proper type handling
+    const createData: any = {
+      title: data.title,
+      slug,
+      description: data.description || '',
+      content: data.content,
+      type: data.type,
+      category: data.category,
+      language: data.language || 'en',
+      status: 'DRAFT',
+      featured: data.featured || false,
+      images: data.images ? JSON.stringify(data.images) : null,
+      tags: data.tags ? JSON.stringify(data.tags) : null,
+      authorId: userId || null,
+      viewCount: 0,
+    };
+
+    const content = await prisma.cultural_content.create({
+      data: createData,
     });
 
     log.info('Cultural content created', {
@@ -100,7 +112,7 @@ export class CulturalService {
     } = query;
 
     // Build where clause
-    const where: Prisma.CulturalContentWhereInput = {
+    const where: Prisma.cultural_contentWhereInput = {
       // Only show published content for public queries (unless status is specified)
       status: status || 'PUBLISHED',
     };
@@ -155,18 +167,18 @@ export class CulturalService {
     const skip = (page - 1) * limit;
 
     // Build order by clause
-    const orderBy: Prisma.CulturalContentOrderByWithRelationInput = {};
+    const orderBy: Prisma.cultural_contentOrderByWithRelationInput = {};
     orderBy[sortBy] = sortOrder;
 
     // Execute queries
     const [content, total] = await Promise.all([
-      prisma.culturalContent.findMany({
+      prisma.cultural_content.findMany({
         where,
         orderBy,
         skip,
         take: limit,
       }),
-      prisma.culturalContent.count({ where }),
+      prisma.cultural_content.count({ where }),
     ]);
 
     const pagination = calculatePagination(page, limit, total);
@@ -184,7 +196,7 @@ export class CulturalService {
     // Check if identifier is UUID or slug
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identifier);
     
-    const content = await prisma.culturalContent.findUnique({
+    const content = await prisma.cultural_content.findUnique({
       where: isUuid ? { id: identifier } : { slug: identifier },
     });
 
@@ -204,7 +216,7 @@ export class CulturalService {
     userId?: string
   ): Promise<CulturalContent> {
     // Check if content exists
-    const existingContent = await prisma.culturalContent.findUnique({
+    const existingContent = await prisma.cultural_content.findUnique({
       where: { id },
     });
 
@@ -223,7 +235,7 @@ export class CulturalService {
       const slug = this.generateSlug(data.title);
 
       // Check if new slug conflicts with existing content (excluding current content)
-      const conflictingContent = await prisma.culturalContent.findFirst({
+      const conflictingContent = await prisma.cultural_content.findFirst({
         where: {
           slug,
           id: { not: id },
@@ -237,7 +249,7 @@ export class CulturalService {
       updateData.slug = slug;
     }
 
-    const content = await prisma.culturalContent.update({
+    const content = await prisma.cultural_content.update({
       where: { id },
       data: updateData,
     });
@@ -256,7 +268,7 @@ export class CulturalService {
    */
   static async deleteContent(id: string, userId?: string): Promise<void> {
     // Check if content exists
-    const content = await prisma.culturalContent.findUnique({
+    const content = await prisma.cultural_content.findUnique({
       where: { id },
     });
 
@@ -269,7 +281,7 @@ export class CulturalService {
       throw new ForbiddenError('You do not have permission to delete this content');
     }
 
-    await prisma.culturalContent.delete({
+    await prisma.cultural_content.delete({
       where: { id },
     });
 
@@ -288,7 +300,7 @@ export class CulturalService {
     data: UpdateContentStatusInput, 
     userId?: string
   ): Promise<CulturalContent> {
-    const content = await prisma.culturalContent.findUnique({
+    const content = await prisma.cultural_content.findUnique({
       where: { id },
     });
 
@@ -301,7 +313,7 @@ export class CulturalService {
       throw new ForbiddenError('You do not have permission to update this content');
     }
 
-    const updatedContent = await prisma.culturalContent.update({
+    const updatedContent = await prisma.cultural_content.update({
       where: { id },
       data: { status: data.status },
     });
@@ -321,7 +333,7 @@ export class CulturalService {
    * Get featured content
    */
   static async getFeaturedContent(limit: number = 8): Promise<CulturalContent[]> {
-    return prisma.culturalContent.findMany({
+    return prisma.cultural_content.findMany({
       where: {
         featured: true,
         status: 'PUBLISHED',
@@ -340,7 +352,7 @@ export class CulturalService {
     type: string, 
     limit: number = 12
   ): Promise<CulturalContent[]> {
-    return prisma.culturalContent.findMany({
+    return prisma.cultural_content.findMany({
       where: {
         type,
         status: 'PUBLISHED',
@@ -359,7 +371,7 @@ export class CulturalService {
     category: string, 
     limit: number = 12
   ): Promise<CulturalContent[]> {
-    return prisma.culturalContent.findMany({
+    return prisma.cultural_content.findMany({
       where: {
         category: { contains: category },
         status: 'PUBLISHED',
@@ -396,7 +408,7 @@ export class CulturalService {
   ): Promise<CulturalContent[]> {
     const { contentId, interests, language, type, limit = 5 } = data;
 
-    let where: Prisma.CulturalContentWhereInput = {
+    let where: Prisma.cultural_contentWhereInput = {
       status: 'PUBLISHED',
     };
 
@@ -422,7 +434,7 @@ export class CulturalService {
       ];
     }
 
-    return prisma.culturalContent.findMany({
+    return prisma.cultural_content.findMany({
       where,
       orderBy: [
         { featured: 'desc' },
@@ -459,7 +471,7 @@ export class CulturalService {
    * Get content statistics
    */
   static async getContentStats(query: CulturalContentStatsQueryInput = {}): Promise<any> {
-    const where: Prisma.CulturalContentWhereInput = {};
+    const where: Prisma.cultural_contentWhereInput = {};
 
     if (query.type) {
       where.type = query.type;
@@ -492,17 +504,17 @@ export class CulturalService {
       contentByType,
       contentByLanguage,
     ] = await Promise.all([
-      prisma.culturalContent.count({ where }),
-      prisma.culturalContent.count({ where: { ...where, status: 'PUBLISHED' } }),
-      prisma.culturalContent.count({ where: { ...where, status: 'DRAFT' } }),
-      prisma.culturalContent.count({ where: { ...where, status: 'ARCHIVED' } }),
-      prisma.culturalContent.count({ where: { ...where, featured: true } }),
-      prisma.culturalContent.groupBy({
+      prisma.cultural_content.count({ where }),
+      prisma.cultural_content.count({ where: { ...where, status: 'PUBLISHED' } }),
+      prisma.cultural_content.count({ where: { ...where, status: 'DRAFT' } }),
+      prisma.cultural_content.count({ where: { ...where, status: 'ARCHIVED' } }),
+      prisma.cultural_content.count({ where: { ...where, featured: true } }),
+      prisma.cultural_content.groupBy({
         by: ['type'],
         where,
         _count: { id: true },
       }),
-      prisma.culturalContent.groupBy({
+      prisma.cultural_content.groupBy({
         by: ['language'],
         where,
         _count: { id: true },
@@ -539,7 +551,7 @@ export class CulturalService {
    * Get recent content
    */
   static async getRecentContent(limit: number = 10): Promise<CulturalContent[]> {
-    return prisma.culturalContent.findMany({
+    return prisma.cultural_content.findMany({
       where: {
         status: 'PUBLISHED',
       },
@@ -554,7 +566,7 @@ export class CulturalService {
    * Get content categories (unique categories)
    */
   static async getCategories(): Promise<Array<{ category: string; count: number }>> {
-    const categories = await prisma.culturalContent.groupBy({
+    const categories = await prisma.cultural_content.groupBy({
       by: ['category'],
       where: {
         status: 'PUBLISHED',
@@ -575,9 +587,7 @@ export class CulturalService {
    * Get content tags (popular tags)
    */
   static async getPopularTags(limit: number = 20): Promise<Array<{ tag: string; count: number }>> {
-    // This is a simplified implementation
-    // In a real-world scenario, you'd use more sophisticated tag analysis
-    const content = await prisma.culturalContent.findMany({
+    const content = await prisma.cultural_content.findMany({
       where: { status: 'PUBLISHED' },
       select: { tags: true },
     });
@@ -585,10 +595,22 @@ export class CulturalService {
     const tagCounts: Record<string, number> = {};
     
     content.forEach(item => {
-      const tags = item.tags as string[];
-      tags.forEach(tag => {
-        tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-      });
+      if (item.tags) {
+        try {
+          const parsedTags = JSON.parse(item.tags);
+          if (Array.isArray(parsedTags)) {
+            parsedTags.forEach((tag: string) => {
+              if (tag && typeof tag === 'string') {
+                tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+              }
+            });
+          } else if (typeof parsedTags === 'string') {
+            tagCounts[parsedTags] = (tagCounts[parsedTags] || 0) + 1;
+          }
+        } catch {
+          tagCounts[item.tags] = (tagCounts[item.tags] || 0) + 1;
+        }
+      }
     });
 
     return Object.entries(tagCounts)
@@ -611,7 +633,7 @@ export class CulturalService {
 
     for (const contentId of contentIds) {
       try {
-        const content = await prisma.culturalContent.findUnique({
+        const content = await prisma.cultural_content.findUnique({
           where: { id: contentId },
         });
 
@@ -631,30 +653,30 @@ export class CulturalService {
         // Perform operation
         switch (operation) {
           case 'publish':
-            await prisma.culturalContent.update({
+            await prisma.cultural_content.update({
               where: { id: contentId },
               data: { status: 'PUBLISHED' },
             });
             break;
           case 'archive':
-            await prisma.culturalContent.update({
+            await prisma.cultural_content.update({
               where: { id: contentId },
               data: { status: 'ARCHIVED' },
             });
             break;
           case 'delete':
-            await prisma.culturalContent.delete({
+            await prisma.cultural_content.delete({
               where: { id: contentId },
             });
             break;
           case 'feature':
-            await prisma.culturalContent.update({
+            await prisma.cultural_content.update({
               where: { id: contentId },
               data: { featured: true },
             });
             break;
           case 'unfeature':
-            await prisma.culturalContent.update({
+            await prisma.cultural_content.update({
               where: { id: contentId },
               data: { featured: false },
             });
