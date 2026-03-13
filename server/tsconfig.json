@@ -16,6 +16,6 @@
       "*": ["node_modules/*", "src/types/*"]
     }
   },
-  "include": ["src/minimal-server.ts"],
-  "exclude": ["node_modules", "src/services", "src/modules", "src/controllers", "src/routes", "src/middlewares", "src/test-notification-infrastructure.ts"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"],
 }
