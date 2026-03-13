@@ -4,7 +4,7 @@
   "description": "Backend server for EthioAI Tourism Platform",
   "main": "dist/server.js",
   "scripts": {
-    "start": "tsnd --respawn --transpile-only src/server.ts",
+    "start": "node dist/server.js",
     "dev": "tsnd --respawn --transpile-only src/server.ts",
     "build": "npm run prisma:generate && tsc",
     "start:prod": "node dist/server.js",
