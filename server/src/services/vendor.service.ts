@@ -1,4 +1,5 @@
-import { PrismaClient, VendorProfile, Category, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
+import { randomUUID } from 'crypto';
 import { 
   CreateVendorProfileInput, 
   UpdateVendorProfileInput, 
@@ -23,9 +24,9 @@ export class VendorService {
   /**
    * Create vendor profile
    */
-  static async createVendorProfile(data: CreateVendorProfileInput, userId: string): Promise<VendorProfile> {
+  static async createVendorProfile(data: CreateVendorProfileInput, userId: string): Promise<any> {
     // Check if user already has a vendor profile
-    const existingProfile = await prisma.vendorProfile.findUnique({
+    const existingProfile = await prisma.vendor_profiles.findUnique({
       where: { userId },
     });
 
@@ -34,7 +35,7 @@ export class VendorService {
     }
 
     // Check if business name is unique
-    const existingBusiness = await prisma.vendorProfile.findFirst({
+    const existingBusiness = await prisma.vendor_profiles.findFirst({
       where: { businessName: data.businessName },
     });
 
@@ -42,8 +43,10 @@ export class VendorService {
       throw new ValidationError('Business name already exists');
     }
 
-    const vendorProfile = await prisma.vendorProfile.create({
+    const vendorProfile = await prisma.vendor_profiles.create({
       data: {
+        id: randomUUID(),
+        updatedAt: new Date(),
         ...data,
         userId,
         businessEmail: data.businessEmail,
@@ -53,7 +56,7 @@ export class VendorService {
         totalSales: 0,
       },
       include: {
-        user: {
+        users: {
           select: {
             name: true,
             email: true,
@@ -75,7 +78,7 @@ export class VendorService {
    * Get all vendor profiles with filtering and pagination
    */
   static async getVendorProfiles(query: VendorQueryInput): Promise<{
-    vendors: VendorProfile[];
+    vendors: any[];
     pagination: PaginationMeta;
   }> {
     const {
@@ -88,7 +91,7 @@ export class VendorService {
     } = query;
 
     // Build where clause
-    const where: Prisma.VendorProfileWhereInput = {};
+    const where: any = {};
 
     if (isVerified !== undefined) {
       where.isVerified = isVerified;
@@ -99,8 +102,8 @@ export class VendorService {
       where.OR = [
         { businessName: { contains: search } },
         { description: { contains: search } },
-        { user: { name: { contains: search } } },
-        { user: { email: { contains: search } } },
+        { users: { name: { contains: search } } },
+        { users: { email: { contains: search } } },
       ];
     }
 
@@ -108,7 +111,7 @@ export class VendorService {
     const skip = (page - 1) * limit;
 
     // Build order by clause
-    const orderBy: Prisma.VendorProfileOrderByWithRelationInput = {};
+    const orderBy: any = {};
     if (sortBy === 'businessName') {
       orderBy.businessName = sortOrder;
     } else if (sortBy === 'rating') {
@@ -121,13 +124,13 @@ export class VendorService {
 
     // Execute queries
     const [vendors, total] = await Promise.all([
-      prisma.vendorProfile.findMany({
+      prisma.vendor_profiles.findMany({
         where,
         orderBy,
         skip,
         take: limit,
         include: {
-          user: {
+          users: {
             select: {
               name: true,
               email: true,
@@ -144,7 +147,7 @@ export class VendorService {
           },
         },
       }),
-      prisma.vendorProfile.count({ where }),
+      prisma.vendor_profiles.count({ where }),
     ]);
 
     // Add product count
@@ -164,11 +167,11 @@ export class VendorService {
   /**
    * Get vendor profile by ID
    */
-  static async getVendorProfileById(id: string): Promise<VendorProfile> {
-    const vendorProfile = await prisma.vendorProfile.findUnique({
+  static async getVendorProfileById(id: string): Promise<any> {
+    const vendorProfile = await prisma.vendor_profiles.findUnique({
       where: { id },
       include: {
-        user: {
+        users: {
           select: {
             name: true,
             email: true,
@@ -205,11 +208,11 @@ export class VendorService {
   /**
    * Get vendor profile by user ID
    */
-  static async getVendorProfileByUserId(userId: string): Promise<VendorProfile | null> {
-    const vendorProfile = await prisma.vendorProfile.findUnique({
+  static async getVendorProfileByUserId(userId: string): Promise<any | null> {
+    const vendorProfile = await prisma.vendor_profiles.findUnique({
       where: { userId },
       include: {
-        user: {
+        users: {
           select: {
             name: true,
             email: true,
@@ -235,8 +238,8 @@ export class VendorService {
     id: string, 
     data: UpdateVendorProfileInput, 
     userId: string
-  ): Promise<VendorProfile> {
-    const existingProfile = await prisma.vendorProfile.findUnique({
+  ): Promise<any> {
+    const existingProfile = await prisma.vendor_profiles.findUnique({
       where: { id },
     });
 
@@ -251,7 +254,7 @@ export class VendorService {
 
     // Check if business name is unique (if being updated)
     if (data.businessName && data.businessName !== existingProfile.businessName) {
-      const existingBusiness = await prisma.vendorProfile.findFirst({
+      const existingBusiness = await prisma.vendor_profiles.findFirst({
         where: { 
           businessName: data.businessName,
           id: { not: id },
@@ -263,11 +266,11 @@ export class VendorService {
       }
     }
 
-    const vendorProfile = await prisma.vendorProfile.update({
+    const vendorProfile = await prisma.vendor_profiles.update({
       where: { id },
       data,
       include: {
-        user: {
+        users: {
           select: {
             name: true,
             email: true,
@@ -289,8 +292,8 @@ export class VendorService {
     id: string, 
     data: UpdateVendorVerificationInput, 
     userId: string
-  ): Promise<VendorProfile> {
-    const vendorProfile = await prisma.vendorProfile.findUnique({
+  ): Promise<any> {
+    const vendorProfile = await prisma.vendor_profiles.findUnique({
       where: { id },
     });
 
@@ -298,13 +301,13 @@ export class VendorService {
       throw new NotFoundError('Vendor profile not found');
     }
 
-    const updatedProfile = await prisma.vendorProfile.update({
+    const updatedProfile = await prisma.vendor_profiles.update({
       where: { id },
       data: {
         isVerified: data.isVerified,
       },
       include: {
-        user: {
+        users: {
           select: {
             name: true,
             email: true,
@@ -327,7 +330,7 @@ export class VendorService {
    * Get vendor statistics
    */
   static async getVendorStats(query: VendorStatsQueryInput = {}): Promise<any> {
-    const where: Prisma.VendorProfileWhereInput = {};
+    const where: any = {};
 
     if (query.vendorId) {
       where.id = query.vendorId;
@@ -345,10 +348,10 @@ export class VendorService {
       unverifiedVendors,
       activeVendors, // Vendors with at least one published product
     ] = await Promise.all([
-      prisma.vendorProfile.count({ where }),
-      prisma.vendorProfile.count({ where: { ...where, isVerified: true } }),
-      prisma.vendorProfile.count({ where: { ...where, isVerified: false } }),
-      prisma.vendorProfile.count({
+      prisma.vendor_profiles.count({ where }),
+      prisma.vendor_profiles.count({ where: { ...where, isVerified: true } }),
+      prisma.vendor_profiles.count({ where: { ...where, isVerified: false } }),
+      prisma.vendor_profiles.count({
         where: {
           ...where,
           products: {
@@ -373,7 +376,7 @@ export class VendorService {
   /**
    * Create category
    */
-  static async createCategory(data: CreateCategoryInput): Promise<Category> {
+  static async createCategory(data: CreateCategoryInput): Promise<any> {
     // Generate slug
     const slug = data.name
       .toLowerCase()
@@ -402,6 +405,8 @@ export class VendorService {
 
     const category = await prisma.categories.create({
       data: {
+        id: randomUUID(),
+        updatedAt: new Date(),
         ...data,
         slug,
       },
@@ -424,7 +429,7 @@ export class VendorService {
    * Get all categories
    */
   static async getCategories(query: CategoryQueryInput): Promise<{
-    categories: Category[];
+    categories: any[];
     pagination: PaginationMeta;
   }> {
     const {
@@ -495,7 +500,7 @@ export class VendorService {
   /**
    * Get category by ID or slug
    */
-  static async getCategoryById(identifier: string): Promise<Category> {
+  static async getCategoryById(identifier: string): Promise<any | null> {
     // Check if identifier is UUID or slug
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identifier);
     
@@ -531,7 +536,7 @@ export class VendorService {
   /**
    * Update category
    */
-  static async updateCategory(id: string, data: UpdateCategoryInput): Promise<Category> {
+  static async updateCategory(id: string, data: UpdateCategoryInput): Promise<any> {
     const existingCategory = await prisma.categories.findUnique({
       where: { id },
     });
