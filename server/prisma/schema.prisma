@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -79,7 +79,7 @@ model cultural_content {
   slug             String   @unique
   description      String   @db.Text
   shortDescription String?  @db.Text
-  content          String   @db.LongText
+  content          String   @db.Text
   type             String
   category         String
   language         String   @default("en")
@@ -234,12 +234,12 @@ model payments {
   failureReason   String?   @db.Text
   createdAt       DateTime  @default(now())
   updatedAt       DateTime
-  bookings        bookings? @relation(fields: [bookingId], references: [id])
-  orders          orders?   @relation(fields: [orderId], references: [id])
+  bookings        bookings? @relation(fields: [bookingId], references: [id], map: "payments_booking_fkey")
+  orders          orders?   @relation(fields: [orderId], references: [id], map: "payments_order_fkey")
   users           users     @relation(fields: [userId], references: [id])
 
-  @@index([bookingId], map: "payments_bookingId_fkey")
-  @@index([orderId], map: "payments_orderId_fkey")
+  @@index([bookingId])
+  @@index([orderId])
   @@index([paymentId])
   @@index([status])
   @@index([userId])
@@ -285,10 +285,10 @@ model refresh_tokens {
   expiresAt DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime
-  users     users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  users     users    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "refresh_tokens_user_fkey")
 
   @@index([token])
-  @@index([userId], map: "refresh_tokens_userId_fkey")
+  @@index([userId])
 }
 
 model reviews {
