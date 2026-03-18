@@ -19,11 +19,19 @@ export const LoginForm = ({ onSubmit, isLoading, error }: LoginFormProps) => {
   const {
     register,
     handleSubmit,
+    setValue,
+    trigger,
     formState: { errors, isValid, isDirty },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     mode: 'onBlur',
   })
+
+  const fillDemoCredentials = async () => {
+    setValue('email', 'demo@example.com', { shouldDirty: true })
+    setValue('password', 'Demo123!', { shouldDirty: true })
+    await trigger()
+  }
 
   const handleFormSubmit = async (data: LoginFormData) => {
     try {
@@ -44,6 +52,17 @@ export const LoginForm = ({ onSubmit, isLoading, error }: LoginFormProps) => {
           {error}
         </div>
       )}
+
+      <div className="p-3 bg-muted/50 border border-border rounded-md text-sm text-muted-foreground flex items-center justify-between gap-3">
+        <span>Demo: <code className="text-foreground">demo@example.com</code> / <code className="text-foreground">Demo123!</code></span>
+        <button
+          type="button"
+          onClick={fillDemoCredentials}
+          className="shrink-0 text-xs text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-ring rounded"
+        >
+          Use Demo
+        </button>
+      </div>
 
       <Input
         {...register('email')}
