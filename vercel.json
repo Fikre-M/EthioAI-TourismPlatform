@@ -1,0 +1,7 @@
+{
+  "buildCommand": "cd client && npm install && npm run build:skip-ts",
+  "outputDirectory": "client/dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
