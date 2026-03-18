@@ -28,9 +28,9 @@ export const config = {
 
   // JWT configuration
   jwt: {
-    secret: process.env.JWT_SECRET || 'your-super-secret-jwt-key',
-    accessSecret: process.env.JWT_ACCESS_SECRET || process.env.JWT_SECRET || 'your-access-secret',
-    refreshSecret: process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET || 'your-refresh-secret',
+    secret: process.env.JWT_SECRET || (() => { throw new Error('JWT_SECRET is not set') })(),
+    accessSecret: process.env.JWT_ACCESS_SECRET || process.env.JWT_SECRET || (() => { throw new Error('JWT_ACCESS_SECRET is not set') })(),
+    refreshSecret: process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET || (() => { throw new Error('JWT_REFRESH_SECRET is not set') })(),
     expiresIn: process.env.JWT_EXPIRES_IN || '15m',
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
   },

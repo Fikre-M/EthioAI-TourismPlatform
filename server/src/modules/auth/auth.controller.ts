@@ -6,8 +6,11 @@ import { z } from 'zod';
 import { sendPasswordResetEmail } from './auth.service';
 
 const prisma = new PrismaClient();
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-const REFRESH_SECRET = process.env.REFRESH_SECRET || 'your-refresh-secret';
+const JWT_SECRET = process.env.JWT_SECRET;
+const REFRESH_SECRET = process.env.REFRESH_SECRET || process.env.JWT_REFRESH_SECRET;
+
+if (!JWT_SECRET) throw new Error('JWT_SECRET environment variable is not set');
+if (!REFRESH_SECRET) throw new Error('REFRESH_SECRET environment variable is not set');
 
 // Input validation schemas
 const registerSchema = z.object({
