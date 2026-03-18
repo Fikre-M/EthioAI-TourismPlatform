@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import { MulterFile } from '../types/file-upload.types';
 import { AuthRequest } from '../modules/auth/auth.types';
 import { z } from 'zod';
 import { 
@@ -91,7 +92,7 @@ export const uploadSingle = async (req: AuthRequest, res: Response) => {
  */
 export const uploadMultiple = async (req: AuthRequest, res: Response) => {
   try {
-    const files = req.files as Express.Multer.File[];
+    const files = req.files as MulterFile[];
     if (!files || files.length === 0) {
       return res.status(400).json({
         success: false,
@@ -218,7 +219,7 @@ export const uploadUserProfile = async (req: AuthRequest, res: Response) => {
  */
 export const uploadProductMedia = async (req: AuthRequest, res: Response) => {
   try {
-    const files = req.files as Express.Multer.File[];
+    const files = req.files as MulterFile[];
     if (!files || files.length === 0) {
       return res.status(400).json({
         success: false,
@@ -312,7 +313,7 @@ export const uploadProductMedia = async (req: AuthRequest, res: Response) => {
  */
 export const uploadTourMedia = async (req: AuthRequest, res: Response) => {
   try {
-    const files = req.files as Express.Multer.File[];
+    const files = req.files as MulterFile[];
     if (!files || files.length === 0) {
       return res.status(400).json({
         success: false,

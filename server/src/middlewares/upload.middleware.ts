@@ -2,6 +2,7 @@ import multer from 'multer';
 import { Request } from 'express';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { MulterFile } from '../types/file-upload.types';
 
 // File type validation
 const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
@@ -17,7 +18,7 @@ const MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50MB
 const storage = multer.memoryStorage();
 
 // File filter function
-const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+const fileFilter = (req: Request, file: MulterFile, cb: multer.FileFilterCallback) => {
   const isImage = allowedImageTypes.includes(file.mimetype);
   const isDocument = allowedDocumentTypes.includes(file.mimetype);
   const isVideo = allowedVideoTypes.includes(file.mimetype);
@@ -31,7 +32,7 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilt
 
 // Size limit function
 const limits = {
-  fileSize: (req: Request, file: Express.Multer.File) => {
+  fileSize: (req: Request, file: MulterFile) => {
     if (allowedImageTypes.includes(file.mimetype)) {
       return MAX_IMAGE_SIZE;
     } else if (allowedDocumentTypes.includes(file.mimetype)) {
@@ -81,7 +82,7 @@ export const uploadMixed = uploadFields([
 ]);
 
 // Validation helper functions
-export const validateFileSize = (file: Express.Multer.File): boolean => {
+export const validateFileSize = (file: MulterFile): boolean => {
   if (allowedImageTypes.includes(file.mimetype)) {
     return file.size <= MAX_IMAGE_SIZE;
   } else if (allowedDocumentTypes.includes(file.mimetype)) {
@@ -92,7 +93,7 @@ export const validateFileSize = (file: Express.Multer.File): boolean => {
   return false;
 };
 
-export const validateFileType = (file: Express.Multer.File, allowedTypes: string[]): boolean => {
+export const validateFileType = (file: MulterFile, allowedTypes: string[]): boolean => {
   return allowedTypes.includes(file.mimetype);
 };
 
@@ -105,15 +106,15 @@ export const generateFileName = (originalName: string): string => {
 };
 
 // File type detection helpers
-export const isImage = (file: Express.Multer.File): boolean => {
+export const isImage = (file: MulterFile): boolean => {
   return allowedImageTypes.includes(file.mimetype);
 };
 
-export const isDocument = (file: Express.Multer.File): boolean => {
+export const isDocument = (file: MulterFile): boolean => {
   return allowedDocumentTypes.includes(file.mimetype);
 };
 
-export const isVideo = (file: Express.Multer.File): boolean => {
+export const isVideo = (file: MulterFile): boolean => {
   return allowedVideoTypes.includes(file.mimetype);
 };
 

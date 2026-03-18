@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary';
+import { MulterFile } from '../types/file-upload.types';
 import { config } from '../config/index';
 import { log } from '../utils/logger';
 import { generateFileName, isImage, isVideo, isDocument } from '../middlewares/upload.middleware';
@@ -34,7 +35,7 @@ export interface UploadOptions {
  * Upload a single file to Cloudinary
  */
 export const uploadToCloudinary = async (
-  file: Express.Multer.File,
+  file: MulterFile,
   options: UploadOptions = {}
 ): Promise<UploadResult> => {
   try {
@@ -109,7 +110,7 @@ export const uploadToCloudinary = async (
  * Upload multiple files to Cloudinary
  */
 export const uploadMultipleToCloudinary = async (
-  files: Express.Multer.File[],
+  files: MulterFile[],
   options: UploadOptions = {}
 ): Promise<UploadResult[]> => {
   try {
@@ -211,7 +212,7 @@ export const generateThumbnailUrl = (
  * Upload profile image with specific optimizations
  */
 export const uploadProfileImage = async (
-  file: Express.Multer.File,
+  file: MulterFile,
   userId: string
 ): Promise<UploadResult> => {
   return uploadToCloudinary(file, {
@@ -231,7 +232,7 @@ export const uploadProfileImage = async (
  * Upload product images with specific optimizations
  */
 export const uploadProductImages = async (
-  files: Express.Multer.File[],
+  files: MulterFile[],
   productId: string
 ): Promise<UploadResult[]> => {
   return uploadMultipleToCloudinary(files, {
@@ -250,7 +251,7 @@ export const uploadProductImages = async (
  * Upload tour images with specific optimizations
  */
 export const uploadTourImages = async (
-  files: Express.Multer.File[],
+  files: MulterFile[],
   tourId: string
 ): Promise<UploadResult[]> => {
   return uploadMultipleToCloudinary(files, {
@@ -269,7 +270,7 @@ export const uploadTourImages = async (
  * Upload review media (images and videos)
  */
 export const uploadReviewMedia = async (
-  files: Express.Multer.File[],
+  files: MulterFile[],
   reviewId: string
 ): Promise<UploadResult[]> => {
   return uploadMultipleToCloudinary(files, {
