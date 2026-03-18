@@ -1,5 +1,5 @@
 // API Configuration
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://ethio-ai-server.onrender.com'
 export const APP_NAME = import.meta.env.VITE_APP_NAME || 'EthioAI Tourism Platform'
 export const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY || 'auth_token'
 
