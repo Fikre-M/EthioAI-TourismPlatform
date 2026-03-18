@@ -103,5 +103,7 @@ temp/
 # Git artifacts and corrupted files
 ersfikreEthioAI*
 *git*checkout*
-*HEAD*
+ORIG_HEAD
+FETCH_HEAD
+MERGE_HEAD
 .vercel
