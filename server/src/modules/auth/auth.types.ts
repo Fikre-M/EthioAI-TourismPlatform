@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 export type UserRole = 'USER' | 'ADMIN' | 'GUIDE' | 'VENDOR';
 
@@ -29,11 +29,12 @@ export interface RefreshTokenPayload {
   userId: string;
 }
 
-export interface AuthRequest extends Request {
+// Use type alias with intersection to ensure all Request properties are available
+export type AuthRequest = Request & {
   user?: {
     id: string;
     email: string;
     role: UserRole;
   };
-  userId?: string; // Convenience property for user.id
-}
+  userId?: string;
+};
