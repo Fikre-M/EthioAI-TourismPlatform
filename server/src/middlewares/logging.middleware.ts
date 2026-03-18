@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { log } from '../utils/logger';
-import { AuthRequest } from './auth.middleware';
+import { AuthRequest } from '../modules/auth/auth.types';
 
 /**
  * Request logging middleware
@@ -12,7 +12,7 @@ export const requestLogger = (req: AuthRequest, res: Response, next: NextFunctio
   const userAgent = headers['user-agent'] || 'Unknown';
 
   // Log request start
-  log.http(`${method} ${originalUrl} - Started`, {
+  log.info(`${method} ${originalUrl} - Started`, {
     method,
     url: originalUrl,
     ip,
@@ -27,11 +27,11 @@ export const requestLogger = (req: AuthRequest, res: Response, next: NextFunctio
     const { statusCode } = res;
 
     // Log request completion
-    log.api(method, originalUrl, statusCode, responseTime, req.userId);
+    log.info(`${method} ${originalUrl} ${statusCode} ${responseTime}ms`, { userId: req.userId });
 
     // Log slow requests as warnings
     if (responseTime > 1000) {
-      log.performance(`Slow request: ${method} ${originalUrl}`, responseTime, {
+      log.warn(`Slow request: ${method} ${originalUrl} (${responseTime}ms)`, {
         statusCode,
         userId: req.userId,
         ip,
@@ -53,7 +53,7 @@ export const requestLogger = (req: AuthRequest, res: Response, next: NextFunctio
     }
 
     // Call original end method
-    originalEnd.call(this, chunk, encoding);
+    return originalEnd.call(this, chunk, encoding);
   };
 
   next();

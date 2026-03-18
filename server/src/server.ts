@@ -31,8 +31,8 @@ try {
     overpassUrl: process.env.OSM_OVERPASS_URL || 'https://overpass-api.de/api/interpreter',
     tileServer: process.env.OSM_TILE_SERVER || 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
     
-    async geocode(query, options = {}) {
-      const params = {
+    async geocode(query: string, options: any = {}) {
+      const params: any = {
         q: query,
         format: 'json',
         limit: options.limit || 5,
@@ -155,7 +155,7 @@ process.on('SIGINT', () => {
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (reason, promise) => {
-  log.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  log.error('Unhandled Rejection', { promise, reason });
   // Close server & exit process
   server.close(() => {
     process.exit(1);

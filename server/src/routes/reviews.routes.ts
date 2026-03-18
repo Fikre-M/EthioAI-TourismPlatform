@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
-import { authenticate, optionalAuth, AuthRequest } from '../middlewares/auth.middleware';
+import { authenticate, optionalAuth } from '../middlewares/auth.middleware';
+import { AuthRequest } from '../modules/auth/auth.types';
 import { ResponseUtil } from '../utils/response';
 import { prisma } from '../utils/database';
 import { asyncHandler } from '../middlewares/error.middleware';
@@ -23,19 +24,19 @@ router.get('/', optionalAuth, asyncHandler(async (req: Request, res: Response) =
   }
 
   const [reviews, total] = await Promise.all([
-    prisma.review.findMany({
+    prisma.reviews.findMany({
       where,
       skip,
       take: limit,
       include: {
-        user: {
+        users: {
           select: {
             id: true,
             name: true,
             avatar: true
           }
         },
-        tour: {
+        tours: {
           select: {
             id: true,
             title: true,
@@ -47,7 +48,7 @@ router.get('/', optionalAuth, asyncHandler(async (req: Request, res: Response) =
         createdAt: 'desc'
       }
     }),
-    prisma.review.count({ where })
+    prisma.reviews.count({ where })
   ]);
 
   const pages = Math.ceil(total / limit);
@@ -76,12 +77,12 @@ router.get('/tour/:tourId', optionalAuth, asyncHandler(async (req: Request, res:
   };
 
   const [reviews, total, averageRating] = await Promise.all([
-    prisma.review.findMany({
+    prisma.reviews.findMany({
       where,
       skip,
       take: limit,
       include: {
-        user: {
+        users: {
           select: {
             id: true,
             name: true,
@@ -93,8 +94,8 @@ router.get('/tour/:tourId', optionalAuth, asyncHandler(async (req: Request, res:
         createdAt: 'desc'
       }
     }),
-    prisma.review.count({ where }),
-    prisma.review.aggregate({
+    prisma.reviews.count({ where }),
+    prisma.reviews.aggregate({
       where,
       _avg: {
         rating: true
@@ -128,7 +129,7 @@ router.post('/', authenticate, asyncHandler(async (req: AuthRequest, res: Respon
   const { tourId, rating, title, comment, images } = req.body;
 
   // Check if tour exists
-  const tour = await prisma.tour.findUnique({
+  const tour = await prisma.tours.findUnique({
     where: { id: tourId }
   });
 
@@ -137,7 +138,7 @@ router.post('/', authenticate, asyncHandler(async (req: AuthRequest, res: Respon
   }
 
   // Check if user has already reviewed this tour
-  const existingReview = await prisma.review.findFirst({
+  const existingReview = await prisma.reviews.findFirst({
     where: {
       userId,
       tourId
@@ -149,7 +150,7 @@ router.post('/', authenticate, asyncHandler(async (req: AuthRequest, res: Respon
   }
 
   // Check if user has booked this tour (optional verification)
-  const booking = await prisma.booking.findFirst({
+  const booking = await prisma.bookings.findFirst({
     where: {
       userId,
       tourId,
@@ -157,26 +158,28 @@ router.post('/', authenticate, asyncHandler(async (req: AuthRequest, res: Respon
     }
   });
 
-  const review = await prisma.review.create({
+  const review = await (prisma.reviews.create as any)({
     data: {
+      id: require('crypto').randomUUID(),
       userId,
       tourId,
       rating,
       title,
       comment,
       images: JSON.stringify(images || []),
-      isVerified: !!booking, // Mark as verified if user has completed booking
-      status: 'PENDING' // Reviews need approval
+      isVerified: !!booking,
+      status: 'PENDING',
+      updatedAt: new Date(),
     },
     include: {
-      user: {
+      users: {
         select: {
           id: true,
           name: true,
           avatar: true
         }
       },
-      tour: {
+      tours: {
         select: {
           id: true,
           title: true,
@@ -200,7 +203,7 @@ router.put('/:id', authenticate, asyncHandler(async (req: AuthRequest, res: Resp
 
   const { rating, title, comment, images } = req.body;
 
-  const existingReview = await prisma.review.findUnique({
+  const existingReview = await prisma.reviews.findUnique({
     where: { id }
   });
 
@@ -212,7 +215,7 @@ router.put('/:id', authenticate, asyncHandler(async (req: AuthRequest, res: Resp
     return ResponseUtil.forbidden(res, 'You can only update your own reviews');
   }
 
-  const review = await prisma.review.update({
+  const review = await prisma.reviews.update({
     where: { id },
     data: {
       rating,
@@ -222,14 +225,14 @@ router.put('/:id', authenticate, asyncHandler(async (req: AuthRequest, res: Resp
       status: 'PENDING' // Reset to pending after update
     },
     include: {
-      user: {
+      users: {
         select: {
           id: true,
           name: true,
           avatar: true
         }
       },
-      tour: {
+      tours: {
         select: {
           id: true,
           title: true,
@@ -251,7 +254,7 @@ router.delete('/:id', authenticate, asyncHandler(async (req: AuthRequest, res: R
     return ResponseUtil.unauthorized(res, 'User authentication required');
   }
 
-  const existingReview = await prisma.review.findUnique({
+  const existingReview = await prisma.reviews.findUnique({
     where: { id }
   });
 
@@ -263,7 +266,7 @@ router.delete('/:id', authenticate, asyncHandler(async (req: AuthRequest, res: R
     return ResponseUtil.forbidden(res, 'You can only delete your own reviews');
   }
 
-  await prisma.review.delete({
+  await prisma.reviews.delete({
     where: { id }
   });
 
@@ -271,3 +274,5 @@ router.delete('/:id', authenticate, asyncHandler(async (req: AuthRequest, res: R
 }));
 
 export default router;
+
+

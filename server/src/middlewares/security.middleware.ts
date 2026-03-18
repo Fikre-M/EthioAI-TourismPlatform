@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import rateLimit from 'express-rate-limit';
 import { config } from '../config/index';
 import { log } from '../utils/logger';
+import { AuthRequest } from '../modules/auth/auth.types';
 
 /**
  * API Key validation middleware
@@ -40,7 +41,7 @@ export const aiRateLimit = rateLimit({
   legacyHeaders: false,
   keyGenerator: (req) => {
     // Rate limit by user ID if authenticated, otherwise by IP
-    return req.user?.id || req.ip;
+    return (req as AuthRequest).user?.id || req.ip || 'unknown';
   },
 });
 
@@ -64,8 +65,8 @@ export const sanitizeRequest = (req: Request, res: Response, next: NextFunction)
   };
 
   // Create a copy for logging
-  req.sanitizedBody = JSON.parse(JSON.stringify(req.body));
-  sanitize(req.sanitizedBody);
+  (req as any).sanitizedBody = JSON.parse(JSON.stringify(req.body));
+  sanitize((req as any).sanitizedBody);
 
   next();
 };
@@ -86,7 +87,7 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction) =
       duration,
       ip: req.ip,
       userAgent: req.get('User-Agent'),
-      userId: req.user?.id,
+      userId: (req as AuthRequest).user?.id,
     });
   });
 

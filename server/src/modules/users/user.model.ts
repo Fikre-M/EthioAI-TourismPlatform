@@ -1,33 +1,32 @@
-import { Prisma, User as PrismaUser, UserRole } from '@prisma/client';
-import { Exclude } from 'class-transformer';
+import { Prisma } from '@prisma/client';
+import { UserRole } from '../auth/auth.types';
 
-export class User implements PrismaUser {
+export type UserRoleType = UserRole;
+
+export interface UserModel {
   id: string;
   email: string;
   name: string | null;
-  
-  @Exclude()
   passwordHash: string;
-  
-  role: UserRole;
+  role: string;
   isEmailVerified: boolean;
   createdAt: Date;
   updatedAt: Date;
-
-  constructor(partial: Partial<User>) {
-    Object.assign(this, partial);
-  }
+  avatar?: string | null;
+  bio?: string | null;
+  phone?: string | null;
+  location?: string | null;
+  dateOfBirth?: Date | null;
 }
 
-export type CreateUserInput = Prisma.UserCreateInput;
-
-export type UpdateUserInput = Prisma.UserUpdateInput;
+export type CreateUserInput = Prisma.usersCreateInput;
+export type UpdateUserInput = Prisma.usersUpdateInput;
 
 export interface UserResponse {
   id: string;
   name: string | null;
   email: string;
-  role: UserRole;
+  role: string;
   isEmailVerified: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -41,7 +40,7 @@ export interface UserWithTokens extends UserResponse {
 export interface UserFilterOptions {
   page?: number;
   limit?: number;
-  role?: UserRole;
+  role?: string;
   search?: string;
   isEmailVerified?: boolean;
 }
@@ -56,8 +55,7 @@ export interface PaginatedUserResponse {
   };
 }
 
-// Mapper functions
-export const toUserResponse = (user: PrismaUser): UserResponse => ({
+export const toUserResponse = (user: UserModel): UserResponse => ({
   id: user.id,
   name: user.name,
   email: user.email,
@@ -68,7 +66,7 @@ export const toUserResponse = (user: PrismaUser): UserResponse => ({
 });
 
 export const toUserWithTokens = (
-  user: PrismaUser,
+  user: UserModel,
   tokens: { accessToken: string; refreshToken: string }
 ): UserWithTokens => ({
   ...toUserResponse(user),
@@ -76,11 +74,10 @@ export const toUserWithTokens = (
   refreshToken: tokens.refreshToken,
 });
 
-// Utility functions
-export const isAdmin = (user: { role: UserRole }): boolean => {
+export const isAdmin = (user: { role: string }): boolean => {
   return user.role === 'ADMIN';
 };
 
-export const hasRole = (user: { role: UserRole }, ...roles: UserRole[]): boolean => {
+export const hasRole = (user: { role: string }, ...roles: string[]): boolean => {
   return roles.includes(user.role);
 };

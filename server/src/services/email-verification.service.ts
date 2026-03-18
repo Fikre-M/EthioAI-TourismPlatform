@@ -27,7 +27,7 @@ export class EmailVerificationService {
   static async sendVerificationEmail(userId: string, email?: string): Promise<{ message: string }> {
     try {
       // Get user details
-      const user = await prisma.user.findUnique({
+      const user = await prisma.users.findUnique({
         where: { id: userId },
       });
 
@@ -45,7 +45,7 @@ export class EmailVerificationService {
 
       // Check if email is already in use by another user (for email changes)
       if (email && email !== user.email) {
-        const existingUser = await prisma.user.findUnique({
+        const existingUser = await prisma.users.findUnique({
           where: { email: targetEmail.toLowerCase() },
         });
 
@@ -144,7 +144,7 @@ export class EmailVerificationService {
       // Update user and mark token as used
       const updatedUser = await prisma.$transaction(async (tx) => {
         // Update user email and verification status
-        const user = await tx.user.update({
+        const user = await tx.users.update({
           where: { id: verification.userId },
           data: {
             email: verification.email,
@@ -253,7 +253,7 @@ export class EmailVerificationService {
    * Resend verification email
    */
   static async resendVerificationEmail(userId: string): Promise<{ message: string }> {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: { id: userId },
     });
 
@@ -474,3 +474,5 @@ export async function createEmailVerificationTable(): Promise<void> {
     log.error('Failed to create email verification tokens table:', error);
   }
 }
+
+

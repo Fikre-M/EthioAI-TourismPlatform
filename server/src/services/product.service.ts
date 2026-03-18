@@ -33,7 +33,7 @@ export class ProductService {
    */
   static async createProduct(data: CreateProductInput, userId: string): Promise<Product> {
     // Verify user has vendor profile
-    const vendorProfile = await prisma.vendorProfile.findUnique({
+    const vendorProfile = await prisma.vendor_profiles.findUnique({
       where: { userId },
     });
 
@@ -80,7 +80,7 @@ export class ProductService {
       include: {
         vendor: {
           include: {
-            user: {
+            users: {
               select: {
                 name: true,
                 email: true,
@@ -132,7 +132,7 @@ export class ProductService {
     } = query;
 
     // Build where clause
-    const where: Prisma.ProductWhereInput = {
+    const where: Prisma.productsWhereInput = {
       // Only show published products for public queries (unless status is specified)
       status: status || 'PUBLISHED',
     };
@@ -198,7 +198,7 @@ export class ProductService {
     const skip = (page - 1) * limit;
 
     // Build order by clause
-    const orderBy: Prisma.ProductOrderByWithRelationInput = {};
+    const orderBy: Prisma.productsOrderByWithRelationInput = {};
     if (sortBy === 'name') {
       orderBy.name = sortOrder;
     } else if (sortBy === 'price') {
@@ -223,7 +223,7 @@ export class ProductService {
         include: {
           vendor: {
             include: {
-              user: {
+              users: {
                 select: {
                   name: true,
                 },
@@ -282,7 +282,7 @@ export class ProductService {
       include: {
         vendor: {
           include: {
-            user: {
+            users: {
               select: {
                 name: true,
                 email: true,
@@ -295,7 +295,7 @@ export class ProductService {
             status: 'APPROVED',
           },
           include: {
-            user: {
+            users: {
               select: {
                 name: true,
                 avatar: true,
@@ -392,7 +392,7 @@ export class ProductService {
       include: {
         vendor: {
           include: {
-            user: {
+            users: {
               select: {
                 name: true,
                 email: true,
@@ -504,7 +504,7 @@ export class ProductService {
       include: {
         vendor: {
           include: {
-            user: {
+            users: {
               select: {
                 name: true,
               },
@@ -545,7 +545,7 @@ export class ProductService {
       include: {
         vendor: {
           include: {
-            user: {
+            users: {
               select: {
                 name: true,
               },
@@ -609,7 +609,7 @@ export class ProductService {
    * Get product statistics
    */
   static async getProductStats(query: ProductStatsQueryInput = {}): Promise<any> {
-    const where: Prisma.ProductWhereInput = {};
+    const where: Prisma.productsWhereInput = {};
 
     if (query.vendorId) {
       where.vendorId = query.vendorId;
@@ -652,4 +652,5 @@ export class ProductService {
     };
   }
 }
+
 

@@ -97,8 +97,10 @@ router.post('/chat', async (req: Request, res: Response) => {
  * Analyze text for sentiment, keywords, etc.
  */
 router.post('/analyze', async (req: Request, res: Response) => {
+  let text: string = '';
+  let analysisType: string = 'sentiment';
   try {
-    const { text, analysisType = 'sentiment' } = req.body;
+    ({ text, analysisType = 'sentiment' } = req.body);
 
     if (!text || typeof text !== 'string') {
       return res.status(400).json({

@@ -46,9 +46,11 @@ export const register = async (req: Request, res: Response) => {
     // Create user
     const user = await prisma.users.create({
       data: {
+        id: require('crypto').randomUUID(),
         name,
         email,
-        password: hashedPassword,
+        passwordHash: hashedPassword,
+        updatedAt: new Date(),
       },
       select: {
         id: true,
@@ -64,11 +66,13 @@ export const register = async (req: Request, res: Response) => {
     const refreshToken = generateRefreshToken(user.id);
 
     // Store refresh token in database
-    await prisma.refreshToken.create({
+    await prisma.refresh_tokens.create({
       data: {
+        id: require('crypto').randomUUID(),
         token: refreshToken,
         userId: user.id,
         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+        updatedAt: new Date(),
       },
     });
 
@@ -104,7 +108,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     // Check password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
@@ -114,11 +118,13 @@ export const login = async (req: Request, res: Response) => {
     const refreshToken = generateRefreshToken(user.id);
 
     // Store refresh token in database
-    await prisma.refreshToken.create({
+    await prisma.refresh_tokens.create({
       data: {
+        id: require('crypto').randomUUID(),
         token: refreshToken,
         userId: user.id,
         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+        updatedAt: new Date(),
       },
     });
 
@@ -130,8 +136,8 @@ export const login = async (req: Request, res: Response) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    // Return user data without password
-    const { password: _, ...userData } = user;
+    // Return user data without passwordHash
+    const { passwordHash: _, ...userData } = user;
 
     res.json({
       user: userData,
@@ -164,11 +170,13 @@ export const forgotPassword = async (req: Request, res: Response) => {
     );
 
     // Save reset token to database
-    await prisma.users.update({
-      where: { id: user.id },
+    await prisma.password_reset_tokens.create({
       data: {
-        resetToken,
-        resetTokenExpiry: new Date(Date.now() + 3600000), // 1 hour
+        id: require('crypto').randomUUID(),
+        token: resetToken,
+        userId: user.id,
+        expiresAt: new Date(Date.now() + 3600000), // 1 hour
+        updatedAt: new Date(),
       },
     });
 
@@ -223,7 +231,7 @@ export const refreshToken = async (req: Request, res: Response) => {
     const payload = jwt.verify(refreshToken, REFRESH_SECRET) as { userId: string };
     
     // Check if token exists in database
-    const tokenInDb = await prisma.refreshToken.findFirst({
+    const tokenInDb = await prisma.refresh_tokens.findFirst({
       where: { 
         token: refreshToken,
         userId: payload.userId,
@@ -260,7 +268,7 @@ export const logout = async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken;
     if (refreshToken) {
       // Delete refresh token from database
-      await prisma.refreshToken.deleteMany({
+      await prisma.refresh_tokens.deleteMany({
         where: { token: refreshToken },
       });
     }

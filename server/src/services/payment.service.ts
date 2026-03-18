@@ -2,6 +2,7 @@ import { PrismaClient, Prisma } from '@prisma/client';
 import type { payments as Payment } from '@prisma/client';
 import Stripe from 'stripe';
 import axios from 'axios';
+import * as crypto from 'crypto';
 import { 
   CreatePaymentIntentInput, 
   InitializeChapaPaymentInput,
@@ -22,6 +23,9 @@ export class PaymentError extends AppError {
     super(message, 400, 'PAYMENT_ERROR');
   }
 }
+
+type PaymentStatus = 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED' | 'REFUNDED';
+
 import { calculatePagination, PaginationMeta } from '../utils/response';
 import { log } from '../utils/logger';
 import { config } from '../config/index';
@@ -33,7 +37,7 @@ let stripe: Stripe | null = null;
 
 if (config.payment.stripe.secretKey) {
   stripe = new Stripe(config.payment.stripe.secretKey, {
-    apiVersion: '2024-11-20.acacia',
+    apiVersion: '2025-01-27.acacia' as any,
   });
 } else {
   console.warn('⚠️ Stripe secret key not provided - Stripe payments disabled');
@@ -52,7 +56,7 @@ export class PaymentService {
     }
     // Verify booking or order exists
     if (data.bookingId) {
-      const booking = await prisma.booking.findUnique({
+      const booking = await prisma.bookings.findUnique({
         where: { id: data.bookingId },
       });
 
@@ -78,7 +82,7 @@ export class PaymentService {
     }
 
     if (data.orderId) {
-      const order = await prisma.order.findUnique({
+      const order = await prisma.orders.findUnique({
         where: { id: data.orderId },
       });
 
@@ -108,8 +112,9 @@ export class PaymentService {
       });
 
       // Create payment record in database
-      const payment = await prisma.payments.create({
+      const payment = await (prisma.payments.create as any)({
         data: {
+          id: crypto.randomUUID(),
           paymentId: paymentIntent.id,
           userId,
           bookingId: data.bookingId,
@@ -118,7 +123,8 @@ export class PaymentService {
           currency: data.currency,
           method: 'STRIPE',
           status: 'PENDING',
-          gatewayResponse: paymentIntent as any,
+          gatewayResponse: JSON.stringify(paymentIntent),
+          updatedAt: new Date(),
         },
       });
 
@@ -149,7 +155,7 @@ export class PaymentService {
   ): Promise<{ checkoutUrl: string; txRef: string; payment: Payment }> {
     // Verify booking or order exists
     if (data.bookingId) {
-      const booking = await prisma.booking.findUnique({
+      const booking = await prisma.bookings.findUnique({
         where: { id: data.bookingId },
       });
 
@@ -163,7 +169,7 @@ export class PaymentService {
     }
 
     if (data.orderId) {
-      const order = await prisma.order.findUnique({
+      const order = await prisma.orders.findUnique({
         where: { id: data.orderId },
       });
 
@@ -208,8 +214,9 @@ export class PaymentService {
       }
 
       // Create payment record in database
-      const payment = await prisma.payments.create({
+      const payment = await (prisma.payments.create as any)({
         data: {
+          id: crypto.randomUUID(),
           paymentId: txRef,
           userId,
           bookingId: data.bookingId,
@@ -218,7 +225,8 @@ export class PaymentService {
           currency: data.currency,
           method: 'CHAPA',
           status: 'PENDING',
-          gatewayResponse: response.data as any,
+          gatewayResponse: JSON.stringify(response.data),
+          updatedAt: new Date(),
         },
       });
 
@@ -281,15 +289,16 @@ export class PaymentService {
         where: { id: payment.id },
         data: {
           status,
-          gatewayResponse: paymentIntent as any,
+          gatewayResponse: JSON.stringify(paymentIntent),
+          updatedAt: new Date(),
         },
       });
 
       // Update booking status if payment is completed
       if (status === 'COMPLETED' && payment.bookingId) {
-        await prisma.booking.update({
+        await prisma.bookings.update({
           where: { id: payment.bookingId },
-          data: { status: 'CONFIRMED' },
+          data: { status: 'CONFIRMED', updatedAt: new Date() },
         });
       }
 
@@ -346,15 +355,16 @@ export class PaymentService {
         where: { id: payment.id },
         data: {
           status,
-          gatewayResponse: response.data as any,
+          gatewayResponse: JSON.stringify(response.data),
+          updatedAt: new Date(),
         },
       });
 
       // Update booking status if payment is completed
       if (status === 'COMPLETED' && payment.bookingId) {
-        await prisma.booking.update({
+        await prisma.bookings.update({
           where: { id: payment.bookingId },
-          data: { status: 'CONFIRMED' },
+          data: { status: 'CONFIRMED', updatedAt: new Date() },
         });
       }
 
@@ -395,47 +405,29 @@ export class PaymentService {
     } = query;
 
     // Build where clause
-    const where: Prisma.PaymentWhereInput = {};
+    const where: Prisma.paymentsWhereInput = {};
 
-    if (status) {
-      where.status = status;
-    }
+    if (status) where.status = status;
+    if (method) where.method = method;
+    if (userId) where.userId = userId;
+    if (bookingId) where.bookingId = bookingId;
+    if (orderId) where.orderId = orderId;
 
-    if (method) {
-      where.method = method;
-    }
-
-    if (userId) {
-      where.userId = userId;
-    }
-
-    if (bookingId) {
-      where.bookingId = bookingId;
-    }
-
-    if (orderId) {
-      where.orderId = orderId;
-    }
-
-    // Date range filter
     if (startDate || endDate) {
       where.createdAt = {};
-      if (startDate) where.createdAt.gte = startDate;
-      if (endDate) where.createdAt.lte = endDate;
+      if (startDate) (where.createdAt as any).gte = startDate;
+      if (endDate) (where.createdAt as any).lte = endDate;
     }
 
-    // Amount range filter
     if (minAmount !== undefined || maxAmount !== undefined) {
       where.amount = {};
-      if (minAmount !== undefined) where.amount.gte = minAmount;
-      if (maxAmount !== undefined) where.amount.lte = maxAmount;
+      if (minAmount !== undefined) (where.amount as any).gte = minAmount;
+      if (maxAmount !== undefined) (where.amount as any).lte = maxAmount;
     }
 
-    // Calculate pagination
     const skip = (page - 1) * limit;
 
-    // Build order by clause
-    const orderBy: Prisma.PaymentOrderByWithRelationInput = {};
+    const orderBy: Prisma.paymentsOrderByWithRelationInput = {};
     if (sortBy === 'amount') {
       orderBy.amount = sortOrder;
     } else if (sortBy === 'status') {
@@ -444,7 +436,6 @@ export class PaymentService {
       orderBy.createdAt = sortOrder;
     }
 
-    // Execute queries
     const [payments, total] = await Promise.all([
       prisma.payments.findMany({
         where,
@@ -452,26 +443,17 @@ export class PaymentService {
         skip,
         take: limit,
         include: {
-          user: {
-            select: {
-              name: true,
-              email: true,
-            },
+          users: {
+            select: { name: true, email: true },
           },
-          booking: {
+          bookings: {
             select: {
               bookingNumber: true,
-              tour: {
-                select: {
-                  title: true,
-                },
-              },
+              tours: { select: { title: true } },
             },
           },
-          order: {
-            select: {
-              orderNumber: true,
-            },
+          orders: {
+            select: { orderNumber: true },
           },
         },
       }),
@@ -480,10 +462,7 @@ export class PaymentService {
 
     const pagination = calculatePagination(page, limit, total);
 
-    return {
-      payments,
-      pagination,
-    };
+    return { payments: payments as any, pagination };
   }
 
   /**
@@ -493,18 +472,13 @@ export class PaymentService {
     const payment = await prisma.payments.findUnique({
       where: { id },
       include: {
-        user: {
-          select: {
-            name: true,
-            email: true,
-          },
+        users: {
+          select: { name: true, email: true },
         },
-        booking: {
-          include: {
-            tour: true,
-          },
+        bookings: {
+          include: { tours: true },
         },
-        order: true,
+        orders: true,
       },
     });
 
@@ -512,12 +486,11 @@ export class PaymentService {
       throw new NotFoundError('Payment not found');
     }
 
-    // Verify ownership if userId is provided
     if (userId && payment.userId !== userId) {
       throw new ValidationError('You do not have permission to view this payment');
     }
 
-    return payment;
+    return payment as any;
   }
 
   /**
@@ -554,68 +527,53 @@ export class PaymentService {
     }
 
     try {
-      let refundAmount = data.amount || Number(payment.amount);
+      const refundAmount = data.amount || Number(payment.amount);
 
-      if (payment.method === 'STRIPE') {
-        // Create Stripe refund
+      if (payment.method === 'STRIPE' && stripe) {
         const refund = await stripe.refunds.create({
           payment_intent: payment.paymentId,
           amount: data.amount ? Math.round(data.amount * 100) : undefined,
           reason: 'requested_by_customer',
-          metadata: {
-            reason: data.reason,
-            userId,
-          },
+          metadata: { reason: data.reason, userId },
         });
 
-        // Update payment status
         const updatedPayment = await prisma.payments.update({
           where: { id: payment.id },
           data: {
             status: 'REFUNDED',
             failureReason: data.reason,
-            gatewayResponse: { ...payment.gatewayResponse, refund } as any,
+            gatewayResponse: JSON.stringify({ refund }),
+            updatedAt: new Date(),
           },
         });
 
-        // Update booking status if applicable
         if (payment.bookingId) {
-          await prisma.booking.update({
+          await prisma.bookings.update({
             where: { id: payment.bookingId },
-            data: { status: 'REFUNDED' },
+            data: { status: 'CANCELLED', updatedAt: new Date() },
           });
         }
 
-        log.info('Stripe payment refunded', {
-          paymentId: payment.id,
-          refundAmount,
-          userId,
-        });
-
+        log.info('Stripe payment refunded', { paymentId: payment.id, refundAmount, userId });
         return updatedPayment;
       } else if (payment.method === 'CHAPA') {
-        // Chapa doesn't have direct refund API, mark as refunded
         const updatedPayment = await prisma.payments.update({
           where: { id: payment.id },
           data: {
             status: 'REFUNDED',
             failureReason: data.reason,
+            updatedAt: new Date(),
           },
         });
 
         if (payment.bookingId) {
-          await prisma.booking.update({
+          await prisma.bookings.update({
             where: { id: payment.bookingId },
-            data: { status: 'REFUNDED' },
+            data: { status: 'CANCELLED', updatedAt: new Date() },
           });
         }
 
-        log.info('Chapa payment marked as refunded', {
-          paymentId: payment.id,
-          refundAmount,
-          userId,
-        });
-
+        log.info('Chapa payment marked as refunded', { paymentId: payment.id, refundAmount, userId });
         return updatedPayment;
       }
 
@@ -630,20 +588,15 @@ export class PaymentService {
    * Get payment statistics
    */
   static async getPaymentStats(query: PaymentStatsQueryInput = {}): Promise<any> {
-    const where: Prisma.PaymentWhereInput = {};
+    const where: Prisma.paymentsWhereInput = {};
 
-    if (query.method) {
-      where.method = query.method;
-    }
-
-    if (query.userId) {
-      where.userId = query.userId;
-    }
+    if (query.method) where.method = query.method;
+    if (query.userId) where.userId = query.userId;
 
     if (query.startDate || query.endDate) {
       where.createdAt = {};
-      if (query.startDate) where.createdAt.gte = query.startDate;
-      if (query.endDate) where.createdAt.lte = query.endDate;
+      if (query.startDate) (where.createdAt as any).gte = query.startDate;
+      if (query.endDate) (where.createdAt as any).lte = query.endDate;
     }
 
     const [
@@ -659,18 +612,9 @@ export class PaymentService {
       prisma.payments.count({ where: { ...where, status: 'COMPLETED' } }),
       prisma.payments.count({ where: { ...where, status: 'FAILED' } }),
       prisma.payments.count({ where: { ...where, status: 'REFUNDED' } }),
-      prisma.payments.aggregate({
-        where: { ...where, status: 'COMPLETED' },
-        _sum: { amount: true },
-      }),
-      prisma.payments.aggregate({
-        where: { ...where, status: 'COMPLETED', method: 'STRIPE' },
-        _sum: { amount: true },
-      }),
-      prisma.payments.aggregate({
-        where: { ...where, status: 'COMPLETED', method: 'CHAPA' },
-        _sum: { amount: true },
-      }),
+      prisma.payments.aggregate({ where: { ...where, status: 'COMPLETED' }, _sum: { amount: true } }),
+      prisma.payments.aggregate({ where: { ...where, status: 'COMPLETED', method: 'STRIPE' }, _sum: { amount: true } }),
+      prisma.payments.aggregate({ where: { ...where, status: 'COMPLETED', method: 'CHAPA' }, _sum: { amount: true } }),
     ]);
 
     return {

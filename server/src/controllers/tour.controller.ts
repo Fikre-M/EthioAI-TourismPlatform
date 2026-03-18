@@ -66,7 +66,7 @@ export class TourController {
       include: {
         reviews: {
           include: {
-            user: {
+            users: {
               select: {
                 id: true,
                 name: true,

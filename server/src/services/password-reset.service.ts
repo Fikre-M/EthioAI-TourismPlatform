@@ -28,7 +28,7 @@ export class PasswordResetService {
   static async requestPasswordReset(email: string, ip?: string, userAgent?: string): Promise<{ message: string }> {
     try {
       // Find user by email
-      const user = await prisma.user.findUnique({
+      const user = await prisma.users.findUnique({
         where: { email: email.toLowerCase() },
       });
 

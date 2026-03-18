@@ -1,4 +1,5 @@
-import { PrismaClient, User, UserRole } from '@prisma/client';
+import { PrismaClient } from '@prisma/client'
+import { UserRole } from '../auth/auth.types';
 import { hashPassword, comparePasswords } from '../../utils/password';
 
 const prisma = new PrismaClient();
@@ -22,7 +23,7 @@ export interface UserResponse {
   id: string;
   name: string | null;
   email: string;
-  role: UserRole;
+  role: string;
   isEmailVerified: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -43,20 +44,22 @@ export const userService = {
     const { password, ...rest } = data;
     const passwordHash = await hashPassword(password);
 
-    return prisma.users.create({
+    return (prisma.users.create as any)({
       data: {
+        id: require('crypto').randomUUID(),
         ...rest,
         passwordHash,
+        updatedAt: new Date(),
       },
       select: userSelect,
     });
   },
 
-  async findUserByEmail(email: string, includePassword = false): Promise<User | null> {
+  async findUserByEmail(email: string, includePassword = false): Promise<any | null> {
     return prisma.users.findUnique({
       where: { email },
       include: {
-        refreshTokens: false,
+        refresh_tokens: false,
         ...(includePassword && { passwordHash: true }),
       },
     });
@@ -94,8 +97,8 @@ export const userService = {
     });
   },
 
-  async verifyPassword(user: User, password: string): Promise<boolean> {
-    return comparePasswords(password, user.passwordHash);
+  async verifyPassword(any: any, password: string): Promise<boolean> {
+    return comparePasswords(password, any.passwordHash);
   },
 
   async markEmailAsVerified(email: string): Promise<UserResponse> {
@@ -148,3 +151,6 @@ export const userService = {
     });
   },
 };
+
+
+

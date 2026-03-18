@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { UserRole } from '@prisma/client';
+import { UserRole } from './auth.types';
 
 const passwordSchema = z
   .string()
@@ -16,7 +16,7 @@ export const registerSchema = z.object({
     name: z.string().min(2, { message: 'Name must be at least 2 characters long' }),
     email: z.string().email({ message: 'Invalid email address' }),
     password: passwordSchema,
-    role: z.nativeEnum(UserRole).default('USER'),
+    role: z.enum(['USER', 'ADMIN', 'GUIDE', 'VENDOR']).default('USER'),
   }),
 });
 

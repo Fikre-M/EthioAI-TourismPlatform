@@ -209,8 +209,8 @@ export class AdminService {
           take: Math.floor(limit / 3),
           orderBy: { createdAt: 'desc' },
           include: {
-            user: { select: { name: true, email: true } },
-            tour: { select: { title: true } }
+            users: { select: { name: true, email: true } },
+            tours: { select: { title: true } }
           }
         }),
         prisma.users.findMany({
@@ -222,8 +222,8 @@ export class AdminService {
           take: Math.floor(limit / 3),
           orderBy: { createdAt: 'desc' },
           include: {
-            user: { select: { name: true } },
-            tour: { select: { title: true } }
+            users: { select: { name: true } },
+            tours: { select: { title: true } }
           }
         })
       ]);
@@ -233,8 +233,8 @@ export class AdminService {
           id: booking.id,
           type: 'booking',
           action: 'created',
-          description: `New booking for ${booking.tour.title}`,
-          user: booking.user.name,
+          description: `New booking for ${booking.tours.title}`,
+          user: booking.users.name,
           timestamp: booking.createdAt,
           metadata: {
             bookingNumber: booking.bookingNumber,
@@ -257,8 +257,8 @@ export class AdminService {
           id: review.id,
           type: 'review',
           action: 'created',
-          description: `New review for ${review.tour?.title || 'product'}`,
-          user: review.user.name,
+          description: `New review for ${review.tours?.title || 'product'}`,
+          user: review.users?.name,
           timestamp: review.createdAt,
           metadata: {
             rating: review.rating,
@@ -443,14 +443,14 @@ export class AdminService {
             take: 10,
             orderBy: { createdAt: 'desc' },
             include: {
-              tour: { select: { title: true } }
+              tours: { select: { title: true } }
             }
           },
           reviews: {
             take: 10,
             orderBy: { createdAt: 'desc' },
             include: {
-              tour: { select: { title: true } }
+              tours: { select: { title: true } }
             }
           },
           payments: {
@@ -577,11 +577,6 @@ export class AdminService {
           take: limit,
           orderBy: { [filters.sortBy]: filters.sortOrder },
           include: {
-            guide: {
-              include: {
-                user: { select: { name: true, email: true } }
-              }
-            },
             _count: {
               select: {
                 bookings: true,
@@ -617,29 +612,14 @@ export class AdminService {
           updatedAt: new Date()
         },
         include: {
-          guide: {
-            include: {
-              user: { select: { name: true, email: true } }
-            }
+          _count: {
+            select: { bookings: true, reviews: true }
           }
         }
       });
 
-      // Notify guide about status change
-      if (tour.guide) {
-        await EmailService.sendEmail({
-          to: tour.guide.user.email,
-          subject: `Tour ${status}: ${tour.title}`,
-          html: `
-            <h2>Tour Status Update</h2>
-            <p>Hello ${tour.guide.user.name},</p>
-            <p>Your tour "${tour.title}" has been ${status.toLowerCase()}.</p>
-            ${reason ? `<p><strong>Reason:</strong> ${reason}</p>` : ''}
-            <p>Best regards,<br>The EthioAI Tourism Team</p>
-          `,
-          text: `Your tour "${tour.title}" has been ${status.toLowerCase()}. ${reason ? `Reason: ${reason}` : ''}`
-        });
-      }
+      // Tour status updated - no guide notification (guide relation not in schema)
+      log.info(`Tour ${tourId} status updated to ${status} by admin ${adminId}`);
 
       return tour;
     } catch (error) {
@@ -670,8 +650,8 @@ export class AdminService {
       const booking = await prisma.bookings.findUnique({
         where: { id: bookingId },
         include: {
-          user: { select: { name: true, email: true } },
-          tour: { select: { title: true } }
+          users: { select: { name: true, email: true } },
+          tours: { select: { title: true } }
         }
       });
 
@@ -686,18 +666,18 @@ export class AdminService {
           updatedAt: new Date()
         },
         include: {
-          user: { select: { name: true, email: true } },
-          tour: { select: { title: true } }
+          users: { select: { name: true, email: true } },
+          tours: { select: { title: true } }
         }
       });
 
       // Send notification email
       try {
-        await EmailService.sendBookingStatusUpdate(booking.user.email, {
+        await EmailService.sendBookingStatusUpdate(booking.users.email, {
           bookingNumber: booking.bookingNumber,
-          tourTitle: booking.tour.title,
+          tourTitle: booking.tours.title,
           status,
-          userName: booking.user.name
+          userName: booking.users.name
         });
       } catch (emailError) {
         log.warn('Failed to send booking status update email:', emailError);
@@ -738,8 +718,8 @@ export class AdminService {
           take: limit,
           orderBy: { [filters.sortBy]: filters.sortOrder },
           include: {
-            user: { select: { name: true, email: true } },
-            tour: { select: { title: true } },
+            users: { select: { name: true, email: true } },
+            tours: { select: { title: true } },
             payments: { select: { status: true, amount: true } }
           }
         }),
@@ -802,3 +782,5 @@ export class AdminService {
   static async bulkUpdateUsers(userIds: string[], action: string, data: any, adminId: string) { /* Implementation */ }
   static async exportData(type: string, format: string, filters: any, adminId: string) { /* Implementation */ }
 }
+
+

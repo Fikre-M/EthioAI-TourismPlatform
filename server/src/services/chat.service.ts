@@ -1,4 +1,4 @@
-import { PrismaClient, ChatMessage, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { 
   SendMessageInput, 
   ChatQueryInput,
@@ -26,8 +26,8 @@ export class ChatService {
     data: SendMessageInput, 
     userId?: string
   ): Promise<{
-    userMessage: ChatMessage;
-    aiResponse: ChatMessage;
+    userMessage: any;
+    aiResponse: any;
   }> {
     // Validate message content
     if (!OpenAIService.validateMessageContent(data.message)) {
@@ -52,7 +52,7 @@ export class ChatService {
     );
 
     // Save user message
-    const userMessage = await prisma.chatMessage.create({
+    const userMessage = await (prisma.chat_messages.create as any)({
       data: {
         userId,
         message: data.message,
@@ -63,7 +63,7 @@ export class ChatService {
     });
 
     // Save AI response
-    const aiResponse = await prisma.chatMessage.create({
+    const aiResponse = await (prisma.chat_messages.create as any)({
       data: {
         userId,
         message: data.message, // Store original user message for context
@@ -95,7 +95,7 @@ export class ChatService {
     query: ChatQueryInput,
     userId?: string
   ): Promise<{
-    messages: ChatMessage[];
+    messages: any[];
     pagination: PaginationMeta;
   }> {
     const {
@@ -111,7 +111,7 @@ export class ChatService {
     } = query;
 
     // Build where clause
-    const where: Prisma.ChatMessageWhereInput = {};
+    const where: Prisma.chat_messagesWhereInput = {};
 
     if (userId) {
       where.userId = userId;
@@ -144,18 +144,18 @@ export class ChatService {
     const skip = (page - 1) * limit;
 
     // Build order by clause
-    const orderBy: Prisma.ChatMessageOrderByWithRelationInput = {};
+    const orderBy: Prisma.chat_messagesOrderByWithRelationInput = {};
     orderBy[sortBy] = sortOrder;
 
     // Execute queries
     const [messages, total] = await Promise.all([
-      prisma.chatMessage.findMany({
+      prisma.chat_messages.findMany({
         where,
         orderBy,
         skip,
         take: limit,
         include: {
-          user: {
+          users: {
             select: {
               id: true,
               name: true,
@@ -164,7 +164,7 @@ export class ChatService {
           },
         },
       }),
-      prisma.chatMessage.count({ where }),
+      prisma.chat_messages.count({ where }),
     ]);
 
     const pagination = calculatePagination(page, limit, total);
@@ -181,8 +181,8 @@ export class ChatService {
   static async getRecentMessages(
     userId: string, 
     limit: number = 10
-  ): Promise<ChatMessage[]> {
-    return prisma.chatMessage.findMany({
+  ): Promise<any[]> {
+    return prisma.chat_messages.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
       take: limit,
@@ -195,17 +195,17 @@ export class ChatService {
   static async getMessageById(
     id: string, 
     userId?: string
-  ): Promise<ChatMessage> {
-    const where: Prisma.ChatMessageWhereInput = { id };
+  ): Promise<any> {
+    const where: Prisma.chat_messagesWhereInput = { id };
     
     if (userId) {
       where.userId = userId;
     }
 
-    const message = await prisma.chatMessage.findUnique({
+    const message = await prisma.chat_messages.findUnique({
       where: { id },
       include: {
-        user: {
+        users: {
           select: {
             id: true,
             name: true,
@@ -234,8 +234,8 @@ export class ChatService {
     id: string, 
     data: UpdateMessageInput,
     userId: string
-  ): Promise<ChatMessage> {
-    const message = await prisma.chatMessage.findUnique({
+  ): Promise<any> {
+    const message = await prisma.chat_messages.findUnique({
       where: { id },
     });
 
@@ -243,7 +243,7 @@ export class ChatService {
       throw new NotFoundError('Message not found');
     }
 
-    const updatedMessage = await prisma.chatMessage.update({
+    const updatedMessage = await prisma.chat_messages.update({
       where: { id },
       data: {
         response: data.response,
@@ -260,7 +260,7 @@ export class ChatService {
    * Delete message
    */
   static async deleteMessage(id: string, userId: string): Promise<void> {
-    const message = await prisma.chatMessage.findUnique({
+    const message = await prisma.chat_messages.findUnique({
       where: { id },
     });
 
@@ -273,7 +273,7 @@ export class ChatService {
       throw new ForbiddenError('You can only delete your own messages');
     }
 
-    await prisma.chatMessage.delete({
+    await prisma.chat_messages.delete({
       where: { id },
     });
 
@@ -284,7 +284,7 @@ export class ChatService {
    * Clear all messages for a user
    */
   static async clearUserMessages(userId: string): Promise<void> {
-    const deletedCount = await prisma.chatMessage.deleteMany({
+    const deletedCount = await prisma.chat_messages.deleteMany({
       where: { userId },
     });
 
@@ -302,7 +302,7 @@ export class ChatService {
     userId: string
   ): Promise<void> {
     // Verify message exists and belongs to user
-    const message = await prisma.chatMessage.findUnique({
+    const message = await prisma.chat_messages.findUnique({
       where: { id: data.messageId },
     });
 
@@ -325,7 +325,7 @@ export class ChatService {
       },
     };
 
-    await prisma.chatMessage.update({
+    await prisma.chat_messages.update({
       where: { id: data.messageId },
       data: {
         metadata: JSON.stringify(updatedMetadata),
@@ -343,7 +343,7 @@ export class ChatService {
    * Get chat statistics
    */
   static async getChatStats(query: ChatStatsQueryInput = {}): Promise<any> {
-    const where: Prisma.ChatMessageWhereInput = {};
+    const where: Prisma.chat_messagesWhereInput = {};
 
     if (query.userId) {
       where.userId = query.userId;
@@ -370,24 +370,24 @@ export class ChatService {
       messagesByType,
       uniqueUsers,
     ] = await Promise.all([
-      prisma.chatMessage.count({ where }),
-      prisma.chatMessage.count({ 
+      prisma.chat_messages.count({ where }),
+      prisma.chat_messages.count({ 
         where: { 
           ...where, 
           response: { not: null } 
         } 
       }),
-      prisma.chatMessage.groupBy({
+      prisma.chat_messages.groupBy({
         by: ['language'],
         where,
         _count: { id: true },
       }),
-      prisma.chatMessage.groupBy({
+      prisma.chat_messages.groupBy({
         by: ['messageType'],
         where,
         _count: { id: true },
       }),
-      prisma.chatMessage.findMany({
+      prisma.chat_messages.findMany({
         where,
         select: { userId: true },
         distinct: ['userId'],
@@ -458,11 +458,11 @@ export class ChatService {
     userId: string,
     format: 'json' | 'text' = 'json'
   ): Promise<string> {
-    const messages = await prisma.chatMessage.findMany({
+    const messages = await prisma.chat_messages.findMany({
       where: { userId },
       orderBy: { createdAt: 'asc' },
       include: {
-        user: {
+        users: {
           select: {
             name: true,
             email: true,
@@ -473,7 +473,7 @@ export class ChatService {
 
     if (format === 'text') {
       let textExport = `Chat History Export\n`;
-      textExport += `User: ${messages[0]?.user?.name || 'Unknown'}\n`;
+      textExport += `User: ${messages[0]?.users?.name || 'Unknown'}\n`;
       textExport += `Export Date: ${new Date().toISOString()}\n`;
       textExport += `Total Messages: ${messages.length}\n\n`;
       textExport += '=' .repeat(50) + '\n\n';
@@ -493,10 +493,10 @@ export class ChatService {
     // JSON format
     return JSON.stringify({
       exportDate: new Date().toISOString(),
-      user: {
+      users: {
         id: userId,
-        name: messages[0]?.user?.name,
-        email: messages[0]?.user?.email,
+        name: messages[0]?.users?.name,
+        email: messages[0]?.users?.email,
       },
       totalMessages: messages.length,
       messages: messages.map(msg => ({
@@ -520,7 +520,7 @@ export class ChatService {
   }>> {
     // This is a simplified implementation
     // In a real-world scenario, you'd use more sophisticated text analysis
-    const messages = await prisma.chatMessage.findMany({
+    const messages = await prisma.chat_messages.findMany({
       select: { message: true },
       take: 1000, // Analyze recent messages
       orderBy: { createdAt: 'desc' },
@@ -548,3 +548,7 @@ export class ChatService {
       .map(([topic, count]) => ({ topic, count }));
   }
 }
+
+
+
+

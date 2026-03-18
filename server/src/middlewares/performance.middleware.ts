@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { monitoringService } from '../services/monitoring.service'
-import { AuthRequest } from './auth.middleware'
-import logger from '../utils/logger'
+import { AuthRequest } from '../modules/auth/auth.types'
+import { log } from '../utils/logger'
 
 /**
  * Performance monitoring middleware
@@ -31,7 +31,7 @@ export function performanceMonitoring() {
       
       // Log request completion
       const authReq = req as AuthRequest
-      logger.info('Request completed', {
+      log.info('Request completed', {
         requestId,
         method: req.method,
         url: req.originalUrl,
@@ -56,7 +56,7 @@ export function requestTimeout(timeoutMs: number = 30000) {
   return (req: Request, res: Response, next: NextFunction) => {
     const timeout = setTimeout(() => {
       if (!res.headersSent) {
-        logger.warn('Request timeout', {
+        log.warn('Request timeout', {
           method: req.method,
           url: req.originalUrl,
           timeout: timeoutMs,
@@ -117,7 +117,7 @@ export function enhancedRateLimit(options: {
     
     // Check if limit exceeded
     if (requestData.count >= options.maxRequests) {
-      logger.warn('Rate limit exceeded', {
+      log.warn('Rate limit exceeded', {
         ip: req.ip,
         method: req.method,
         url: req.originalUrl,
@@ -155,7 +155,7 @@ export function memoryMonitoring() {
     
     // Warn if memory usage is high
     if (memoryUsageMB > 500) { // 500MB threshold
-      logger.warn('High memory usage detected', {
+      log.warn('High memory usage detected', {
         heapUsed: memoryUsageMB + 'MB',
         heapTotal: Math.round(memUsage.heapTotal / 1024 / 1024) + 'MB',
         external: Math.round(memUsage.external / 1024 / 1024) + 'MB',
@@ -194,11 +194,9 @@ export function securityMonitoring() {
     
     for (const pattern of suspiciousPatterns) {
       if (pattern.test(requestString)) {
-        logger.security('Suspicious request detected', {
-          ip: req.ip,
+        log.security('Suspicious request detected', req.ip, req.get('User-Agent') || '', {
           method: req.method,
           url: req.originalUrl,
-          userAgent: req.get('User-Agent'),
           pattern: pattern.toString(),
           timestamp: new Date().toISOString()
         })

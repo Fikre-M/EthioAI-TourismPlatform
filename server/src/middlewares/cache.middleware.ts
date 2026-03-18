@@ -18,7 +18,7 @@ export const cacheMiddleware = (options: CacheOptions = {}) => {
     const keyGenerator = options.keyGenerator || ((req) => `${req.method}:${req.originalUrl}`);
     
     const cacheKey = keyGenerator(req);
-    const cached = cache.get(cacheKey);
+    const cached = memoryCache.get(cacheKey);
     
     if (cached && cached.expires > Date.now()) {
       log.info('Cache hit', { key: cacheKey });
@@ -31,7 +31,7 @@ export const cacheMiddleware = (options: CacheOptions = {}) => {
     res.json = function(data: any) {
       // Cache successful responses
       if (res.statusCode >= 200 && res.statusCode < 300) {
-        cache.set(cacheKey, {
+        memoryCache.set(cacheKey, {
           data,
           expires: Date.now() + (ttl * 1000)
         });
@@ -83,9 +83,9 @@ export const invalidateCache = (patterns: string[] | ((req: Request) => string[]
         
         for (const pattern of patternsToInvalidate) {
           // Simple pattern matching - in production, use Redis with pattern matching
-          for (const [key] of cache) {
+          for (const [key] of memoryCache) {
             if (key.includes(pattern.replace('*', ''))) {
-              cache.delete(key);
+              memoryCache.delete(key);
               log.info('Cache invalidated', { key, pattern });
             }
           }

@@ -30,7 +30,7 @@ export class BaseNotificationService implements INotificationService {
       const effectiveChannels = this.determineEffectiveChannels(request, preferences)
 
       // Create notification in database
-      const notification = await this.prisma.notification.create({
+      const notification = await this.prisma.notifications.create({
         data: {
           userId: request.userId,
           type: request.type as any, // Cast to Prisma enum
@@ -67,7 +67,7 @@ export class BaseNotificationService implements INotificationService {
         if (filters.endDate) where.createdAt.lte = filters.endDate
       }
 
-      const notifications = await this.prisma.notification.findMany({
+      const notifications = await this.prisma.notifications.findMany({
         where,
         orderBy: { createdAt: 'desc' },
         take: filters.limit || 50,
@@ -83,7 +83,7 @@ export class BaseNotificationService implements INotificationService {
 
   async markAsRead(notificationId: string, userId: string): Promise<void> {
     try {
-      const notification = await this.prisma.notification.findFirst({
+      const notification = await this.prisma.notifications.findFirst({
         where: { id: notificationId, userId },
       })
 
@@ -91,7 +91,7 @@ export class BaseNotificationService implements INotificationService {
         throw new NotFoundError('Notification not found')
       }
 
-      await this.prisma.notification.update({
+      await this.prisma.notifications.update({
         where: { id: notificationId },
         data: {
           status: 'READ' as any,
@@ -109,7 +109,7 @@ export class BaseNotificationService implements INotificationService {
 
   async markAllAsRead(userId: string): Promise<void> {
     try {
-      await this.prisma.notification.updateMany({
+      await this.prisma.notifications.updateMany({
         where: {
           userId,
           status: { not: 'READ' as any },
@@ -129,7 +129,7 @@ export class BaseNotificationService implements INotificationService {
 
   async deleteNotification(notificationId: string, userId: string): Promise<void> {
     try {
-      const notification = await this.prisma.notification.findFirst({
+      const notification = await this.prisma.notifications.findFirst({
         where: { id: notificationId, userId },
       })
 
@@ -137,7 +137,7 @@ export class BaseNotificationService implements INotificationService {
         throw new NotFoundError('Notification not found')
       }
 
-      await this.prisma.notification.delete({
+      await this.prisma.notifications.delete({
         where: { id: notificationId },
       })
 
@@ -154,11 +154,11 @@ export class BaseNotificationService implements INotificationService {
     preferences: Partial<NotificationPreferences>
   ): Promise<NotificationPreferences> {
     try {
-      const existingPrefs = await this.prisma.notificationPreferences.findUnique({
+      const existingPrefs = await this.prisma.notification_preferences.findUnique({
         where: { userId },
       })
 
-      const updatedPrefs = await this.prisma.notificationPreferences.upsert({
+      const updatedPrefs = await (prisma.notification_preferences.upsert as any)({
         where: { userId },
         create: {
           userId,
@@ -187,13 +187,13 @@ export class BaseNotificationService implements INotificationService {
 
   async getPreferences(userId: string): Promise<NotificationPreferences> {
     try {
-      let preferences = await this.prisma.notificationPreferences.findUnique({
+      let preferences = await this.prisma.notification_preferences.findUnique({
         where: { userId },
       })
 
       // Create default preferences if none exist
       if (!preferences) {
-        preferences = await this.prisma.notificationPreferences.create({
+        preferences = await (prisma.notification_preferences.create as any)({
           data: {
             userId,
             channels: this.getDefaultChannelPreferences(),
@@ -228,7 +228,7 @@ export class BaseNotificationService implements INotificationService {
         status: 'PENDING' as any,
       }))
 
-      await this.prisma.notification.createMany({
+      await (prisma.notifications.createMany as any)({
         data: notifications,
       })
 
@@ -387,3 +387,7 @@ export class BaseNotificationService implements INotificationService {
     }
   }
 }
+
+
+
+

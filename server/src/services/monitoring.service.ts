@@ -134,7 +134,7 @@ export class MonitoringService {
     }
 
     // Store error in cache for quick access
-    cacheService.set(`error:${errorId}`, errorReport, { ttl: 86400 }) // 24 hours
+    cacheService.set(`error:${errorId}`, errorReport, 86400) // 24 hours
 
     // Log error
     logger.error('Error recorded for monitoring', {
@@ -239,11 +239,11 @@ export class MonitoringService {
   async getErrorReports(limit: number = 50): Promise<ErrorReport[]> {
     try {
       // Get error IDs from cache
-      const errorKeys = await cacheService['redis'].keys('ethioai:error:*')
+      const errorKeys = await cacheService.keys('error:*')
       const errorIds = errorKeys.map(key => key.split(':').pop()).slice(0, limit)
       
       const errors = await Promise.all(
-        errorIds.map(id => cacheService.get<ErrorReport>(`error:${id}`))
+        errorIds.map(id => cacheService.get(`error:${id}`))
       )
 
       return errors.filter(Boolean) as ErrorReport[]
@@ -263,14 +263,14 @@ export class MonitoringService {
 
     // Clear old errors (older than 7 days)
     try {
-      const errorKeys = await cacheService['redis'].keys('ethioai:error:*')
+      const errorKeys = await cacheService.keys('error:*')
       const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000)
       
       for (const key of errorKeys) {
         const errorId = key.split(':').pop()
-        const error = await cacheService.get<ErrorReport>(`error:${errorId}`)
+        const error = await cacheService.get(`error:${errorId}`)
         
-        if (error && error.timestamp.getTime() < sevenDaysAgo) {
+        if (error && (error as ErrorReport).timestamp.getTime() < sevenDaysAgo) {
           await cacheService.del(`error:${errorId}`)
         }
       }
@@ -341,7 +341,7 @@ export class MonitoringService {
       }
       
       const testKey = 'health-check'
-      await cacheService.set(testKey, 'test', { ttl: 10 })
+      await cacheService.set(testKey, 'test', 10)
       const result = await cacheService.get(testKey)
       await cacheService.del(testKey)
       
