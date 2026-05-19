@@ -95,11 +95,17 @@ export class AuthService {
 
   static async logout(userId: string, refreshToken?: string): Promise<void> {
     if (refreshToken) {
+      // Delete only the specific refresh token (single device logout)
       await prisma.refresh_tokens.deleteMany({ where: { userId, token: refreshToken } });
-    } else {
-      await prisma.refresh_tokens.deleteMany({ where: { userId } });
     }
+    // If no refresh token provided, still succeed — client-side token is already discarded
     log.auth('User logged out', userId);
+  }
+
+  static async logoutAll(userId: string): Promise<void> {
+    // Invalidate all sessions across all devices
+    await prisma.refresh_tokens.deleteMany({ where: { userId } });
+    log.auth('User logged out from all devices', userId);
   }
 
   static async refreshToken(refreshToken: string): Promise<any> {

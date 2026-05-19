@@ -99,6 +99,7 @@ router.post('/refresh', refreshRateLimit, validate({ body: refreshTokenSchema })
 // Protected routes (authentication required)
 router.get('/me', authenticate, AuthController.getCurrentUser);
 router.post('/logout', authenticate, AuthController.logout);
+router.post('/logout-all', authenticate, AuthController.logoutAll);
 router.put('/profile', authenticate, validate({ body: updateProfileSchema }), AuthController.updateProfile);
 router.put('/change-password', authenticate, validate({ body: changePasswordSchema }), AuthController.changePassword);
 router.post('/verify-email', authenticate, AuthController.verifyEmail);

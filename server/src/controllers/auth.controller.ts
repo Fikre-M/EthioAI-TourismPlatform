@@ -66,7 +66,7 @@ export class AuthController {
   });
 
   /**
-   * Logout user
+   * Logout user (current device)
    */
   static logout = asyncHandler(async (req: AuthRequest, res: Response) => {
     const { refreshToken } = req.body;
@@ -80,6 +80,22 @@ export class AuthController {
     });
 
     return ResponseUtil.success(res, null, 'Logout successful');
+  });
+
+  /**
+   * Logout user from all devices
+   */
+  static logoutAll = asyncHandler(async (req: AuthRequest, res: Response) => {
+    const userId = req.user?.id!;
+    
+    await AuthService.logoutAll(userId);
+    
+    log.auth('User logged out from all devices', userId, {
+      ip: req.ip,
+      userAgent: req.get('User-Agent'),
+    });
+
+    return ResponseUtil.success(res, null, 'Logged out from all devices successfully');
   });
 
   /**
