@@ -67,7 +67,7 @@ api.interceptors.response.use(
       
       if (refreshToken) {
         try {
-          const response = await api.post('/auth/refresh', {
+          const response = await api.post('/api/auth/refresh', {
             refreshToken: refreshToken
           });
           

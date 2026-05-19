@@ -1,6 +1,6 @@
 import api from '@api/axios.config'
 import { AUTH_ENDPOINTS } from '@api/endpoints'
-import { setToken, setUser, clearAuth, getToken } from '@utils/storage'
+import { setToken, setRefreshToken, setUser, clearAuth, getToken } from '@utils/storage'
 import type { 
   LoginCredentials, 
   RegisterData, 
@@ -22,8 +22,9 @@ class AuthService {
       
       const { user, tokens } = response.data.data
       
-      // Store access token and user data
+      // Store access token, refresh token, and user data
       setToken(tokens.accessToken)
+      setRefreshToken(tokens.refreshToken)
       setUser(user)
       
       // Return in expected format
@@ -49,8 +50,9 @@ class AuthService {
       
       const { user, tokens } = response.data.data
       
-      // Store access token and user data
+      // Store access token, refresh token, and user data
       setToken(tokens.accessToken)
+      setRefreshToken(tokens.refreshToken)
       setUser(user)
       
       // Return in expected format
