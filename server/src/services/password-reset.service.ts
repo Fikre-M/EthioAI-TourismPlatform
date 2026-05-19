@@ -43,11 +43,12 @@ export class PasswordResetService {
         return { message: successMessage };
       }
 
-      // Check for recent reset requests (rate limiting)
+      // Check for recent reset requests (rate limiting) — PostgreSQL compatible
+      const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
       const recentReset = await prisma.$queryRaw<any[]>`
         SELECT id FROM password_reset_tokens 
-        WHERE userId = ${user.id} 
-        AND createdAt > DATE_SUB(NOW(), INTERVAL 15 MINUTE)
+        WHERE "userId" = ${user.id} 
+        AND "createdAt" > ${fifteenMinutesAgo}
         AND used = false
         LIMIT 1
       `;
