@@ -19,7 +19,9 @@ export const authenticate = (req: AuthRequest, res: Response, next: NextFunction
     const token = authHeader.substring(7); // Remove 'Bearer ' prefix
 
     try {
-      const decoded = jwt.verify(token, config.jwt.accessSecret) as any;
+      const decoded = jwt.verify(token, config.jwt.accessSecret, {
+        algorithms: ['HS256'],
+      }) as any;
       
       req.user = {
         id: decoded.userId,
@@ -57,7 +59,9 @@ export const optionalAuth = (req: AuthRequest, res: Response, next: NextFunction
     const token = authHeader.substring(7);
 
     try {
-      const decoded = jwt.verify(token, config.jwt.accessSecret) as any;
+      const decoded = jwt.verify(token, config.jwt.accessSecret, {
+        algorithms: ['HS256'],
+      }) as any;
       req.user = {
         id: decoded.userId,
         email: decoded.email,
@@ -124,7 +128,9 @@ export const validateRefreshToken = (req: AuthRequest, res: Response, next: Next
     }
 
     try {
-      const decoded = jwt.verify(refreshToken, config.jwt.refreshSecret) as any;
+      const decoded = jwt.verify(refreshToken, config.jwt.refreshSecret, {
+        algorithms: ['HS256'],
+      }) as any;
       req.user = {
         id: decoded.userId,
         email: decoded.email,

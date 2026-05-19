@@ -106,7 +106,10 @@ export class AuthService {
     let decoded: any;
     try {
       decoded = verifyRefreshToken(refreshToken);
-    } catch {
+    } catch (err: any) {
+      if (err.name === 'TokenExpiredError') {
+        throw new UnauthorizedError('Refresh token expired');
+      }
       throw new UnauthorizedError('Invalid refresh token');
     }
 
@@ -115,7 +118,12 @@ export class AuthService {
       include: { users: true },
     });
 
-    if (!storedToken || storedToken.expiresAt < new Date()) {
+    // Validate token exists, not expired, and userId matches JWT claim
+    if (
+      !storedToken ||
+      storedToken.expiresAt < new Date() ||
+      storedToken.users.id !== decoded.userId
+    ) {
       throw new UnauthorizedError('Refresh token expired or invalid');
     }
 

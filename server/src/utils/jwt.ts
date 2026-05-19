@@ -32,14 +32,18 @@ export function generateTokenPair(userId: string, role: string): {
  * Verify access token
  */
 export function verifyAccessToken(token: string): TokenPayload {
-  return jwt.verify(token, config.jwt.accessSecret) as TokenPayload;
+  return jwt.verify(token, config.jwt.accessSecret, {
+    algorithms: ['HS256'],
+  }) as TokenPayload;
 }
 
 /**
  * Verify refresh token
  */
 export function verifyRefreshToken(token: string): TokenPayload {
-  return jwt.verify(token, config.jwt.refreshSecret) as TokenPayload;
+  return jwt.verify(token, config.jwt.refreshSecret, {
+    algorithms: ['HS256'],
+  }) as TokenPayload;
 }
 
 /**
