@@ -6,7 +6,6 @@ import { EmailService } from './email.service';
 import { log } from '../utils/logger';
 import { 
   NotFoundError, 
-  ValidationError, 
   UnauthorizedError 
 } from '../middlewares/error.middleware';
 
@@ -118,12 +117,7 @@ export class PasswordResetService {
 
       const reset = resetRecord[0];
 
-      // Validate new password
-      if (!newPassword || newPassword.length < 8) {
-        throw new ValidationError('Password must be at least 8 characters long');
-      }
-
-      // Hash new password
+      // Hash new password (complexity already validated by schema before reaching here)
       const passwordHash = await bcrypt.hash(newPassword, config.security.bcryptSaltRounds);
 
       // Update password and mark token as used
