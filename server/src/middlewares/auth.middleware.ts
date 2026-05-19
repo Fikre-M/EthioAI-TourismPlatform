@@ -180,68 +180,6 @@ export const requireOwnershipOrAdmin = (userIdField: string = 'userId') => {
 };
 
 /**
- * Rate limiting by user
- */
-export const rateLimitByUser = (maxRequests: number, windowMs: number) => {
-  const userRequests = new Map<string, { count: number; resetTime: number }>();
-
-  return (req: AuthRequest, res: Response, next: NextFunction): void => {
-    try {
-      const userId = req.user?.id;
-      
-      if (!userId) {
-        return next(); // Skip rate limiting for unauthenticated requests
-      }
-
-      const now = Date.now();
-      const userLimit = userRequests.get(userId);
-
-      if (!userLimit || now > userLimit.resetTime) {
-        // Reset or initialize user limit
-        userRequests.set(userId, {
-          count: 1,
-          resetTime: now + windowMs
-        });
-        return next();
-      }
-
-      if (userLimit.count >= maxRequests) {
-        log.security('Rate limit exceeded', userId, req.get('User-Agent'), {
-          maxRequests,
-          windowMs,
-          ip: req.ip
-        });
-        
-        res.status(429).json({
-          success: false,
-          error: {
-            code: 'RATE_LIMIT_EXCEEDED',
-            message: 'Too many requests. Please try again later.',
-            retryAfter: Math.ceil((userLimit.resetTime - now) / 1000)
-          }
-        });
-        return;
-      }
-
-      // Increment request count
-      userLimit.count++;
-      userRequests.set(userId, userLimit);
-
-      // Add rate limit headers
-      res.set({
-        'X-RateLimit-Limit': maxRequests.toString(),
-        'X-RateLimit-Remaining': (maxRequests - userLimit.count).toString(),
-        'X-RateLimit-Reset': Math.ceil(userLimit.resetTime / 1000).toString()
-      });
-
-      next();
-    } catch (error) {
-      next(error);
-    }
-  };
-};
-
-/**
  * Check if user's email is verified
  */
 export const requireEmailVerification = (req: AuthRequest, res: Response, next: NextFunction): void => {

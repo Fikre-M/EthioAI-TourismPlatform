@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import rateLimit from 'express-rate-limit';
 import { AuthController } from '../controllers/auth.controller';
 import { authenticate } from '../middlewares/auth.middleware';
 import { validate } from '../middlewares/validation.middleware';
@@ -18,6 +19,37 @@ import * as crypto from 'crypto';
 
 const router = Router();
 const prisma = new PrismaClient();
+
+// Strict rate limiter for sensitive auth endpoints (login, register, forgot-password)
+const authRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,                   // 10 attempts per window per IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: {
+      code: 'RATE_LIMIT_EXCEEDED',
+      message: 'Too many attempts. Please try again in 15 minutes.',
+    },
+  },
+  skipSuccessfulRequests: true, // Only count failed attempts
+});
+
+// More lenient limiter for token refresh
+const refreshRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: {
+      code: 'RATE_LIMIT_EXCEEDED',
+      message: 'Too many refresh attempts. Please try again later.',
+    },
+  },
+});
 
 /**
  * Authentication Routes
@@ -58,11 +90,11 @@ router.post('/seed-demo', async (req: Request, res: Response) => {
 });
 
 // Public routes (no authentication required)
-router.post('/register', validate({ body: registerSchema }), AuthController.register);
-router.post('/login', validate({ body: loginSchema }), AuthController.login);
-router.post('/forgot-password', validate({ body: forgotPasswordSchema }), AuthController.forgotPassword);
-router.post('/reset-password', validate({ body: resetPasswordSchema }), AuthController.resetPassword);
-router.post('/refresh', validate({ body: refreshTokenSchema }), AuthController.refreshToken);
+router.post('/register', authRateLimit, validate({ body: registerSchema }), AuthController.register);
+router.post('/login', authRateLimit, validate({ body: loginSchema }), AuthController.login);
+router.post('/forgot-password', authRateLimit, validate({ body: forgotPasswordSchema }), AuthController.forgotPassword);
+router.post('/reset-password', authRateLimit, validate({ body: resetPasswordSchema }), AuthController.resetPassword);
+router.post('/refresh', refreshRateLimit, validate({ body: refreshTokenSchema }), AuthController.refreshToken);
 
 // Protected routes (authentication required)
 router.get('/me', authenticate, AuthController.getCurrentUser);
